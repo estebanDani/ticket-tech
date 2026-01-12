@@ -1,0 +1,1 @@
+// src\app\admin\theaters\page.tsx
