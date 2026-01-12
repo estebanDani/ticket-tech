@@ -7,7 +7,7 @@ export const theme = createTheme({
       main: '#1976d2',
     },
     secondary: {
-      main: '#9c27b0',
+      main: '#dc004e',
     },
     background: {
       default: '#f5f5f5',
@@ -17,16 +17,35 @@ export const theme = createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
-      fontSize: '2rem',
+      fontSize: '2.5rem',
       fontWeight: 600,
     },
     h2: {
-      fontSize: '1.5rem',
+      fontSize: '2rem',
+      fontWeight: 600,
+    },
+    h3: {
+      fontSize: '1.75rem',
       fontWeight: 500,
     },
-    button: {
-      textTransform: 'none',
-      fontWeight: 500,
+  },
+  shape: {
+    borderRadius: 8,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        },
+      },
     },
   },
 })
