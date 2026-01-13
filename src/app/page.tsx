@@ -1,7 +1,10 @@
 import { Container, Typography, Box } from '@mui/material'
+import { Header } from '../components/common/Header';
 
 export default function Home() {
   return (
+    <>
+      <Header />
     <Container maxWidth="lg">
       <Box
         sx={{
@@ -24,5 +27,6 @@ export default function Home() {
         </Typography>
       </Box>
     </Container>
-  )
+    </>
+  );
 }
