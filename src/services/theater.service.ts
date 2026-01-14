@@ -38,19 +38,19 @@ const getById = async (id: string): Promise<Theater> => {
         throw error
     }
 }
-const create = async (theater: Omit<Theater, 'id'>): Promise<Theater> => {
+const create = async (theater: Omit<Theater, 'id' | 'capacity' | 'seatMap'>): Promise<Theater> => {
     try {
-        const docRef = await addDoc(theatersCollection, theater)
-        //Generamos el mapeo de los asientos
         const seats = seatMapGenerator(theater.rows, theater.seatsPerRow)
-        //Calculamos la capacidad total
         const capacity = seats.length
-        //Actualizamos el objeto theater con los datos generados
+
         const newTheater = {
             ...theater,
-            capacity,
+            capacity: capacity,
             seatMap: seats,
         }
+
+        const docRef = await addDoc(theatersCollection, newTheater)
+
         return {
             id: docRef.id,
             ...newTheater
@@ -79,18 +79,17 @@ const eliminate = async (id: string): Promise<void> => {
     }
 };
 
-export {
-    getAll,
-    getById,
-    create,
-    update,
-    eliminate
+export default {
+    getAll: getAll,
+    getById: getById,
+    create: create,
+    update: update,
+    eliminate: eliminate
 }
 
 const seatMapGenerator = (rows: number, seatsPerRow: number): Seat[] => {
     const seats: Seat[] = [];
     for (let i = 0; i < rows; i++) {
-        // Genera la letra de la fila (A, B, C...)
         const rowLabel = String.fromCharCode(65 + i);
 
         for (let j = 1; j < seatsPerRow; j++) {
