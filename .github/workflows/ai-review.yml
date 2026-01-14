@@ -27,7 +27,7 @@ jobs:
           echo "/tmp/gga/bin" >> $GITHUB_PATH
 
       - name: 🤖 Install Gemini CLI
-        run: npm install -g @anthropic-ai/claude-code @google/generative-ai
+        run: npm install -g @google/gemini-cli
 
       - name: 🔍 Get changed files
         id: changed-files
@@ -55,7 +55,7 @@ jobs:
       - name: 😇 Run AI Code Review
         run: gga run
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: 💬 Comment on PR (if failed)
         if: failure()
