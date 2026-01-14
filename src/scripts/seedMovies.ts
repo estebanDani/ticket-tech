@@ -15,10 +15,10 @@ async function seedMovies() {
       createdAt: Timestamp.fromDate(movie.createdAt),
     }
 
-    const ref = await addDoc(moviesCollection, payload)
+    await addDoc(moviesCollection, payload)
   }
 }
 
-seedMovies().catch((err) => {
+seedMovies().catch(() => {
   process.exit(1)
 })
