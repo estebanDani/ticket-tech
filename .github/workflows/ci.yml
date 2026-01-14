@@ -1,0 +1,39 @@
+name: CI - Build & Test
+
+on:
+  pull_request:
+    branches: [main, test, dev]
+  push:
+    branches: [main, test, dev]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  quality:
+    name: 🔍 Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📚 Install dependencies (fresh for Linux)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+
+      - name: 🔍 Lint
+        run: npm run lint
+
+      - name: 🏗️ Build
+        run: npm run build
+
+      # Descomentar cuando tengas tests configurados
+      # - name: 🧪 Run tests
+      #   run: npm run test -- --coverage --watchAll=false

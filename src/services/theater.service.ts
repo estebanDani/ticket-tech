@@ -2,9 +2,10 @@ import { db } from "./firebase"
 import { collection, getDocs, getDoc, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore"
 import { Theater } from "@/types"
 import { Seat } from "@/types"
+import { COLLECTIONS } from "@/utils/constants"
 
 
-const theatersCollection = collection(db, 'theaters')
+const theatersCollection = collection(db, COLLECTIONS.THEATERS)
 
 const getAll = async (): Promise<Theater[]> => {
     try {
@@ -23,7 +24,7 @@ const getAll = async (): Promise<Theater[]> => {
 
 const getById = async (id: string): Promise<Theater> => {
     try {
-        const docRef = doc(db, 'theaters', id)
+        const docRef = doc(db, COLLECTIONS.THEATERS, id)
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
             return {
@@ -62,16 +63,16 @@ const create = async (theater: Omit<Theater, 'id' | 'capacity' | 'seatMap'>): Pr
 }
 const update = async (id: string, theater: Partial<Theater>): Promise<void> => {
     try {
-        const docRef = doc(db, 'theaters', id);
+        const docRef = doc(db, COLLECTIONS.THEATERS, id);
         await updateDoc(docRef, theater);
     } catch (error) {
         console.error('Error updating theater:', error);
         throw error;
     }
 };
-const eliminate = async (id: string): Promise<void> => {
+const deleteTheater = async (id: string): Promise<void> => {
     try {
-        const docRef = doc(db, 'theaters', id);
+        const docRef = doc(db, COLLECTIONS.THEATERS, id);
         await deleteDoc(docRef);
     } catch (error) {
         console.error('Error deleting theater:', error);
@@ -84,7 +85,7 @@ export default {
     getById: getById,
     create: create,
     update: update,
-    eliminate: eliminate
+    delete: deleteTheater
 }
 
 const seatMapGenerator = (rows: number, seatsPerRow: number): Seat[] => {
