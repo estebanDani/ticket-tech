@@ -1,6 +1,6 @@
 import { Container, Typography, Box } from '@mui/material'
-import { Header } from '../components/common/Header';
-import { Footer } from '../components/common/Footer';
+import { Header } from '@/components/common/Header';
+import { Footer } from '@/components/common/Footer';
 
 export default function Home() {
   return (

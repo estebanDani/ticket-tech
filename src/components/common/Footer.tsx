@@ -3,12 +3,11 @@
 import { Box, Container, Typography, Stack } from '@mui/material';
 
 export function Footer(){
-      const colorText = '#ffffff';
   return (
     <Box
       component="footer"
       sx={{
-        backgroundColor: '#343434',
+        backgroundColor: 'grey.200',
         py: 3,
       }}
     >
@@ -19,15 +18,15 @@ export function Footer(){
           justifyContent="center"
           alignItems="center"
         >
-          <Typography variant="body2" sx={{color: colorText}}>
+          <Typography variant="body2" sx={{color: "text.secondary"}}>
             © 2025 Cinema Tickets 
           </Typography>
 
-          <Typography variant="body2" sx={{color: colorText}}>
+          <Typography variant="body2" sx={{color: "text.secondary"}}>
             Contacto
           </Typography>
 
-          <Typography variant="body2" sx={{color: colorText}}>
+          <Typography variant="body2" sx={{color: "text.secondary"}}>
             📍 Ubicacion
           </Typography>
         </Stack>

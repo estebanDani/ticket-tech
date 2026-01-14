@@ -13,6 +13,13 @@ export const theme = createTheme({
       default: '#f5f5f5',
       paper: '#ffffff',
     },
+    text: {
+      primary: '#000000',
+      secondary: '#ffffff',
+    },
+    grey: {
+      200: '#343434',
+    },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
