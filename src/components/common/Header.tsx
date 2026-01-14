@@ -40,20 +40,18 @@ export function Header() {
 
   return (
     <AppBar position="static">
-      <Box sx={{textAlign: 'center', paddingTop:'40px'}}>
-        <Typography variant="h3" >
+        <Typography variant="h3" sx={{textAlign: 'center', paddingTop:'40px'}}>
             1. HOME CARTELERA
         </Typography>
-      </Box>
 
-      <Toolbar>
+      <Toolbar sx={{display: 'flex'}}>
         <Box>
           <Typography variant="h6" >
             🎬  CINEMA TICKETS
           </Typography>
         </Box>
 
-        <Box sx={{ display: { xs: 'none', md: 'block'}, ml:'auto' } }>
+        <Box sx={{ display: { xs: 'none', md: 'flex' },ml:'auto' } }>
           <Button color="inherit" startIcon={<PersonIcon />}>Login</Button>
           <Button color="inherit" >Register</Button>
         </Box>
