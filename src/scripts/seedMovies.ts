@@ -5,7 +5,6 @@ import { mockMovies } from '@/mocks/mockMovies'
 
 
 async function seedMovies() {
-  console.log('Seeding movies...')
 
   const moviesCollection = collection(db, 'movies')
 
@@ -17,13 +16,9 @@ async function seedMovies() {
     }
 
     const ref = await addDoc(moviesCollection, payload)
-    console.log(`Created movie: ${movie.title} (${ref.id})`)
   }
-
-  console.log('Seed completed')
 }
 
 seedMovies().catch((err) => {
-  console.error('Seed failed:', err)
   process.exit(1)
 })
