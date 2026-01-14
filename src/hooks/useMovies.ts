@@ -35,8 +35,9 @@ export function useMovies(): UseMoviesResult {
             : 'Error al cargar películas'
         )
       } finally {
-        if (!isMounted) return
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
