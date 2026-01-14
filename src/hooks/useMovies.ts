@@ -27,9 +27,13 @@ export function useMovies(): UseMoviesResult {
 
         if (!isMounted) return
         setMovies(data)
-      } catch (err) {
+      } catch (err: unknown) {
         if (!isMounted) return
-        setError(err instanceof Error ? err.message : 'Error al cargar películas')
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Error al cargar películas'
+        )
       } finally {
         if (!isMounted) return
         setLoading(false)
