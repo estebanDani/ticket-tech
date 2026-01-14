@@ -8,12 +8,6 @@ jobs:
   ai-review:
     name: 😇 Gentleman Guardian Angel
     runs-on: ubuntu-latest
-    
-    # Solo corre si hay archivos de código modificados
-    if: |
-      contains(github.event.pull_request.head.ref, 'feature/') ||
-      contains(github.event.pull_request.head.ref, 'fix/') ||
-      contains(github.event.pull_request.head.ref, 'refactor/')
 
     steps:
       - name: 📥 Checkout code
@@ -32,30 +26,36 @@ jobs:
           chmod +x /tmp/gga/bin/gga
           echo "/tmp/gga/bin" >> $GITHUB_PATH
 
-      - name: 🤖 Install Claude CLI
-        run: npm install -g @anthropic-ai/claude-code
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: 🤖 Install Gemini CLI
+        run: npm install -g @anthropic-ai/claude-code @google/generative-ai
 
       - name: 🔍 Get changed files
         id: changed-files
         run: |
-          # Obtener archivos cambiados en el PR
           git diff --name-only origin/${{ github.base_ref }}...HEAD > /tmp/changed_files.txt
           echo "Changed files:"
           cat /tmp/changed_files.txt
 
       - name: 📋 Stage changed files
         run: |
-          # Stagear los archivos para que gga los revise
           if [ -s /tmp/changed_files.txt ]; then
             cat /tmp/changed_files.txt | xargs -I {} git add {} 2>/dev/null || true
           fi
 
+      - name: 📝 Update GGA config to use Gemini
+        run: |
+          cat > .gga << 'EOF'
+          PROVIDER="gemini"
+          FILE_PATTERNS="*.ts,*.tsx,*.js,*.jsx"
+          EXCLUDE_PATTERNS="*.test.ts,*.test.tsx,*.spec.ts,*.spec.tsx,*.d.ts,node_modules/*,*.config.*,.next/*,out/*"
+          RULES_FILE="AGENTS.md"
+          STRICT_MODE="true"
+          EOF
+
       - name: 😇 Run AI Code Review
         run: gga run
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: 💬 Comment on PR (if failed)
         if: failure()
