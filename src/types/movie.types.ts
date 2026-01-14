@@ -11,3 +11,5 @@ export interface Movie {
     isActive: boolean;
     createdAt: Date;
 }
+
+export type CreateMovieDto = Omit<Movie, 'id'>;
