@@ -7,16 +7,12 @@ import { SnackbarProvider } from 'notistack'
 
 import { theme } from '@/theme/theme'
 
-interface ProvidersProps {
-  children: React.ReactNode
-}
-
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AppRouterCacheProvider options={{ key: 'mui' }}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <SnackbarProvider 
+      <SnackbarProvider
         maxSnack={3}
         anchorOrigin={{
           vertical: 'top',
