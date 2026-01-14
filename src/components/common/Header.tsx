@@ -18,7 +18,17 @@ import { useState } from 'react';
 
 export function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const menuProps = {
+    anchorOrigin: {
+      vertical: 'bottom' as const,
+      horizontal: 'right' as const,
+    },
+    transformOrigin: {
+      vertical: 'top' as const,
+      horizontal: 'right' as const,
+    },
+  };
+
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -30,30 +40,34 @@ export function Header() {
 
   return (
     <AppBar position="static">
-        <Typography variant="h3" sx={{textAlign: 'center', marginTop:'40px'}}>
+      <Box sx={{textAlign: 'center', paddingTop:'40px'}}>
+        <Typography variant="h3" >
             1. HOME CARTELERA
         </Typography>
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-         🎬  CINEMA TICKETS
-        </Typography>
+      </Box>
 
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+      <Toolbar>
+        <Box>
+          <Typography variant="h6" >
+            🎬  CINEMA TICKETS
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: { xs: 'none', md: 'block'}, ml:'auto' } }>
           <Button color="inherit" startIcon={<PersonIcon />}>Login</Button>
           <Button color="inherit" >Register</Button>
         </Box>
 
-        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+        <Box sx={{ display: { xs: 'block', md: 'none' }, ml:'auto' }}>
           <IconButton color="inherit" onClick={handleOpen}>
             <MenuIcon />
           </IconButton>
 
           <Menu
             anchorEl={anchorEl}
-            open={open}
+            open={!!anchorEl}
             onClose={handleClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            {...menuProps}
           >
             <MenuItem onClick={handleClose}>Login</MenuItem>
             <MenuItem onClick={handleClose}>Register</MenuItem>
