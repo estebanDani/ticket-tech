@@ -1,0 +1,69 @@
+name: CD - Deploy to Firebase
+
+on:
+  push:
+    branches:
+      - main
+      - test
+      - dev
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  build-and-deploy:
+    name: 🚀 Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📚 Install dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+
+      - name: 🏗️ Build
+        run: npm run build
+
+      # Deploy a DEV cuando push a dev
+      - name: 🚀 Deploy to Firebase (Dev)
+        if: github.ref == 'refs/heads/dev'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: dev
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
+
+      # Deploy a TEST cuando push a test
+      - name: 🚀 Deploy to Firebase (Test)
+        if: github.ref == 'refs/heads/test'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: test
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
+
+      # Deploy a PRODUCCIÓN cuando push a main
+      - name: 🚀 Deploy to Firebase (Production)
+        if: github.ref == 'refs/heads/main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: live
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks

@@ -1,0 +1,4 @@
+# Este archivo define quién debe aprobar los PRs
+# Solo estebanDani puede aprobar cambios
+
+* @estebanDani

@@ -4,10 +4,12 @@ export interface Movie {
     synopsis: string;
     duration: number;
     genre: string [];
-    rating: number;
+    rating: string;
     posterUrl: string;
     trailerUrl: string;
     releaseDate: Date;
     isActive: boolean;
     createdAt: Date;
 }
+
+export type CreateMovieDto = Omit<Movie, 'id'>;

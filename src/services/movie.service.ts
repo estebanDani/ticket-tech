@@ -1,13 +1,14 @@
 import {collection, getDocs, getDoc, doc, addDoc,} from 'firebase/firestore';
-import { db } from './firebase';
-import { Movie } from '../types';
 
+import { db } from '@/services/firebase';
+import { Movie, CreateMovieDto } from '@/types';
+import { COLLECTIONS } from '@/utils/constants';
 
 export class MovieService {
     
     static async getAll(): Promise<Movie[]> {
         try {
-            const snapshot = await getDocs(collection(db, 'movies'));
+            const snapshot = await getDocs(collection(db, COLLECTIONS.MOVIES));
 
             return snapshot.docs.map((doc) => ({
                 id: doc.id,
@@ -21,7 +22,7 @@ export class MovieService {
 
     static async getById(id: string): Promise<Movie | null> {
         try {
-            const docRef = doc(db, 'movies', id);
+            const docRef = doc(db, COLLECTIONS.MOVIES, id);
             const snapshot = await getDoc(docRef);
 
             if (!snapshot.exists()) {
@@ -38,10 +39,10 @@ export class MovieService {
         }
     }
 
-    static async create(movie: Omit<Movie, 'id'>): Promise<Movie> {
+    static async create(movie: CreateMovieDto): Promise<Movie> {
         try {
             const docRef = await addDoc(
-                collection(db, 'movies'),
+                collection(db, COLLECTIONS.MOVIES),
                 movie
             );
 
