@@ -22,13 +22,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
 
-      - name: 📚 Install dependencies
-        run: npm ci
-
-      - name: 🔧 Rebuild native modules for Linux
-        run: npm rebuild
+      - name: 📚 Install dependencies (fresh for Linux)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: 🔍 Lint
         run: npm run lint
