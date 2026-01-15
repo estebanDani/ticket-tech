@@ -8,7 +8,7 @@ export interface Theater {
     amenities: string [];
 }
 
-interface Seat {
+export interface Seat {
     id: string;
     row: string;
     number: number;
