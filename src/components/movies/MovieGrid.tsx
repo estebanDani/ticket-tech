@@ -10,22 +10,21 @@ interface Props {
 
 const MovieGrid = ({ movies, loading }: Props) => {
     return (
-        <Grid container spacing={{ xs: 2, md: 3 }} justifyContent="start" alignItems="center" paddingBlock={2} >
-            {loading ? (
-                <Grid container spacing={2}>
-                    {[...Array(12)].map((_, index) => (
-                        <Grid key={index} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>
-                            <Skeleton variant="rectangular" height={400} width={300} />
-                        </Grid>
-                    ))}
+        <Grid container
+            spacing={2}
+            justifyContent="start"
+            padding={3}
+            sx={{ width: '100%', marginInline: 0 }}
+        >
+            {movies.map(movie => (
+                <Grid
+                    key={movie.id}
+                    size={{ xs: 12, sm: 6, md: 3, lg: 3 }}
+                    sx={{ display: 'flex', justifyContent: 'center' }}
+                >
+                    <MovieCard movie={movie} />
                 </Grid>
-            ) : (
-                movies.map(movie => (
-                    <Grid key={movie.id} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} >
-                        <MovieCard movie={movie} />
-                    </Grid>
-                ))
-            )}
+            ))}
         </Grid>
     )
 }

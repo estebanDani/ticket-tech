@@ -27,11 +27,11 @@ export default function Home() {
   return (
     <>
       <Header />
+      <MovieGrid
+        movies={movies}
+        loading={loading}
+      />
       <Container maxWidth="lg">
-        <MovieGrid
-          movies={movies}
-          loading={loading}
-        />
         <Box
           sx={{
             minHeight: '100vh',
