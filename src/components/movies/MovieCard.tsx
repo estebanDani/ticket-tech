@@ -1,9 +1,8 @@
 import {Card, CardActions, CardMedia, CardContent, Typography, Stack, Chip, Button} from '@mui/material';
-import AccessAlarm from '@mui/icons-material/AccessAlarm';
-import StarIcon from '@mui/icons-material/Star';
+import { Star, AccessAlarm } from '@mui/icons-material'
 
 import { Movie } from '@/types';
-import { formatDuration } from '@/utils/formatDuration';
+import { formatDuration } from '@/utils';
 
 interface MovieCardProps {
   movie: Movie;
@@ -42,7 +41,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           </Stack>
 
           <Stack direction="row" spacing={0.5} alignItems="center">
-            <StarIcon fontSize="small" color="warning" />
+            <Star fontSize="small" color="warning" />
             <Typography variant="body2">
               {movie.rating}
             </Typography>
