@@ -1,40 +1,37 @@
+"use client"
+import { useEffect, useState } from 'react'
 import { Container, Typography, Box } from '@mui/material'
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
+import MovieGrid from '@/components/movies/MovieGrid';
+import { MovieService } from '@/services/movie.service';
+import { Movie } from '@/types';
 
 export default function Home() {
+  const [movies, setMovies] = useState<Movie[]>([])
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
-    getAllTheaters()
+    const fetchMovies = async () => {
+      setLoading(true)
+      try {
+        const movies = await MovieService.getAll()
+        setMovies(movies)
+      } catch (error) {
+        console.error('Error fetching movies:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchMovies()
   }, [])
-  const getAllTheaters = async () => {
-    console.log('Fetching theaters...')
-    try {
-      const theaters = await theaterService.getAll()
-      console.log('Theaters:', theaters)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  const createTheater = async () => {
-    console.log('Creating theater...')
-    try {
-      await theaterService.create({
-        name: 'Sala 1',
-        rows: 10,
-        seatsPerRow: 10,
-        amenities: ["Popcorn", "Coca-Cola", "Agua"]
-      })
-      alert('Theater created successfully!')
-    } catch (error) {
-      console.error(error)
-      alert('Error creating theater')
-    }
-  }
   return (
     <>
       <Header />
-
       <Container maxWidth="lg">
+        <MovieGrid
+          movies={movies}
+          loading={loading}
+        />
         <Box
           sx={{
             minHeight: '100vh',
