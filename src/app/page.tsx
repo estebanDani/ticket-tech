@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Container, Typography, Box } from '@mui/material'
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
-import MovieGrid from '@/components/movies/MovieGrid';
+import MovieGrid from '@/components/movies/movie_grid/MovieGrid';
 import { MovieService } from '@/services/movie.service';
 import { Movie } from '@/types';
 
