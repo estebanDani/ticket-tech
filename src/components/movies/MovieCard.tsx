@@ -3,6 +3,7 @@ import AccessAlarm from '@mui/icons-material/AccessAlarm';
 import StarIcon from '@mui/icons-material/Star';
 
 import { Movie } from '@/types';
+import { formatDuration } from '@/utils/formatDuration';
 
 interface MovieCardProps {
   movie: Movie;
@@ -36,7 +37,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           <Stack direction="row" spacing={0.5} alignItems="center">
             <AccessAlarm fontSize="small" />
             <Typography variant="body2">
-              {movie.duration} min
+              {formatDuration(movie.duration)} 
             </Typography>
           </Stack>
 
@@ -53,7 +54,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             <Chip
               key={genre}
               label={genre}
-              size="small"
+              size="medium"
               color="primary"
               variant="outlined"
             />
@@ -61,7 +62,6 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         </Stack>
       </CardContent>
 
-      {/* Actions */}
       <CardActions sx={{ p: 2 }}>
         <Button
           variant="contained"
