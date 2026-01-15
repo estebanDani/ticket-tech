@@ -1,29 +1,13 @@
 "use client"
-import { useEffect, useState } from 'react'
 import { Container, Typography, Box } from '@mui/material'
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
-import MovieGrid from '@/components/movies/movie_grid/MovieGrid';
-import { MovieService } from '@/services/movie.service';
-import { Movie } from '@/types';
+import { MovieGrid } from '@/components';
+import { useMovies } from '@/hooks/useMovies';
 
 export default function Home() {
-  const [movies, setMovies] = useState<Movie[]>([])
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    const fetchMovies = async () => {
-      setLoading(true)
-      try {
-        const movies = await MovieService.getAll()
-        setMovies(movies)
-      } catch (error) {
-        console.error('Error fetching movies:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchMovies()
-  }, [])
+  const { movies, loading } = useMovies()
+
   return (
     <>
       <Header />
