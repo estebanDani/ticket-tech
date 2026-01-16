@@ -12,6 +12,7 @@ import {
 import Grid from '@mui/material/Grid'
 import { format } from 'date-fns'
 import type { Movie } from '@/types'
+import { formatDuration } from '@/utils/formatDuration'
 
 interface MovieDetailProps {
   movie: Movie
@@ -21,17 +22,6 @@ function safeFormatDate(value: Date | null | undefined): string {
   if (!value) return '—'
   if (Number.isNaN(value.getTime())) return '—'
   return format(value, 'dd/MM/yyyy')
-}
-
-function formatDuration(minutes?: number): string {
-  if (!minutes || minutes <= 0) return '—'
-
-  const h = Math.floor(minutes / 60)
-  const m = minutes % 60
-
-  if (h === 0) return `${m} min`
-  if (m === 0) return `${h} h`
-  return `${h} h ${m} min`
 }
 
 export function MovieDetail({ movie }: MovieDetailProps) {
