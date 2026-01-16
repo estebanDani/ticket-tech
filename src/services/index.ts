@@ -1,2 +1,4 @@
-export { MovieService } from './movie.service'
-export { db } from './firebase'
+import { MovieService } from "./movie.service";
+import theaterService from "./theater.service";
+
+export { MovieService, theaterService };
