@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import type { Movie } from '@/types'
-import { MovieService } from '@/services/movie.service'
+import { MovieService } from '@/services'
 
 interface UseMoviesResult {
   movies: Movie[]

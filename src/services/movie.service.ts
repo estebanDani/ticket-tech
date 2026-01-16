@@ -9,7 +9,7 @@ export class MovieService {
     static async getAll(): Promise<Movie[]> {
         try {
             const snapshot = await getDocs(collection(db, COLLECTIONS.MOVIES));
-
+            
             return snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
@@ -24,14 +24,17 @@ export class MovieService {
         try {
             const docRef = doc(db, COLLECTIONS.MOVIES, id);
             const snapshot = await getDoc(docRef);
-
+            
             if (!snapshot.exists()) {
                 return null;
             }
 
+            const data = snapshot.data()
+            
             return {
                 id: snapshot.id,
-                ...snapshot.data(),
+                ...data,
+                releaseDate: data.releaseDate?.toDate(),
             } as Movie;
         } catch (error) {
             console.error(`Error getting movie ${id}:`, error);
