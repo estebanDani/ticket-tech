@@ -1,75 +1,94 @@
-import { Card, CardActions, CardMedia, CardContent, Typography, Stack, Chip, Button } from '@mui/material';
+'use client';
+import {Card, CardActions, CardMedia, CardContent, Typography, Stack, Chip, Button} from '@mui/material';
 import { Star, AccessAlarm } from '@mui/icons-material'
 
 import { Movie } from '@/types';
 import { formatDuration } from '@/utils';
+import Link from 'next/link';
 
 interface MovieCardProps {
-    movie: Movie;
+  movie: Movie;
 }
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
-    return (
-        <Card
+  return (
+    <Card
+      component={Link}
+      href={`/movies/${movie.id}`}
+      sx={{
+        width: '100%',
+        maxWidth: 320,
+        height: '100%',
+        borderRadius: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        textDecoration: 'none',
+        cursor: 'pointer',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: 6,
+        },
+      }}
+    >
+
+      <CardMedia
+        sx={{
+          height: 370
+        }}
+        component="img"
+        image={movie.posterUrl}
+        title={movie.title}
+      />
+
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography variant="h6"
+            fontWeight={600}
             sx={{
-                maxWidth: 320,
-                height: '100%',
-                borderRadius: 2
-            }}
-        >
+                minHeight: '3.2em',
+            }}>
+          {movie.title}
+        </Typography>
 
-            <CardMedia
-                sx={{
-                    height: 370
-                }}
-                component="img"
-                image={movie.posterUrl}
-                title={movie.title}
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <AccessAlarm fontSize="small" />
+            <Typography variant="body2">
+              {formatDuration(movie.duration)} 
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Star fontSize="small" color="warning" />
+            <Typography variant="body2">
+              {movie.rating}
+            </Typography>
+          </Stack>
+        </Stack>
+
+        <Stack direction="row" spacing={1} flexWrap="wrap" mb={1} mt={1}>
+          {movie.genre.map((genre) => (
+            <Chip
+              key={genre}
+              label={genre}
+              size="small"
+              color="primary"
+              variant="outlined"
+              
             />
+          ))}
+        </Stack>
+      </CardContent>
 
-            <CardContent sx={{ pb: 0 }}>
-                <Typography variant="h3" fontWeight={600} gutterBottom>
-                    {movie.title}
-                </Typography>
-
-                <Stack direction="row" spacing={2} alignItems="center">
-                    <Stack direction="row" spacing={0.5} alignItems="center">
-                        <AccessAlarm fontSize="small" />
-                        <Typography variant="body2">
-                            {formatDuration(movie.duration)}
-                        </Typography>
-                    </Stack>
-
-                    <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Star fontSize="small" color="warning" />
-                        <Typography variant="body2">
-                            {movie.rating}
-                        </Typography>
-                    </Stack>
-                </Stack>
-
-                <Stack direction="row" spacing={1} flexWrap="wrap" mb={1} mt={1}>
-                    {movie.genre.map((genre) => (
-                        <Chip
-                            key={genre}
-                            label={genre}
-                            size="medium"
-                            color="primary"
-                            variant="outlined"
-                        />
-                    ))}
-                </Stack>
-            </CardContent>
-
-            <CardActions sx={{ p: 2 }}>
-                <Button
-                    variant="contained"
-                    fullWidth
-                    sx={{ borderRadius: 1 }}
-                >
-                    Ver más
-                </Button>
-            </CardActions>
-        </Card>
-    );
+      <CardActions sx={{ p: 2 }}>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ borderRadius: 1 }}
+        >
+          Ver más
+        </Button>
+      </CardActions>
+    </Card>
+  );
 };
