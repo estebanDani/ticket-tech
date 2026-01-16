@@ -3,7 +3,8 @@ import { Footer } from './common/Footer'
 import { LoadingSpinner } from './common/LoadingSpinner'
 
 import { MovieCard } from './movies/MovieCard';
-import { default as MovieGrid } from './movies/movie_grid/MovieGrid';
+import MovieGrid from './movies/movie_grid/MovieGrid'
+import { MovieDetail } from './movies/MovieDetail'
 
 export { 
     MovieCard, 
@@ -11,4 +12,5 @@ export {
     Header, 
     Footer, 
     LoadingSpinner, 
+    MovieDetail,
 };
