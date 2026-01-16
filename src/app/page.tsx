@@ -1,43 +1,49 @@
-"use client"
-import { Container, Typography, Box } from '@mui/material'
-import { Header } from '@/components/common/Header';
-import { Footer } from '@/components/common/Footer';
-import { MovieGrid } from '@/components';
-import { useMovies } from '@/hooks/useMovies';
+'use client'
+
+import { Box, Container, Typography } from '@mui/material'
+
+import { Header, Footer, MovieGrid } from '@/components'
+import { useActiveMovies } from '@/hooks/useActiveMovies'
 
 export default function Home() {
-  const { movies, loading } = useMovies()
+  const { movies, loading, error } = useActiveMovies()
 
   return (
     <>
       <Header />
-      <MovieGrid
-        movies={movies}
-        loading={loading}
-      />
-      <Container maxWidth="lg">
-        <Box
+
+      <Container maxWidth={false} disableGutters sx={{ py: 4 }}>
+        <Typography
+          variant="h2"
+          fontWeight={800}
           sx={{
-            minHeight: '100vh',
+            mb: 3,
+            px: 3,
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
             alignItems: 'center',
-            textAlign: 'center',
+            gap: 1,
           }}
         >
-          <Typography variant="h1" gutterBottom>
-            🎬 Cinema Tickets
-          </Typography>
-          <Typography variant="h5" color="text.secondary">
-            Sistema de Reserva de Tickets
-          </Typography>
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            Proyecto configurado exitosamente ✅
-          </Typography>
-        </Box>
+          🎞️ Cartelera
+        </Typography>
+
+        {error ? (
+          <Box sx={{ py: 2, px: 3 }}>
+            <Typography variant="h6" fontWeight={700}>
+              Ocurrió un error
+            </Typography>
+            <Typography variant="body2">{error}</Typography>
+          </Box>
+        ) : movies.length === 0 && !loading ? (
+          <Box sx={{ px: 3 }}>
+            <Typography variant="body2">No hay películas disponibles</Typography>
+          </Box>
+        ) : (
+          <MovieGrid movies={movies} loading={loading} />
+        )}
       </Container>
+
       <Footer />
     </>
-  );
+  )
 }

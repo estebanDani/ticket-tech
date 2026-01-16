@@ -19,6 +19,10 @@ export class MovieService {
             throw new Error('Failed to fetch movies');
         }
     }
+    static async getActive(): Promise<Movie[]> {
+    const movies = await MovieService.getAll()
+    return movies.filter((movie) => movie.isActive)
+    }
 
     static async getById(id: string): Promise<Movie | null> {
         try {
