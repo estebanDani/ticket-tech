@@ -17,21 +17,18 @@ interface MovieDetailProps {
   movie: Movie
 }
 
-function safeFormatDate(value: unknown): string {
-  try {
-    if (!value) return '—'
-    const date = value instanceof Date ? value : new Date(value as any)
-    if (Number.isNaN(date.getTime())) return '—'
-    return format(date, 'dd/MM/yyyy')
-  } catch {
-    return '—'
-  }
+function safeFormatDate(value: Date | null | undefined): string {
+  if (!value) return '—'
+  if (Number.isNaN(value.getTime())) return '—'
+  return format(value, 'dd/MM/yyyy')
 }
 
-function formatDuration(minutes: number): string {
+function formatDuration(minutes?: number): string {
   if (!minutes || minutes <= 0) return '—'
+
   const h = Math.floor(minutes / 60)
   const m = minutes % 60
+
   if (h === 0) return `${m} min`
   if (m === 0) return `${h} h`
   return `${h} h ${m} min`
@@ -44,7 +41,6 @@ export function MovieDetail({ movie }: MovieDetailProps) {
   return (
     <Box sx={{ py: 4 }}>
       <Grid container spacing={3}>
-        {/* Poster */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Card
             elevation={0}
@@ -56,18 +52,13 @@ export function MovieDetail({ movie }: MovieDetailProps) {
           >
             <CardMedia
               component="img"
-              height="520"
               image={movie.posterUrl || '/images/placeholder-poster.png'}
               alt={movie.title}
-              sx={{
-                objectFit: 'cover',
-                height: { xs: 420, md: 520 }, // ✅ responsive
-              }}
+              sx={{ objectFit: 'cover', height: { xs: 420, md: 520 } }}
             />
           </Card>
         </Grid>
 
-        {/* Info */}
         <Grid size={{ xs: 12, md: 8 }}>
           <Stack spacing={2}>
             <Box>
@@ -84,13 +75,11 @@ export function MovieDetail({ movie }: MovieDetailProps) {
 
             <Divider />
 
-            {/* ✅ Limitar ancho para mejor lectura */}
             <Box sx={{ maxWidth: 700 }}>
               <Typography variant="h6" fontWeight={700} gutterBottom>
                 Sinopsis
               </Typography>
 
-              {/* ✅ Más contraste (sin verse “pesado”) */}
               <Typography
                 sx={{
                   color: 'text.primary',
