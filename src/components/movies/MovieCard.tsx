@@ -16,9 +16,12 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       component={Link}
       href={`/movies/${movie.id}`}
       sx={{
+        width: '100%',
         maxWidth: 320,
         height: '100%',
         borderRadius: 2,
+        display: 'flex',
+        flexDirection: 'column',
         textDecoration: 'none',
         cursor: 'pointer',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -38,8 +41,12 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         title={movie.title}
       />
 
-      <CardContent sx={{ pb: 0 }}>
-        <Typography variant="h3" fontWeight={600} gutterBottom>
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography variant="h6"
+            fontWeight={600}
+            sx={{
+                minHeight: '3.2em',
+            }}>
           {movie.title}
         </Typography>
 
@@ -64,9 +71,10 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             <Chip
               key={genre}
               label={genre}
-              size="medium"
+              size="small"
               color="primary"
               variant="outlined"
+              
             />
           ))}
         </Stack>
