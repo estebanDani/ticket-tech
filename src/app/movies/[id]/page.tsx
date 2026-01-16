@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 
@@ -16,49 +15,17 @@ import {
   Typography,
 } from '@mui/material'
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'
-import StarIcon from '@mui/icons-material/Star'
-import EventIcon from '@mui/icons-material/Event'
+import { AccessTime, ArrowBack, Event, LocalOffer, Star } from '@mui/icons-material'
 
-import type { Movie } from '@/types'
-import { MovieService } from '@/services/movie.service'
+import { useMovie } from '@/hooks/useMovie'
 
 type Params = { id: string }
 
 export default function MovieDetailPage() {
   const router = useRouter()
-  const params = useParams<Params>()
-  const id = params?.id
+  const { id } = useParams<Params>()
 
-  const [movie, setMovie] = useState<Movie | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const loadMovie = async () => {
-      if (!id) {
-        setLoading(false)
-        return
-      }
-
-      try {
-        setLoading(true)
-        setError(null)
-
-        const data = await MovieService.getById(id)
-        setMovie(data)
-      } catch (err: unknown) {
-        setMovie(null)
-        setError(err instanceof Error ? err.message : 'Error al cargar la película')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadMovie()
-  }, [id])
+  const { movie, loading, error } = useMovie(id)
 
   if (loading) {
     return (
@@ -71,7 +38,7 @@ export default function MovieDetailPage() {
   if (error) {
     return (
       <Box sx={{ py: 6 }}>
-        <Button startIcon={<ArrowBackIcon />} onClick={() => router.back()} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowBack />} onClick={() => router.back()} sx={{ mb: 2 }}>
           Volver a Cartelera
         </Button>
 
@@ -86,7 +53,7 @@ export default function MovieDetailPage() {
   if (!movie) {
     return (
       <Box sx={{ py: 6 }}>
-        <Button startIcon={<ArrowBackIcon />} onClick={() => router.back()} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowBack />} onClick={() => router.back()} sx={{ mb: 2 }}>
           Volver a Cartelera
         </Button>
 
@@ -101,7 +68,7 @@ export default function MovieDetailPage() {
 
   return (
     <Box sx={{ py: 4 }}>
-      <Button startIcon={<ArrowBackIcon />} onClick={() => router.back()} sx={{ mb: 3 }}>
+      <Button startIcon={<ArrowBack />} onClick={() => router.back()} sx={{ mb: 3 }}>
         Volver a Cartelera
       </Button>
 
@@ -136,7 +103,7 @@ export default function MovieDetailPage() {
               </Typography>
 
               <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
-                <LocalOfferIcon fontSize="small" sx={{ opacity: 0.7 }} />
+                <LocalOffer fontSize="small" sx={{ opacity: 0.7 }} />
                 {movie.genre.map((g) => (
                   <Chip key={g} label={g} size="small" variant="outlined" />
                 ))}
@@ -144,19 +111,19 @@ export default function MovieDetailPage() {
 
               <Stack direction="row" spacing={3} flexWrap="wrap" alignItems="center">
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <AccessTimeIcon fontSize="small" sx={{ opacity: 0.7 }} />
+                  <AccessTime fontSize="small" sx={{ opacity: 0.7 }} />
                   <Typography variant="body2">{movie.duration}min</Typography>
                 </Stack>
 
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <StarIcon fontSize="small" sx={{ opacity: 0.7 }} />
+                  <Star fontSize="small" sx={{ opacity: 0.7 }} />
                   <Typography variant="body2">{movie.rating}</Typography>
                 </Stack>
               </Stack>
 
               {movie.releaseDate ? (
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <EventIcon fontSize="small" sx={{ opacity: 0.7 }} />
+                  <Event fontSize="small" sx={{ opacity: 0.7 }} />
                   <Typography variant="body2" sx={{ opacity: 0.85 }}>
                     Estreno: {movie.releaseDate.toLocaleDateString()}
                   </Typography>
