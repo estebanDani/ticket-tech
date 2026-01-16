@@ -1,12 +1,20 @@
+"use client"
 import { Container, Typography, Box } from '@mui/material'
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
+import { MovieGrid } from '@/components';
+import { useMovies } from '@/hooks/useMovies';
 
 export default function Home() {
+  const { movies, loading } = useMovies()
+
   return (
     <>
       <Header />
-
+      <MovieGrid
+        movies={movies}
+        loading={loading}
+      />
       <Container maxWidth="lg">
         <Box
           sx={{
