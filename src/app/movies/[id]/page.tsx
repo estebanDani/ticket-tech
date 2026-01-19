@@ -15,7 +15,7 @@ export async function generateStaticParams() {
     }))
   } catch (error) {
     console.error('Error fetching movies for static generation:', error)
-    return [{ id: '1' }]
+    return []
   }
 }
 
@@ -25,6 +25,5 @@ interface PageProps {
 
 export default async function MovieDetailPage({ params }: PageProps) {
   const { id } = await params
-
   return <MovieDetailClient id={id} />
 }
