@@ -17,24 +17,27 @@ import { GenereMovies } from '@/utils'
 
 export default function Home() {
   const { movies, loading, error } = useActiveMovies()
+
   const [searchValue, setSearchValue] = useState('')
-  const filterMovies = movies.filter(movie =>
-    movie.title.toLowerCase().includes(searchValue.toLowerCase())
-  )
+  const [selectedGenre, setSelectedGenre] = useState<string>(GenereMovies.ALL)
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
 
-  const [selectedGenre, setSelectedGenre] = useState<string>(GenereMovies.ALL)
-
   const filteredMovies = useMemo(() => {
-    if (selectedGenre === GenereMovies.ALL) return movies
+    return movies.filter(movie => {
+      const matchesTitle = movie.title
+        .toLowerCase()
+        .includes(searchValue.toLowerCase())
 
-    return movies.filter(movie =>
-      movie.genre?.includes(selectedGenre)
-    )
-  }, [movies, selectedGenre])
+      const matchesGenre =
+        selectedGenre === GenereMovies.ALL ||
+        movie.genre?.includes(selectedGenre)
+
+      return matchesTitle && matchesGenre
+    })
+  }, [movies, searchValue, selectedGenre])
 
   return (
     <>
@@ -42,6 +45,7 @@ export default function Home() {
         searchValue={searchValue}
         onChangeSearch={handleSearch}
       />
+
       <Container maxWidth={false} disableGutters sx={{ py: 4 }}>
         <Typography
           variant="h2"
@@ -64,7 +68,7 @@ export default function Home() {
             label="Género"
             onChange={(e) => setSelectedGenre(e.target.value)}
           >
-            <MenuItem value= {GenereMovies.ALL}>Todos</MenuItem>
+            <MenuItem value={GenereMovies.ALL}>Todos</MenuItem>
             <MenuItem value={GenereMovies.ACTION}>Acción</MenuItem>
             <MenuItem value={GenereMovies.DRAMA}>Drama</MenuItem>
             <MenuItem value={GenereMovies.COMEDY}>Comedia</MenuItem>
@@ -85,7 +89,7 @@ export default function Home() {
         ) : filteredMovies.length === 0 && !loading ? (
           <Box sx={{ px: 3 }}>
             <Typography variant="body2">
-              No hay películas disponibles para este género
+              No hay películas disponibles con estos filtros
             </Typography>
           </Box>
         ) : (
