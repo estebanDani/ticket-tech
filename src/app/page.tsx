@@ -17,6 +17,14 @@ import { GenereMovies } from '@/utils'
 
 export default function Home() {
   const { movies, loading, error } = useActiveMovies()
+  const [searchValue, setSearchValue] = useState('')
+  const filterMovies = movies.filter(movie =>
+    movie.title.toLowerCase().includes(searchValue.toLowerCase())
+  )
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
 
   const [selectedGenre, setSelectedGenre] = useState<string>(GenereMovies.ALL)
 
@@ -30,8 +38,10 @@ export default function Home() {
 
   return (
     <>
-      <Header />
-
+      <Header
+        searchValue={searchValue}
+        onChangeSearch={handleSearch}
+      />
       <Container maxWidth={false} disableGutters sx={{ py: 4 }}>
         <Typography
           variant="h2"
