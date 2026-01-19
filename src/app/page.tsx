@@ -13,14 +13,15 @@ import {
 
 import { Header, Footer, MovieGrid } from '@/components'
 import { useActiveMovies } from '@/hooks/useActiveMovies'
+import { GenereMovies } from '@/utils'
 
 export default function Home() {
   const { movies, loading, error } = useActiveMovies()
 
-  const [selectedGenre, setSelectedGenre] = useState<string>('all')
+  const [selectedGenre, setSelectedGenre] = useState<string>(GenereMovies.ALL)
 
   const filteredMovies = useMemo(() => {
-    if (selectedGenre === 'all') return movies
+    if (selectedGenre === GenereMovies.ALL) return movies
 
     return movies.filter(movie =>
       movie.genre?.includes(selectedGenre)
@@ -53,14 +54,14 @@ export default function Home() {
             label="Género"
             onChange={(e) => setSelectedGenre(e.target.value)}
           >
-            <MenuItem value="all">Todos</MenuItem>
-            <MenuItem value="Acción">Acción</MenuItem>
-            <MenuItem value="Drama">Drama</MenuItem>
-            <MenuItem value="Comedia">Comedia</MenuItem>
-            <MenuItem value="Terror">Terror</MenuItem>
-            <MenuItem value="Animación">Animación</MenuItem>
-            <MenuItem value="Aventura">Aventura</MenuItem>
-            <MenuItem value="Fantasía">Fantasía</MenuItem>
+            <MenuItem value= {GenereMovies.ALL}>Todos</MenuItem>
+            <MenuItem value={GenereMovies.ACTION}>Acción</MenuItem>
+            <MenuItem value={GenereMovies.DRAMA}>Drama</MenuItem>
+            <MenuItem value={GenereMovies.COMEDY}>Comedia</MenuItem>
+            <MenuItem value={GenereMovies.HORROR}>Terror</MenuItem>
+            <MenuItem value={GenereMovies.ANIMATION}>Animación</MenuItem>
+            <MenuItem value={GenereMovies.ADVENTURE}>Aventura</MenuItem>
+            <MenuItem value={GenereMovies.FANTASY}>Fantasía</MenuItem>
           </Select>
         </FormControl>
 

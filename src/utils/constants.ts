@@ -5,3 +5,14 @@ export const COLLECTIONS = {
   BOOKINGS: 'bookings',
   USERS: 'users',
 } as const;
+
+export const GenereMovies = {
+    ALL : 'all',
+    ACTION:'Acción',
+    DRAMA:'Drama',
+    COMEDY:'Comedia',
+    HORROR:'Terror',
+    ANIMATION:'Animación',
+    ADVENTURE:'Aventura',
+    FANTASY:'Fantasía'
+}as const;
