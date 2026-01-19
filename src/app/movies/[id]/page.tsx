@@ -4,6 +4,7 @@ import { db } from '@/services/firebase'
 import { MovieDetailClient } from './MovieDetailClient'
 
 export const dynamic = 'force-static'
+export const dynamicParams = false
 
 export async function generateStaticParams() {
   try {
