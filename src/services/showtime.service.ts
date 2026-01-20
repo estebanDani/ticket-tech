@@ -94,4 +94,21 @@ export class ShowtimeService {
         }
     }
 
+    static async getReservedSeats(showtimeId: string): Promise<string[]>{
+        try {
+            const docRef = doc(db, COLLECTIONS.SHOWTIMES, showtimeId);
+            const snapshot = await getDoc(docRef);
+
+            if (!snapshot.exists()) {
+                throw new Error('Showtime not found');
+            }
+            const data = snapshot.data();
+            return data.reservedSeats ?? [] ;
+
+        } catch (error) {
+            console.error(`Error getting reserved seats for showtime ${showtimeId}:`, error);
+            throw new Error('Failed to fetch reserved seats');
+        }
+    }
+
 }
