@@ -9,3 +9,5 @@ export interface Showtime {
     reservedSeats: string[];
     date:string;
 }
+
+export type CreateShowtimeDto = Omit<Showtime, 'id'>;

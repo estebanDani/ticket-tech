@@ -1,19 +1,43 @@
-"use client"
-import { useState } from 'react'
-import { Box, Container, Typography } from '@mui/material'
+'use client'
+
+import { useState, useMemo } from 'react'
+import {
+  Box,
+  Container,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@mui/material'
+
 import { Header, Footer, MovieGrid } from '@/components'
 import { useActiveMovies } from '@/hooks/useActiveMovies'
+import { GenereMovies, GENRE_LIST } from '@/utils'
 
 export default function Home() {
   const { movies, loading, error } = useActiveMovies()
+
   const [searchValue, setSearchValue] = useState('')
-  const filterMovies = movies.filter(movie =>
-    movie.title.toLowerCase().includes(searchValue.toLowerCase())
-  )
+  const [selectedGenre, setSelectedGenre] = useState<string>(GenereMovies.ALL)
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
+
+  const filteredMovies = useMemo(() => {
+    return movies.filter(movie => {
+      const matchesTitle = movie.title
+        .toLowerCase()
+        .includes(searchValue.toLowerCase())
+
+      const matchesGenre =
+        selectedGenre === GenereMovies.ALL ||
+        movie.genre?.includes(selectedGenre)
+
+      return matchesTitle && matchesGenre
+    })
+  }, [movies, searchValue, selectedGenre])
 
   return (
     <>
@@ -21,6 +45,7 @@ export default function Home() {
         searchValue={searchValue}
         onChangeSearch={handleSearch}
       />
+
       <Container maxWidth={false} disableGutters sx={{ py: 4 }}>
         <Typography
           variant="h2"
@@ -36,6 +61,21 @@ export default function Home() {
           🎞️ Cartelera
         </Typography>
 
+        <FormControl sx={{ width: 160, ml: 3, mb: 3 }}>
+          <InputLabel>Género</InputLabel>
+          <Select
+            value={selectedGenre}
+            label="Género"
+            onChange={(e) => setSelectedGenre(e.target.value)}
+          >
+            {GENRE_LIST.map((genre) => (
+                  <MenuItem key={genre.value} value={genre.value}>
+                    {genre.label}
+                  </MenuItem>
+                ))}
+          </Select>
+        </FormControl>
+
         {error ? (
           <Box sx={{ py: 2, px: 3 }}>
             <Typography variant="h6" fontWeight={700}>
@@ -43,12 +83,14 @@ export default function Home() {
             </Typography>
             <Typography variant="body2">{error}</Typography>
           </Box>
-        ) : filterMovies.length === 0 && !loading ? (
+        ) : filteredMovies.length === 0 && !loading ? (
           <Box sx={{ px: 3 }}>
-            <Typography variant="body2">No hay películas disponibles</Typography>
+            <Typography variant="body2">
+              No hay películas disponibles con estos filtros
+            </Typography>
           </Box>
         ) : (
-          <MovieGrid movies={filterMovies} loading={loading} />
+          <MovieGrid movies={filteredMovies} loading={loading} />
         )}
       </Container>
 
