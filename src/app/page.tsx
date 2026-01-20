@@ -13,7 +13,7 @@ import {
 
 import { Header, Footer, MovieGrid } from '@/components'
 import { useActiveMovies } from '@/hooks/useActiveMovies'
-import { GenereMovies } from '@/utils'
+import { GenereMovies, GENRE_LIST } from '@/utils'
 
 export default function Home() {
   const { movies, loading, error } = useActiveMovies()
@@ -68,14 +68,11 @@ export default function Home() {
             label="Género"
             onChange={(e) => setSelectedGenre(e.target.value)}
           >
-            <MenuItem value={GenereMovies.ALL}>Todos</MenuItem>
-            <MenuItem value={GenereMovies.ACTION}>Acción</MenuItem>
-            <MenuItem value={GenereMovies.DRAMA}>Drama</MenuItem>
-            <MenuItem value={GenereMovies.COMEDY}>Comedia</MenuItem>
-            <MenuItem value={GenereMovies.HORROR}>Terror</MenuItem>
-            <MenuItem value={GenereMovies.ANIMATION}>Animación</MenuItem>
-            <MenuItem value={GenereMovies.ADVENTURE}>Aventura</MenuItem>
-            <MenuItem value={GenereMovies.FANTASY}>Fantasía</MenuItem>
+            {GENRE_LIST.map((genre) => (
+                  <MenuItem key={genre.value} value={genre.value}>
+                    {genre.label}
+                  </MenuItem>
+                ))}
           </Select>
         </FormControl>
 
