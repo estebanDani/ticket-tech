@@ -15,10 +15,10 @@ export type DateSelectorProps = {
 }
 
 function formatLabel(date: Date) {
-  const rawDay = format(date, 'EEE', { locale: es }) // "lun." o "lun"
+  const rawDay = format(date, 'EEE', { locale: es }) 
   const day = rawDay.replace('.', '')
   const dayCap = day.charAt(0).toUpperCase() + day.slice(1)
-  return `${dayCap} ${format(date, 'dd/MM')}` // "Lun 15/01"
+  return `${dayCap} ${format(date, 'dd/MM')}` 
 }
 
 export function DateSelector({
