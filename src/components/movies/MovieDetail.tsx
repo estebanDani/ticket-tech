@@ -1,21 +1,15 @@
 'use client'
 
-import {
-  Box,
-  Card,
-  CardMedia,
-  Chip,
-  Divider,
-  Stack,
-  Typography,
-} from '@mui/material'
+import { Box, Card, CardMedia, Chip, Divider, Stack, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { format } from 'date-fns'
+import type { ReactNode } from 'react'
 import type { Movie } from '@/types'
 import { formatDuration } from '@/utils/formatDuration'
 
 interface MovieDetailProps {
   movie: Movie
+  footer?: ReactNode
 }
 
 function safeFormatDate(value: Date | null | undefined): string {
@@ -24,7 +18,7 @@ function safeFormatDate(value: Date | null | undefined): string {
   return format(value, 'dd/MM/yyyy')
 }
 
-export function MovieDetail({ movie }: MovieDetailProps) {
+export function MovieDetail({ movie, footer }: MovieDetailProps) {
   const releaseDate = safeFormatDate(movie.releaseDate)
   const duration = formatDuration(movie.duration)
 
@@ -96,6 +90,8 @@ export function MovieDetail({ movie }: MovieDetailProps) {
                 <Typography color="text.secondary">—</Typography>
               )}
             </Box>
+
+            {footer}
           </Stack>
         </Grid>
       </Grid>
