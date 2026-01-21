@@ -13,33 +13,35 @@ export type SeatButtonProps = {
 }
 
 function getSeatStyles(status: SeatStatus) {
-  if (status === 'reserved') {
-    return {
-      bgcolor: 'error.main',
-      color: 'error.contrastText',
-      '&:hover': { bgcolor: 'error.dark' },
-    }
-  }
+  switch (status) {
+    case 'reserved':
+      return {
+        bgcolor: 'error.main',
+        color: 'error.contrastText',
+        '&:hover': { bgcolor: 'error.dark' },
+      }
 
-  if (status === 'selected') {
-    return {
-      bgcolor: 'success.main',
-      color: 'success.contrastText',
-      '&:hover': { bgcolor: 'success.dark' },
-      '&.Mui-selected': {
+    case 'selected':
+      return {
         bgcolor: 'success.main',
         color: 'success.contrastText',
-      },
-      '&.Mui-selected:hover': {
-        bgcolor: 'success.dark',
-      },
-    }
-  }
+        '&:hover': { bgcolor: 'success.dark' },
+        '&.Mui-selected': {
+          bgcolor: 'success.main',
+          color: 'success.contrastText',
+        },
+        '&.Mui-selected:hover': {
+          bgcolor: 'success.dark',
+        },
+      }
 
-  return {
-    bgcolor: 'grey.300',
-    color: 'text.primary',
-    '&:hover': { bgcolor: 'grey.400' },
+    case 'available':
+    default:
+      return {
+        bgcolor: 'grey.300',
+        color: 'text.primary',
+        '&:hover': { bgcolor: 'grey.400' },
+      }
   }
 }
 
