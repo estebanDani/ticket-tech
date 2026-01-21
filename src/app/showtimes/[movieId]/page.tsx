@@ -1,15 +1,15 @@
-import React from 'react'
+import { Box, Container } from "@mui/material"
 interface ShotimesDetailsProps {
-    params: {
-        movieId: string
-    }
+    params: Promise<{ movieId: string }>
 }
 
 
 const ShotimesDetails = async ({ params }: ShotimesDetailsProps) => {
     const { movieId } = await params
     return (
-        <div>ShotimesDetails {movieId}</div>
+        <Container>
+            ShotimesDetails {movieId}
+        </Container>
     )
 }
 
