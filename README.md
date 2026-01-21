@@ -52,3 +52,9 @@ If you haven't already done so, install the necessary dependencies:
     ```bash
     npm run seed:movies
     ```
+
+## For Use with SnackBar
+ 
+     ```bash
+    npm install axios
+    ```
