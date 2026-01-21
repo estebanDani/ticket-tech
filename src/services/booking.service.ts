@@ -2,14 +2,15 @@ import {collection, doc, runTransaction} from 'firebase/firestore'
 import QRCode  from 'qrcode'
 
 import { db } from '@/services/firebase'
-import type { Booking,CreateBookingDto } from '@/types/booking.types'
+import type { Booking,CreateBookingDto } from '@/types'
+import { COLLECTIONS } from '@/utils'
 
 export class BookingService {
   
   static async create(data: CreateBookingDto): Promise<Booking> {
     
-    const bookingRef = doc(collection(db, 'bookings'))
-    const showtimeRef = doc(db, 'showtimes', data.showtimeId)
+    const bookingRef = doc(collection(db, COLLECTIONS.BOOKINGS))
+    const showtimeRef = doc(db, COLLECTIONS.SHOWTIMES, data.showtimeId)
 
     return await runTransaction(db, async (transaction) => {
       const showtimeSnap = await transaction.get(showtimeRef)
