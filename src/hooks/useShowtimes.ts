@@ -1,8 +1,9 @@
 'use client'
 
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { Showtime } from '@/types'
 import { ShowtimeService } from '@/services/showtime.service'
+import { sortShowtimesByDateTime } from '@/utils'
 
 type UseShowtimesResult = {
   showtimes: Showtime[]
@@ -10,18 +11,12 @@ type UseShowtimesResult = {
   error: string | null
 }
 
-function sortByDateTime(a: Showtime, b: Showtime) {
-  const at = a.startTime?.getTime?.() ?? 0
-  const bt = b.startTime?.getTime?.() ?? 0
-  return at - bt
-}
-
 export function useShowtimes(movieId?: string): UseShowtimesResult {
-  const [showtimes, setShowtimes] = React.useState<Showtime[]>([])
-  const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState<string | null>(null)
+  const [showtimes, setShowtimes] = useState<Showtime[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     let cancelled = false
 
     const run = async () => {
@@ -37,7 +32,7 @@ export function useShowtimes(movieId?: string): UseShowtimesResult {
 
       try {
         const data = await ShowtimeService.getByMovieId(movieId)
-        const sorted = [...data].sort(sortByDateTime)
+        const sorted = [...data].sort(sortShowtimesByDateTime)
 
         if (!cancelled) {
           setShowtimes(sorted)
