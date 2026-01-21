@@ -1,5 +1,4 @@
 'use client';
-import { useState, useEffect } from 'react';
 import {Card, CardContent, Typography, Button, Box} from '@mui/material';
 import { Showtime } from "@/types";
 
