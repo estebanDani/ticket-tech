@@ -9,16 +9,6 @@ interface ShowtimeCardProps {
 
 
 export const ShowtimeCard = ({showtime} : ShowtimeCardProps) => {
-
-
-      const [formattedTime, setFormattedTime] = useState('');
-        useEffect(() => {
-            setFormattedTime(
-            showtime.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            );
-        }, [showtime.startTime]);
-
-
     return(
         <Card
             sx={{
