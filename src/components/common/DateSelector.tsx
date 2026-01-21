@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { MouseEvent, useMemo } from 'react'
 import { addDays, format, startOfDay } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { ToggleButton, ToggleButtonGroup } from '@mui/material'
@@ -15,10 +15,10 @@ export type DateSelectorProps = {
 }
 
 function formatLabel(date: Date) {
-  const rawDay = format(date, 'EEE', { locale: es }) 
+  const rawDay = format(date, 'EEE', { locale: es })
   const day = rawDay.replace('.', '')
   const dayCap = day.charAt(0).toUpperCase() + day.slice(1)
-  return `${dayCap} ${format(date, 'dd/MM')}` 
+  return `${dayCap} ${format(date, 'dd/MM')}`
 }
 
 export function DateSelector({
@@ -29,16 +29,16 @@ export function DateSelector({
   disabled = false,
   size = 'small',
 }: DateSelectorProps) {
-  const baseDate = React.useMemo(() => startOfDay(minDate ?? new Date()), [minDate])
+  const baseDate = useMemo(() => startOfDay(minDate ?? new Date()), [minDate])
 
-  const dates = React.useMemo(
+  const dates = useMemo(
     () => Array.from({ length: daysToShow }, (_, i) => startOfDay(addDays(baseDate, i))),
     [baseDate, daysToShow]
   )
 
-  const selectedKey = React.useMemo(() => format(startOfDay(value), 'yyyy-MM-dd'), [value])
+  const selectedKey = useMemo(() => format(startOfDay(value), 'yyyy-MM-dd'), [value])
 
-  const handleChange = (_: React.MouseEvent<HTMLElement>, newKey: string | null) => {
+  const handleChange = (_: MouseEvent<HTMLElement>, newKey: string | null) => {
     if (!newKey) return
     const selected = dates.find((d) => format(d, 'yyyy-MM-dd') === newKey)
     if (selected) onDateSelect(selected)
