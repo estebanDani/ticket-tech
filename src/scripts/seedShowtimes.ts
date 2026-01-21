@@ -4,12 +4,9 @@ import { db } from '@/services/firebase'
 import { generateMockShowtimes } from '@/mocks/mockShowtimes'
 
 async function seedShowtimes() {
-    console.log('🎬 Generando showtimes...')
 
     const showtimes = await generateMockShowtimes()
     const showtimesCollection = collection(db, 'showtimes')
-
-    console.log(`💾 Guardando ${showtimes.length} showtimes...`)
 
     for (const showtime of showtimes) {
         await addDoc(showtimesCollection, {
@@ -18,8 +15,6 @@ async function seedShowtimes() {
             endTime: Timestamp.fromDate(showtime.endTime as Date),
         })
     }
-
-    console.log('✅ Completado!')
 }
 
 seedShowtimes().catch(() => {
