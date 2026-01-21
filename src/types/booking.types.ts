@@ -1,7 +1,7 @@
 export interface Booking {
     id: string;
     userId: string;
-    showtimeID: string;
+    showtimeId: string;
     movieId: string;
     seats: string [];
     totalPreice: number;
@@ -10,3 +10,5 @@ export interface Booking {
     bookingDate:Date;
     qrCode: string;
 }
+
+export type CreateBookingDto = Omit<Booking, 'id'| 'qrCode'>;
