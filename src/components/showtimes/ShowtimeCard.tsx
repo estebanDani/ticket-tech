@@ -11,7 +11,7 @@ export const ShowtimeCard = ({showtime} : ShowtimeCardProps) => {
     return(
         <Card
             sx={{
-                width:'100%s',
+                width:'100%',
             }}
         >
             <CardContent>
@@ -37,9 +37,6 @@ export const ShowtimeCard = ({showtime} : ShowtimeCardProps) => {
                                 <Typography variant="body2">
                                     🏢
                                     {showtime.theaterId}
-                                </Typography>
-                                <Typography>
-                                    
                                 </Typography>
 
                             </Box>
