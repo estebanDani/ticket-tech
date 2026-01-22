@@ -9,6 +9,16 @@ export const theme = createTheme({
     secondary: {
       main: '#dc004e',
     },
+    error: {
+      light: '#ef5350',
+      main: '#d32f2f',
+      dark: '#c62828',
+    },
+    success: {
+      light: '#4caf50',
+      main: '#2e7d32',
+      dark: '#1b5e20'
+    },
     background: {
       default: '#f5f5f5',
       paper: '#ffffff',
@@ -19,7 +29,9 @@ export const theme = createTheme({
     },
     grey: {
       200: '#343434',
+      500: '#444444',
     },
+
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
