@@ -6,6 +6,7 @@ import { DateSelector } from './common/DateSelector'
 import { MovieCard } from './movies/MovieCard';
 import MovieGrid from './movies/movie_grid/MovieGrid'
 import { MovieDetail } from './movies/MovieDetail'
+import { SeatButton } from './seats/SeatButton';
 
 export { 
     MovieCard, 
@@ -15,4 +16,5 @@ export {
     LoadingSpinner, 
     MovieDetail,
     DateSelector,
+    SeatButton,
 };
