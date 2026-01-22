@@ -1,7 +1,6 @@
 import React from 'react'
 import { Container, Box, Typography } from '@mui/material'
 import { theme } from '@/theme/theme'
-import { PaddingOutlined } from '@mui/icons-material'
 
 const SeatLegent = () => {
     return (
