@@ -39,7 +39,8 @@ const styles = {
         alignItems: 'center',
     },
     seat: {
-        width: '45px',
-        height: '45px',
+        width: '35px',
+        height: '35px',
+        borderRadius: '10%',
     }
 }
