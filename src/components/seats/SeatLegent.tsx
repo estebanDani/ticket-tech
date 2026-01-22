@@ -1,21 +1,21 @@
 import React from 'react'
-import { Container, Box, Typography } from '@mui/material'
+import { Container, Box, Typography, Chip } from '@mui/material'
 import { theme } from '@/theme/theme'
 
 const SeatLegent = () => {
     return (
         <Container sx={styles.container}>
             <Box sx={styles.subContainer}>
-                <Box sx={{ ...styles.seat, backgroundColor: '#444444' }} />
+                <Chip sx={{ ...styles.seat, backgroundColor: '#444444' }} />
                 <Typography variant='h6'>Disponible</Typography>
             </Box>
             <Box sx={styles.subContainer}>
-                <Box sx={{ ...styles.seat, backgroundColor: 'red' }} />
-                <Typography variant='h6'>Disponible</Typography>
+                <Chip sx={{ ...styles.seat }} color='error' />
+                <Typography variant='h6'>Reservado</Typography>
             </Box>
             <Box sx={styles.subContainer}>
-                <Box sx={{ ...styles.seat, backgroundColor: 'green' }} />
-                <Typography variant='h6'>Disponible</Typography>
+                <Chip sx={{ ...styles.seat }} color='success' />
+                <Typography variant='h6'>Tu selección</Typography>
             </Box>
         </Container>
     )
@@ -39,8 +39,7 @@ const styles = {
         alignItems: 'center',
     },
     seat: {
-        width: '30px',
-        height: '30px',
-        borderRadius: '15%',
+        width: '45px',
+        height: '45px',
     }
 }
