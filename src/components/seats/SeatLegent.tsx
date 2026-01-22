@@ -1,0 +1,47 @@
+import React from 'react'
+import { Container, Box, Typography } from '@mui/material'
+import { theme } from '@/theme/theme'
+import { PaddingOutlined } from '@mui/icons-material'
+
+const SeatLegent = () => {
+    return (
+        <Container sx={styles.container}>
+            <Box sx={styles.subContainer}>
+                <Box sx={{ ...styles.seat, backgroundColor: '#444444' }} />
+                <Typography variant='h6'>Disponible</Typography>
+            </Box>
+            <Box sx={styles.subContainer}>
+                <Box sx={{ ...styles.seat, backgroundColor: 'red' }} />
+                <Typography variant='h6'>Disponible</Typography>
+            </Box>
+            <Box sx={styles.subContainer}>
+                <Box sx={{ ...styles.seat, backgroundColor: 'green' }} />
+                <Typography variant='h6'>Disponible</Typography>
+            </Box>
+        </Container>
+    )
+}
+
+export default SeatLegent
+
+const styles = {
+    container: {
+        paddingBlock: '12px',
+        backgroundColor: theme.palette.background.default,
+        borderRadius: '8px',
+        display: 'flex',
+        gap: '30px',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    subContainer: {
+        display: 'flex',
+        gap: '8px',
+        alignItems: 'center',
+    },
+    seat: {
+        width: '30px',
+        height: '30px',
+        borderRadius: '15%',
+    }
+}
