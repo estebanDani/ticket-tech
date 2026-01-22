@@ -1,5 +1,4 @@
 import { Box, Container } from "@mui/material"
-import SeatLegent from "@/components/seats/SeatLegent"
 import { theme } from "@/theme/theme"
 interface ShotimesDetailsProps {
     params: Promise<{ movieId: string }>
@@ -11,7 +10,6 @@ const ShotimesDetails = async ({ params }: ShotimesDetailsProps) => {
     return (
         <Container maxWidth="lg" sx={{ py: 4, backgroundColor: theme.palette.background.paper }}>
             ShotimesDetails {movieId}
-            <SeatLegent />
             <Box sx={{ py: 2 }}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi ut ducimus iste quaerat provident eum delectus aut magnam commodi quos, unde velit voluptas fugiat perspiciatis, sint quia. Natus, est dolores.
                 Et tempora asperiores animi blanditiis atque unde doloremque neque expedita eos aliquam autem reprehenderit, nostrum sit labore sequi! Id, veritatis libero! Cupiditate ab consequatur, sed enim obcaecati voluptatibus tempore ex!
