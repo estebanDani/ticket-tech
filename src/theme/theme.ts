@@ -36,14 +36,6 @@ export const theme = createTheme({
       900: '#aaa'
 
     },
-    success: {
-      main: '#4caf50',
-    },
-    error: {
-      main: '#d32f2f',
-    },
-
-
   },
 
   typography: {
