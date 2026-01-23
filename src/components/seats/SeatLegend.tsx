@@ -1,7 +1,7 @@
 import { Container, Box, Typography, Chip } from '@mui/material'
 import { theme } from '@/theme/theme'
 
-const SeatLegend = ({ type }: { type: 'screen' | 'info' }) => {
+const SeatLegend = () => {
 
     const LegendItems = [
         {
@@ -17,19 +17,14 @@ const SeatLegend = ({ type }: { type: 'screen' | 'info' }) => {
             label: 'Tu selección',
         },
     ]
-    const backgroundColor = type == "info" ? theme.palette.background.default : theme.palette.grey[500];
     return (
-        <Container sx={{ ...styles.container, backgroundColor }}>
-            {type == "info" ? (
-                LegendItems.map((item, index) => (
-                    <Box sx={styles.subContainer} key={`legend-item-${index}`}>
-                        <Chip sx={{ ...styles.seat, backgroundColor: item.color }} />
-                        <Typography variant='h6'>{item.label}</Typography>
-                    </Box>
-                ))
-            ) : (
-                <Typography variant='h6' sx={styles.screenContainer}>🎥 PANTALLA</Typography>
-            )}
+        <Container sx={{ ...styles.container }}>
+            {LegendItems.map((item, index) => (
+                <Box sx={styles.subContainer} key={`legend-item-${index}`}>
+                    <Chip sx={{ ...styles.seat, backgroundColor: item.color }} />
+                    <Typography variant='h6'>{item.label}</Typography>
+                </Box>
+            ))}
         </Container>
     )
 }
@@ -44,6 +39,7 @@ const styles = {
         gap: '30px',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: theme.palette.background.default,
     },
     subContainer: {
         display: 'flex',
@@ -55,8 +51,4 @@ const styles = {
         height: '35px',
         borderRadius: '10%',
     },
-    screenContainer: {
-        textAlign: 'center',
-        color: theme.palette.grey[200],
-    }
 }
