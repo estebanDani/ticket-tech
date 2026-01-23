@@ -1,4 +1,4 @@
-import { ShowtimesPageClient } from "@/components/showtimes/ShowtimesPageClient";
+import { ShowtimesPageClient } from "@/components";
 
 type PageProps = {
   params: { movieId: string } | Promise<{ movieId: string }>;
