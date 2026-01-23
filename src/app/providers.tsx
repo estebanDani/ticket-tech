@@ -6,6 +6,7 @@ import { CssBaseline } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 
 import { theme } from '@/theme/theme'
+import { BookingProvider } from '@/contexts/BookingContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +20,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
           horizontal: 'right',
         }}
       >
-        {children}
+        <BookingProvider>
+          {children}
+        </BookingProvider>
       </SnackbarProvider>
     </ThemeProvider>
     </AppRouterCacheProvider>
