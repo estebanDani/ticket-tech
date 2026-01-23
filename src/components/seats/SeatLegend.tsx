@@ -5,7 +5,7 @@ const SeatLegend = () => {
 
     const LegendItems = [
         {
-            color: theme.palette.grey[500],
+            color: theme.palette.grey[400],
             label: 'Disponible',
         },
         {
