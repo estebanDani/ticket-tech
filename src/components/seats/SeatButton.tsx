@@ -1,54 +1,92 @@
-'use client';
+'use client'
 
-import { Box } from '@mui/material';
-import { Seat } from '@/types';
+import { MouseEvent } from 'react'
+import { Tooltip, ToggleButton } from '@mui/material'
 
-interface SeatButtonProps {
-  seat: Seat;
-  isReserved: boolean;
-  isSelected: boolean;
-  onClick: () => void;
+export type SeatStatus = 'available' | 'reserved' | 'selected'
+
+export type SeatButtonProps = {
+  seat: string
+  status: SeatStatus
+  onClick: (seat: string) => void
+  disabled?: boolean
 }
 
-export const SeatButton = ({
+function getSeatStyles(status: SeatStatus) {
+  switch (status) {
+    case 'reserved':
+      return {
+        bgcolor: 'error.main',
+        color: 'error.contrastText',
+        '&:hover': { bgcolor: 'error.dark' },
+      }
+
+    case 'selected':
+      return {
+        bgcolor: 'success.main',
+        color: 'success.contrastText',
+        '&:hover': { bgcolor: 'success.dark' },
+        '&.Mui-selected': {
+          bgcolor: 'success.main',
+          color: 'success.contrastText',
+        },
+        '&.Mui-selected:hover': {
+          bgcolor: 'success.dark',
+        },
+      }
+
+    case 'available':
+    default:
+      return {
+        bgcolor: 'grey.300',
+        color: 'text.primary',
+        '&:hover': { bgcolor: 'grey.400' },
+      }
+  }
+}
+
+export function SeatButton({
   seat,
-  isReserved,
-  isSelected,
+  status,
   onClick,
-}: SeatButtonProps) => {
-  const hasAisle = seat.number === 3 || seat.number === 7;
+  disabled,
+}: SeatButtonProps) {
+  const isReserved = status === 'reserved'
+  const isDisabled = disabled ?? isReserved
+
+  const handleClick = (_: MouseEvent<HTMLElement>) => {
+    if (isDisabled) return
+    onClick(seat)
+  }
 
   return (
-    <Box
-      sx={{
-        mr: hasAisle ? 4 : 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Box
-        onClick={isReserved ? undefined : onClick}
-        sx={{
-          width: 30,
-          height: 30,
-          borderRadius: '6px',
-          cursor: isReserved ? 'not-allowed' : 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: '0.2s',
-          backgroundColor: isReserved
-            ? theme => theme.palette.error.main
-            : isSelected
-            ? theme => theme.palette.success.main
-            : theme => theme.palette.grey[400],
-          '&:hover': {
-            opacity: isReserved ? 1 : 0.8,
-            transform: isReserved ? 'none' : 'scale(1.1)',
-          },
-        }}
-      />
-    </Box>
-  );
-};
+    <Tooltip title={`Asiento ${seat}`} arrow>
+      <span>
+        <ToggleButton
+          value={seat}
+          selected={status === 'selected'}
+          disabled={isDisabled}
+          onClick={handleClick}
+          size="small"
+          aria-label={`Seat ${seat}`}
+          sx={{
+            minWidth: 44,
+            height: 44,
+            borderRadius: 2,
+            border: '1px solid',
+            borderColor: 'divider',
+            textTransform: 'none',
+            fontWeight: 700,
+            ...getSeatStyles(status),
+            '&.Mui-disabled': {
+              opacity: 0.75,
+              cursor: 'not-allowed',
+            },
+          }}
+        >
+          {seat}
+        </ToggleButton>
+      </span>
+    </Tooltip>
+  )
+}

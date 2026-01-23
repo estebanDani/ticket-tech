@@ -5,7 +5,7 @@ import { Box, Typography, Paper, Grid } from '@mui/material';
 
 import { Seat } from '@/types';
 import { useBooking } from '@/contexts/BookingContext';
-import { SeatButton } from './SeatButton';
+import { SeatButton, SeatStatus } from './SeatButton';
 
 interface SeatGridProps {
   seatMap: Seat[];
@@ -25,8 +25,6 @@ export const SeatGrid: React.FC<SeatGridProps> = ({ seatMap, reservedSeats }) =>
   }, [seatMap]);
 
   const handleSeatClick = (seatId: string) => {
-    if (reservedSeats.includes(seatId)) return;
-
     const isSelected = selectedSeats.includes(seatId);
 
     if (isSelected) {
@@ -38,6 +36,12 @@ export const SeatGrid: React.FC<SeatGridProps> = ({ seatMap, reservedSeats }) =>
       }
       setSeats([...selectedSeats, seatId]);
     }
+  };
+
+  const getSeatStatus = (seatId: string): SeatStatus => {
+    if (reservedSeats.includes(seatId)) return 'reserved';
+    if (selectedSeats.includes(seatId)) return 'selected';
+    return 'available';
   };
 
   return (
@@ -106,10 +110,9 @@ export const SeatGrid: React.FC<SeatGridProps> = ({ seatMap, reservedSeats }) =>
                   .map((seat) => (
                     <SeatButton
                       key={seat.id}
-                      seat={seat}
-                      isReserved={reservedSeats.includes(seat.id)}
-                      isSelected={selectedSeats.includes(seat.id)}
-                      onClick={() => handleSeatClick(seat.id)}
+                      seat={seat.id}                     
+                      status={getSeatStatus(seat.id)}    
+                      onClick={handleSeatClick}       
                     />
                   ))}
               </Grid>
