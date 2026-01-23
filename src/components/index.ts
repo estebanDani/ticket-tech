@@ -7,6 +7,8 @@ import { MovieCard } from './movies/MovieCard';
 import MovieGrid from './movies/movie_grid/MovieGrid'
 import { MovieDetail } from './movies/MovieDetail'
 import { SeatButton } from './seats/SeatButton';
+import { ShowtimeCard } from './showtimes/ShowtimeCard';
+import { ShowtimesPageClient } from './showtimes/ShowtimesPageClient';
 
 export { 
     MovieCard, 
@@ -17,4 +19,6 @@ export {
     MovieDetail,
     DateSelector,
     SeatButton,
+    ShowtimeCard,
+    ShowtimesPageClient,
 };
