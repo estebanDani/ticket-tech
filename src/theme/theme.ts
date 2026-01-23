@@ -18,9 +18,24 @@ export const theme = createTheme({
       secondary: '#ffffff',
     },
     grey: {
+      100: '#121212',
       200: '#343434',
+      300: '#333',
+      400: '#444',
+      800: '#888',
+      900: '#aaa'
+
     },
+    success: {
+      main: '#4caf50', 
+    },
+    error: {
+      main: '#d32f2f',
+    },
+
+
   },
+
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
