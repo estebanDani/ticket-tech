@@ -27,7 +27,6 @@ export default function BookingSummary({ onConfirm }: BookingSummaryProps) {
   return (
     <Card sx={{ 
       weight: '100%',
-      maxWidth: 370,
       borderRadius: 1, 
       boxShadow: 3
       }}>
