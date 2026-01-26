@@ -2,18 +2,19 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import {useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
 
-import { Box, Button, CircularProgress, Container, Grid, Typography } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
+import { Box,  CircularProgress,  Grid,  } from '@mui/material';
 
-import PaymentMethodForm from './PaymentMethodForm';
-import UserDataForm from './UserDataForm';
+import PaymentMethodForm from '@/components/booking/PaymentMethodForm';
+import UserDataForm from '@/components/booking/UserDataForm';
 import BookingSummary from '@/components/booking/BookingSummary';
-import BookingStepper from '@/components/booking/BookingStepper';
+import { checkoutSchema } from '@/schemas/checkout.schema';
 
 type PaymentMethod = 'cash' | 'card' | 'transfer';
 
-interface UserForm {
+interface FormData {
   name: string;
   email: string;
   phone: string;
@@ -21,7 +22,7 @@ interface UserForm {
   confirm: boolean;
 }
 
-export default function BookingCheckoutPage() {
+export default function CheckoutPage() {
   const { showtimeId } = useParams();
   const router = useRouter();
 
@@ -29,60 +30,29 @@ export default function BookingCheckoutPage() {
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethod>('card');
 
-  const [form, setForm] = useState<UserForm>({
-    name: '',
-    email: '',
-    phone: '',
-    terms: false,
-    confirm: false,
-  });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  /* ---------------- VALIDATION ---------------- */
-  const validate = () => {
-  const newErrors: Record<string, string> = {};
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!form.name.trim()) {
-    newErrors.name = 'Nombre requerido';
-  } else if (form.name.trim().length < 3) {
-    newErrors.name = 'El nombre debe tener al menos 3 caracteres';
-  }
-
-  if (!form.email) {
-    newErrors.email = 'Email requerido';
-  } else if (!emailRegex.test(form.email)) {
-    newErrors.email = 'Email inválido';
-  }
-
-  if (!form.phone) {
-    newErrors.phone = 'Teléfono requerido';
-  } else if (!/^[0-9]+$/.test(form.phone)) {
-    newErrors.phone = 'El teléfono solo debe contener números';
-  } else if (form.phone.length < 7) {
-    newErrors.phone = 'Teléfono demasiado corto';
-  }
-
-  if (!form.terms) {
-    newErrors.terms = 'Debes aceptar los términos';
-  }
-
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+  const { control, handleSubmit } = useForm<FormData>({
+    resolver: yupResolver(checkoutSchema),
+    mode: 'onBlur',
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      terms: false,
+      confirm: false,
+    },
+  });
 
 
-  const handleConfirm = async () => {
-    if (!validate()) return;
+  const onSubmit = async (data:FormData) => {
 
     setLoading(true);
 
     await new Promise((res) => setTimeout(res, 1500));
 
       console.log('Reserva confirmada', {
-        user: form,
+        user: data,
         showtimeId,
         paymentMethod,
       });
@@ -101,37 +71,21 @@ export default function BookingCheckoutPage() {
     }
 
   return (
-    <Container sx={{ py: 4}}>
-      <Button startIcon={<ArrowBack />} onClick={() => router.back()} sx={{ mb: 2 }}>
-          Volver a Selección de Asientos
-      </Button>
-      <Typography variant="h4" fontWeight={800} gutterBottom>
-        📝 Checkout - Confirma tu Reserva
-      </Typography>
-      <BookingStepper activeStep={1} />
-      <Grid container spacing={4} direction={{ xs: 'column', lg: 'row' }}>
-        <Grid  size={{ xs: 12, lg: 8 }}>
-          <PaymentMethodForm
-            value={paymentMethod}
-            onChange={setPaymentMethod}
-          />
-
-          <UserDataForm
-            value={form}
-            errors={errors}
-            onChange={(data) =>
-              setForm((prev) => ({ ...prev, ...data }))
-            }
-          />
-        </Grid>
-
-        {/* RIGHT */}
-        <Grid size={{ xs:12, lg:4 }}>
-          <BookingSummary
-            onConfirm={handleConfirm}
-          />
-        </Grid>
+    <Grid container spacing={4} direction={{ xs: 'column', lg: 'row' }}>
+      <Grid  size={{ xs: 12, lg: 8 }}>
+        <PaymentMethodForm
+          value={paymentMethod}
+          onChange={setPaymentMethod}
+        />
+        <UserDataForm
+          control={control}
+        />
       </Grid>
-    </Container>
+      <Grid size={{ xs:12, lg:4 }}>
+        <BookingSummary
+          onConfirm={handleSubmit(onSubmit)}
+        />
+      </Grid>
+    </Grid>
   );
 }

@@ -1,3 +1,5 @@
+'use client';  
+
 import {Paper, Typography, RadioGroup, FormControlLabel, Radio} from '@mui/material';
 
 type PaymentMethod = 'cash' | 'card' | 'transfer';
