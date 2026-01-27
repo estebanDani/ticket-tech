@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { 
   Box, 
   Typography, 
@@ -30,6 +30,11 @@ export default function SeatsPage() {
     }
   }, [selectedShowtime, router]);
 
+  const totalPrice = useMemo(() => {
+    return selectedSeats.length * (selectedShowtime?.price || 0);
+  }, [selectedSeats.length, selectedShowtime?.price]);
+
+
   if (loading) {
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="60vh" gap={2}>
@@ -50,8 +55,6 @@ export default function SeatsPage() {
       </Container>
     );
   }
-
-  const totalPrice = selectedSeats.length * (selectedShowtime?.price || 0);
   
   const seatListNames = selectedSeats.length > 0 
     ? selectedSeats.join(", ") 
