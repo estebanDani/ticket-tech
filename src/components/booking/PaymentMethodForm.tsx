@@ -1,30 +1,24 @@
 'use client';  
 
+import {  PAYMETMETHOD_ENUM, PAYMETMETHOD_MAP } from '@/utils';
 import {Paper, Typography, RadioGroup, FormControlLabel, Radio} from '@mui/material';
 
-type PaymentMethod = 'cash' | 'card' | 'transfer';
-
 interface Props {
-  value: PaymentMethod;
-  onChange: (value: PaymentMethod) => void;
+  value: PAYMETMETHOD_ENUM;
+  onChange: (value: PAYMETMETHOD_ENUM) => void;
 }
 
 export default function PaymentMethodForm({ value, onChange }: Props) {
 
-    const paymetMethods :Record<PaymentMethod, string>={
-        'cash': '💵 Efectivo en taquilla',
-        'card': '💳 Tarjeta de crédito / débito',
-        'transfer': '📲 Transferencia bancaria'
-    }
   return (
     <Paper sx={{ p: 3, mb: 3 }}>
       <Typography variant="h6" fontWeight={600} gutterBottom>💳 MÉTODO DE PAGO</Typography>
 
       <RadioGroup
         value={value}
-        onChange={(e) => onChange(e.target.value as PaymentMethod)}
+        onChange={(e) => onChange(e.target.value as PAYMETMETHOD_ENUM)}
       >
-        {Object.entries(paymetMethods).map(([key, label]) => (
+        {[...PAYMETMETHOD_MAP.entries()].map(([key, label]) => (
             <FormControlLabel
             sx={{ 
                     m:1,

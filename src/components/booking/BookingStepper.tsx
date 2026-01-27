@@ -1,14 +1,26 @@
 'use client';
 
+import { BOOKING_LABEL_MAP } from '@/utils';
 import { ArrowBack } from '@mui/icons-material';
 import {Stepper, Step, StepLabel, Box, Typography, Button} from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 
+enum BookingStepPath {
+  SEATS = 'seats',
+  CHECKOUT = 'checkout',
+  TICKETS = 'tickets',
+}
 
-const steps= [
-  { label: 'Seleccionar Asientos', path: 'seats' },
-  { label: 'Confirmar Pago', path: 'checkout' },
-  { label: 'Obtener Tickets', path: 'tickets' },
+type BookingStep = {
+  label: string;
+  path: BookingStepPath;
+};
+
+const steps: BookingStep[] = [
+  { label: 'Seleccionar Asientos', path: BookingStepPath.SEATS },
+  { label: 'Confirmar Pago', path: BookingStepPath.CHECKOUT },
+  { label: 'Obtener Tickets', path: BookingStepPath.TICKETS },
 ];
 
 
@@ -16,17 +28,14 @@ export default function BookingStepper() {
   const router = useRouter();
   const pathName = usePathname();
 
-  const activeStep = steps.findIndex(step => pathName.includes(step.path));
-    
-  const backLabelMap: Record<number, string> = {
-    0: 'Volver a Horarios',
-    1: 'Volver a Selección de Asientos',
-    2: 'Volver',
-  };
+  const activeStep = useMemo(()=>{
+    return steps.findIndex(step => pathName.includes(step.path));
+  }, [pathName]);
+
   return (
     <Box sx={{ width: '100%', m: 3, ml:0}}>
       <Button startIcon={<ArrowBack />} onClick={() => router.back()} sx={{ mb: 2 }}>
-         {backLabelMap[activeStep]}
+         {BOOKING_LABEL_MAP.get(activeStep) ?? 'Volver'}
       </Button>
       { activeStep === 1 && (
         <Typography variant="h4" fontWeight={800} gutterBottom>

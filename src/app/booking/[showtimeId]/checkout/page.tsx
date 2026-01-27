@@ -11,8 +11,8 @@ import PaymentMethodForm from '@/components/booking/PaymentMethodForm';
 import UserDataForm from '@/components/booking/UserDataForm';
 import BookingSummary from '@/components/booking/BookingSummary';
 import { checkoutSchema } from '@/schemas/checkout.schema';
+import { PAYMETMETHOD_ENUM } from '@/utils';
 
-type PaymentMethod = 'cash' | 'card' | 'transfer';
 
 interface FormData {
   name: string;
@@ -27,39 +27,39 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   /* ---------------- STATE ---------------- */
-  const [paymentMethod, setPaymentMethod] =
-    useState<PaymentMethod>('card');
+  const [paymentMethod, setPaymentMethod] = useState<PAYMETMETHOD_ENUM>(PAYMETMETHOD_ENUM.Card);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const DEFAULT_VALUES: FormData = {
+    name: '',
+    email: '',
+    phone: '',
+    terms:false,
+    confirm:false
+  };
+
+  const FORM_OPTIONS = {
+    mode: 'onBlur' as const,
+    defaultValues: DEFAULT_VALUES,
+  };
+
 
   const { control, handleSubmit } = useForm<FormData>({
     resolver: yupResolver(checkoutSchema),
-    mode: 'onBlur',
-    defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      terms: false,
-      confirm: false,
-    },
+    ...FORM_OPTIONS,
   });
 
 
-  const onSubmit = async (data:FormData) => {
+  const onSubmit = async () => {
 
     setLoading(true);
 
     await new Promise((res) => setTimeout(res, 1500));
 
-      console.log('Reserva confirmada', {
-        user: data,
-        showtimeId,
-        paymentMethod,
-      });
-
     setLoading(false);
-
     router.push(`/booking/${showtimeId}/success`);
+
   };
 
   if (loading) {
