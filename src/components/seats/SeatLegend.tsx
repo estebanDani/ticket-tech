@@ -1,4 +1,4 @@
-import { Container, Box, Typography, Chip } from '@mui/material'
+import { Box, Typography, Chip } from '@mui/material'
 import { theme } from '@/theme/theme'
 
 const SeatLegend = () => {
@@ -18,14 +18,14 @@ const SeatLegend = () => {
         },
     ]
     return (
-        <Container sx={{ ...styles.container }}>
+        <Box sx={{ ...styles.container }}>
             {LegendItems.map((item, index) => (
                 <Box sx={styles.subContainer} key={`legend-item-${index}`}>
                     <Chip sx={{ ...styles.seat, backgroundColor: item.color }} />
                     <Typography variant='h6'>{item.label}</Typography>
                 </Box>
             ))}
-        </Container>
+        </Box>
     )
 }
 
@@ -39,7 +39,11 @@ const styles = {
         gap: '30px',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        marginBottom: '20px',
+        width: '100%',
+
     },
     subContainer: {
         display: 'flex',
