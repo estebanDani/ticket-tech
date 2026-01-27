@@ -15,7 +15,7 @@ import {
 import { useBooking } from "@/contexts/BookingContext";
 import { useTheater } from "@/hooks/useTheater";
 import { SeatGrid } from "@/components/seats/SeatGrid";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { ArrowBackIos } from "@mui/icons-material";
 import SeatLegend from "@/components/seats/SeatLegend";
 import { useRouter } from "next/navigation";
 
@@ -33,7 +33,7 @@ export default function SeatsPage() {
 
     const totalPrice = useMemo(() => {
         return selectedSeats.length * (selectedShowtime?.price || 0);
-    }, [selectedSeats.length, selectedShowtime?.price]);
+    }, [selectedSeats, selectedShowtime]);
 
 
     if (loading) {
@@ -65,7 +65,7 @@ export default function SeatsPage() {
 
         <Container maxWidth={false} sx={{ py: 2, px: { xs: 2, md: 4 } }}>
             <Button
-                startIcon={<ArrowBackIosIcon sx={{ fontSize: 14 }} />}
+                startIcon={<ArrowBackIos sx={{ fontSize: 14 }} />}
                 onClick={() => router.back()}
                 sx={{ textTransform: 'none', mb: 2 }}
             >
