@@ -9,7 +9,6 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { ShowtimeCard } from "@/components/showtimes/ShowtimeCard";
 import { useShowtimes } from "@/hooks/useShowtimes";
 import { useMovie } from "@/hooks/useMovie";
-import { useRouter } from "next/navigation";
 
 type Props = { movieId: string };
 
@@ -23,7 +22,6 @@ export function ShowtimesPageClient({ movieId }: Props) {
 
   const loading = movieLoading || showtimesLoading;
   const error = movieError || showtimesError;
-  const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState<Date>(
     startOfDay(new Date()),
