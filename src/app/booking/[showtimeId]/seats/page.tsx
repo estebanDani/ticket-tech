@@ -1,0 +1,149 @@
+"use client";
+
+import React, { useEffect } from "react";
+import { 
+  Box, 
+  Typography, 
+  Container, 
+  Button, 
+  Paper, 
+  Stack, 
+  CircularProgress, 
+  Alert,
+  Divider
+} from "@mui/material";
+import { useBooking } from "@/contexts/BookingContext";
+import { useTheater } from "@/hooks/useTheater";
+import { SeatGrid } from "@/components/seats/SeatGrid";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useRouter } from "next/navigation";
+
+export default function SeatsPage() {
+  const router = useRouter();
+  const { selectedMovie, selectedShowtime, selectedSeats } = useBooking();
+  
+  const { theater, loading, error } = useTheater(selectedShowtime?.theaterId);
+
+  useEffect(() => {
+    if (!selectedShowtime) {
+      router.push("/");
+    }
+  }, [selectedShowtime, router]);
+
+  if (loading) {
+    return (
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="60vh" gap={2}>
+        <CircularProgress />
+        <Typography>Cargando mapa de sala...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Alert severity="error" action={
+          <Button color="inherit" size="small" onClick={() => router.back()}>Volver</Button>
+        }>
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
+
+  const totalPrice = selectedSeats.length * (selectedShowtime?.price || 0);
+  
+  const seatListNames = selectedSeats.length > 0 
+    ? selectedSeats.join(", ") 
+    : "Ninguno";
+
+  return (
+    
+    <Container maxWidth={false} sx={{ py: 2, px: { xs: 2, md: 4 } }}>
+        <Button 
+            startIcon={<ArrowBackIosIcon sx={{ fontSize: 14 }} />} 
+            onClick={() => router.back()}
+            sx={{ textTransform: 'none', mb: 2 }}
+        >
+            Volver a Horarios
+        </Button>
+
+      <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={2}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 0.5, sm: 2 }} alignItems={{ xs: 'flex-start', sm: 'center' }}>
+            <Typography variant="body1" fontWeight="bold">
+              🎬 {selectedMovie?.title } 
+            </Typography>
+            <Typography variant="body2" color="text.primary" sx={{ display: { xs: 'none', sm: 'block' } }}>|</Typography>
+            <Typography variant="body2" color="text.primary">
+              📅 {selectedShowtime?.date}
+            </Typography>
+            <Typography variant="body2" color="text.primary" sx={{ display: { xs: 'none', sm: 'block' } }}>|</Typography>
+            <Typography variant="body2" color="text.primary">
+              🕒 {selectedShowtime ? new Date(selectedShowtime.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "--:--"}
+            </Typography>
+          </Stack>
+          
+          <Typography variant="body1" fontWeight="bold">
+            💰 {selectedShowtime?.price} Bs/asiento 
+          </Typography>
+        </Box>
+      </Paper>
+
+      <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
+        <Stack direction="row" spacing={{ xs: 5, md: 7 }} justifyContent="center">
+          <LegendItem color="grey.400" label="Disponible" />
+          <LegendItem color="secondary.main" label="Reservado" />
+          <LegendItem color="success.light" label="Tu selección" />
+        </Stack>
+      </Paper>
+
+      <Box>
+        <SeatGrid 
+          seatMap={theater?.seatMap || []} 
+          reservedSeats={selectedShowtime?.reservedSeats || []} 
+        />
+      </Box>
+
+      <Paper  sx={{ p: 7, mb: 3, borderRadius: 2 }}>
+        <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          📋 RESUMEN DE SELECCIÓN
+        </Typography>
+        
+        <Box sx={{ my: 2 }}>
+          <Box display="flex" justifyContent="space-between" mb={1}>
+            <Typography color="text.primary">🪑 Asientos seleccionados:</Typography>
+            <Typography align="right">{seatListNames}</Typography>
+          </Box>
+
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography color="text.primary">💰 Precio total:</Typography>
+            <Typography variant="h5" color="primary" fontWeight="bold">
+              {totalPrice} Bs
+            </Typography>
+          </Box>
+        </Box>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Button 
+          variant="contained" 
+          size="large"
+          fullWidth
+          disabled={selectedSeats.length === 0}
+          sx={{ py: 1.5, fontSize: '1.1rem' }}
+        >
+          Continuar al Pago
+        </Button>
+      </Paper>
+
+    </Container>
+  );
+}
+
+const LegendItem = ({ color, label }: { color: string; label: string }) => (
+  <Stack direction="row" alignItems="center" spacing={1}>
+    <Box sx={{ width: 16, height: 16, bgcolor: color, borderRadius: 0.5 }} />
+    <Typography variant="caption" fontWeight="bold">{label}</Typography>
+  </Stack>
+);
