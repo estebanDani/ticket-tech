@@ -5,9 +5,10 @@ import { useTheater } from "@/hooks/useTheater";
 
 interface ShowtimeCardProps {
   showtime: Showtime;
+  handleClick: () => void;
 }
 
-export const ShowtimeCard = ({ showtime }: ShowtimeCardProps) => {
+export const ShowtimeCard = ({ showtime, handleClick }: ShowtimeCardProps) => {
   const { theater } = useTheater(showtime.theaterId);
   return (
     <Card
@@ -51,7 +52,7 @@ export const ShowtimeCard = ({ showtime }: ShowtimeCardProps) => {
               {showtime.price} Bs
             </Typography>
 
-            <Button variant="contained" size="small" sx={{ mt: 1 }}>
+            <Button variant="contained" size="small" sx={{ mt: 1 }} onClick={handleClick}>
               Seleccionar
             </Button>
           </Box>

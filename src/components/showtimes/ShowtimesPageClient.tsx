@@ -9,6 +9,7 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { ShowtimeCard } from "@/components/showtimes/ShowtimeCard";
 import { useShowtimes } from "@/hooks/useShowtimes";
 import { useMovie } from "@/hooks/useMovie";
+import { useRouter } from "next/navigation";
 
 type Props = { movieId: string };
 
@@ -22,6 +23,7 @@ export function ShowtimesPageClient({ movieId }: Props) {
 
   const loading = movieLoading || showtimesLoading;
   const error = movieError || showtimesError;
+  const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState<Date>(
     startOfDay(new Date()),
@@ -36,6 +38,9 @@ export function ShowtimesPageClient({ movieId }: Props) {
     () => showtimes.filter((s) => s.date === selectedKey),
     [showtimes, selectedKey],
   );
+  const handleNavigate = (showtimeId: string) => {
+    router.push(`/booking/${showtimeId}/seats`);
+  };
 
   return (
     <Box px={3} py={4}>
@@ -64,7 +69,10 @@ export function ShowtimesPageClient({ movieId }: Props) {
           !error &&
           filtered.map((showtime) => (
             <Box key={showtime.id} mb={2}>
-              <ShowtimeCard showtime={showtime} />
+              <ShowtimeCard
+                showtime={showtime}
+                handleClick={() => handleNavigate(showtime.id)}
+              />
             </Box>
           ))}
       </Box>
