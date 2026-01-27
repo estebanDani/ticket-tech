@@ -138,10 +138,3 @@ export default function SeatsPage() {
         </Container>
     );
 }
-
-const LegendItem = ({ color, label }: { color: string; label: string }) => (
-    <Stack direction="row" alignItems="center" spacing={1}>
-        <Box sx={{ width: 16, height: 16, bgcolor: color, borderRadius: 0.5 }} />
-        <Typography variant="caption" fontWeight="bold">{label}</Typography>
-    </Stack>
-);

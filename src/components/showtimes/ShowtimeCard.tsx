@@ -13,9 +13,6 @@ export const ShowtimeCard = ({ showtime }: ShowtimeCardProps) => {
   const { theater } = useTheater(showtime.theaterId);
   const { setShowtime } = useBooking();
 
-  const handleClick = () => {
-    setShowtime(showtime);
-  };
 
   return (
     <Card

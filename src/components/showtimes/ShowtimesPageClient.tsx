@@ -38,9 +38,6 @@ export function ShowtimesPageClient({ movieId }: Props) {
     () => showtimes.filter((s) => s.date === selectedKey),
     [showtimes, selectedKey],
   );
-  const handleNavigate = (showtimeId: string) => {
-    router.push(`/booking/${showtimeId}/seats`);
-  };
 
   return (
     <Box px={3} py={4}>
