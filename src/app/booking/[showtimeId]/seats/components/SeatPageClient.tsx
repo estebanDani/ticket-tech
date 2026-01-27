@@ -66,9 +66,9 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
+        minHeight: '100vh',
         width: '100vw',
         gap: 5,
+        py: 4,
     }
 }

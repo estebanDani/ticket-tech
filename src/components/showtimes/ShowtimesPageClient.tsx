@@ -69,10 +69,7 @@ export function ShowtimesPageClient({ movieId }: Props) {
           !error &&
           filtered.map((showtime) => (
             <Box key={showtime.id} mb={2}>
-              <ShowtimeCard
-                showtime={showtime}
-                handleClick={() => handleNavigate(showtime.id)}
-              />
+              <ShowtimeCard showtime={showtime} />
             </Box>
           ))}
       </Box>
