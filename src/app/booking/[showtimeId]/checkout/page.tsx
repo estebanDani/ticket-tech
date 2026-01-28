@@ -13,7 +13,6 @@ import BookingSummary from '@/components/booking/BookingSummary';
 import { checkoutSchema } from '@/schemas/checkout.schema';
 import { PAYMETMETHOD_ENUM } from '@/utils';
 
-
 interface FormData {
   name: string;
   email: string;
@@ -21,6 +20,19 @@ interface FormData {
   terms: boolean;
   confirm: boolean;
 }
+
+const DEFAULT_VALUES: FormData = {
+  name: '',
+  email: '',
+  phone: '',
+  terms:false,
+  confirm:false
+};
+
+const FORM_OPTIONS = {
+  mode: 'onBlur' as const,
+  defaultValues: DEFAULT_VALUES,
+};
 
 export default function CheckoutPage() {
   const { showtimeId } = useParams();
@@ -31,18 +43,7 @@ export default function CheckoutPage() {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const DEFAULT_VALUES: FormData = {
-    name: '',
-    email: '',
-    phone: '',
-    terms:false,
-    confirm:false
-  };
-
-  const FORM_OPTIONS = {
-    mode: 'onBlur' as const,
-    defaultValues: DEFAULT_VALUES,
-  };
+  
 
 
   const { control, handleSubmit } = useForm<FormData>({
