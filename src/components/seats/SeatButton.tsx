@@ -70,13 +70,11 @@ export function SeatButton({
           size="small"
           aria-label={`Seat ${seat}`}
           sx={{
-            minWidth: 44,
-            height: 44,
-            borderRadius: 2,
-            border: '1px solid',
-            borderColor: 'divider',
-            textTransform: 'none',
-            fontWeight: 700,
+            minWidth: 32, 
+            width: 32,
+            height: 32,
+            borderRadius: 1, 
+            border: 'none', 
             ...getSeatStyles(status),
             '&.Mui-disabled': {
               opacity: 0.75,
@@ -84,7 +82,6 @@ export function SeatButton({
             },
           }}
         >
-          {seat}
         </ToggleButton>
       </span>
     </Tooltip>
