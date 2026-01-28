@@ -11,7 +11,9 @@ import PaymentMethodForm from '@/components/booking/PaymentMethodForm';
 import UserDataForm from '@/components/booking/UserDataForm';
 import BookingSummary from '@/components/booking/BookingSummary';
 import { checkoutSchema } from '@/schemas/checkout.schema';
-import { PAYMETMETHOD_ENUM } from '@/utils';
+import { PAYMETMETHOD_ENUM, showError } from '@/utils';
+import { BookingService } from '@/services/booking.service';
+import { useBooking } from '@/contexts/BookingContext';
 
 interface FormData {
   name: string;
@@ -37,14 +39,12 @@ const FORM_OPTIONS = {
 export default function CheckoutPage() {
   const { showtimeId } = useParams();
   const router = useRouter();
+  const { selectedSeats,selectedShowtime, clearBooking } = useBooking();
 
   /* ---------------- STATE ---------------- */
   const [paymentMethod, setPaymentMethod] = useState<PAYMETMETHOD_ENUM>(PAYMETMETHOD_ENUM.Card);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  
-
 
   const { control, handleSubmit } = useForm<FormData>({
     resolver: yupResolver(checkoutSchema),
@@ -56,11 +56,31 @@ export default function CheckoutPage() {
 
     setLoading(true);
 
-    await new Promise((res) => setTimeout(res, 1500));
+    try{
+      if (!selectedShowtime) {
+        showError('No showtime selected');
+        setLoading(false);
+        return;
+      }
+      
+      const response = await BookingService.create({
+        userId:'',
+        showtimeId: showtimeId as string,
+        movieId: selectedShowtime?.movieId ?? '',
+        seats: selectedSeats,
+        totalPreice: selectedShowtime.price * selectedSeats.length,
+        status:'pending',
+        paymentMethod,
+        bookingDate: new Date()
+      })
 
-    setLoading(false);
-    router.push(`/booking/${showtimeId}/success`);
-
+      router.push(`/booking/${showtimeId}/tickets/${response.id}`);
+    }catch(error){
+      showError(error as string || 'Ocurrio un error al procesar la reserva')
+    }finally{
+      clearBooking();
+      setLoading(false);
+    }
   };
 
   if (loading) {
