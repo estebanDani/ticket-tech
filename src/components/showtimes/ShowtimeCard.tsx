@@ -11,7 +11,7 @@ interface ShowtimeCardProps {
 
 export const ShowtimeCard = ({ showtime }: ShowtimeCardProps) => {
   const { theater } = useTheater(showtime.theaterId);
-  const { setShowtime } = useBooking();
+  const { setShowtime ,setTheater} = useBooking();
 
   return (
     <Card
@@ -61,7 +61,9 @@ export const ShowtimeCard = ({ showtime }: ShowtimeCardProps) => {
               variant="contained"
               size="small"
               sx={{ mt: 1 }}
-              onClick={() => setShowtime(showtime)}
+              onClick={() => {
+                setShowtime(showtime)
+                setTheater(theater)}}
             >
               Seleccionar
             </Button>

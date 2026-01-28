@@ -15,14 +15,13 @@ import {
 import { useBooking } from "@/contexts/BookingContext";
 import { useTheater } from "@/hooks/useTheater";
 import { SeatGrid } from "@/components/seats/SeatGrid";
-import { ArrowBackIos } from "@mui/icons-material";
 import SeatLegend from "@/components/seats/SeatLegend";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SeatsPage() {
     const router = useRouter();
-    const { selectedMovie, selectedShowtime, selectedSeats } = useBooking();
-
+    const { selectedMovie, selectedShowtime, selectedSeats ,setSeats} = useBooking();
     const { theater, loading, error } = useTheater(selectedShowtime?.theaterId);
 
     useEffect(() => {
@@ -64,13 +63,7 @@ export default function SeatsPage() {
     return (
 
         <Container maxWidth={false} sx={{ py: 2, px: { xs: 2, md: 4 } }}>
-            <Button
-                startIcon={<ArrowBackIos sx={{ fontSize: 14 }} />}
-                onClick={() => router.back()}
-                sx={{ textTransform: 'none', mb: 2 }}
-            >
-                Volver a Horarios
-            </Button>
+            
 
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={2}>
@@ -125,11 +118,14 @@ export default function SeatsPage() {
                 <Divider sx={{ my: 2 }} />
 
                 <Button
+                    component={Link}
+                    href={`/booking/${selectedShowtime?.id}/checkout`}
                     variant="contained"
                     size="large"
                     fullWidth
                     disabled={selectedSeats.length === 0}
                     sx={{ py: 1.5, fontSize: '1.1rem' }}
+                    onClick={()=>setSeats(selectedSeats)}
                 >
                     Continuar al Pago
                 </Button>
