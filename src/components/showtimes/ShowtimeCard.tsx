@@ -1,8 +1,8 @@
 "use client";
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import { Showtime } from "@/types";
-import { useTheater } from "@/hooks/useTheater";
 import { useBooking } from "@/contexts/BookingContext";
+import { useTheater } from "@/hooks/useTheater";
 import Link from "next/link";
 
 interface ShowtimeCardProps {
@@ -55,11 +55,11 @@ export const ShowtimeCard = ({ showtime }: ShowtimeCardProps) => {
               {showtime.price} Bs
             </Typography>
 
-            <Button 
+            <Button
               component={Link}
-              href={`/booking/${showtime.id}/seats`} 
-              variant="contained" 
-              size="small" 
+              href={`/booking/${showtime.id}/seats`}
+              variant="contained"
+              size="small"
               sx={{ mt: 1 }}
               onClick={() => setShowtime(showtime)}
             >

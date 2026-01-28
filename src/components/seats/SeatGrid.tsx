@@ -110,9 +110,9 @@ export const SeatGrid: React.FC<SeatGridProps> = ({ seatMap, reservedSeats }) =>
                   .map((seat) => (
                     <SeatButton
                       key={seat.id}
-                      seat={seat.id}                     
-                      status={getSeatStatus(seat.id)}    
-                      onClick={handleSeatClick}       
+                      seat={seat.id}
+                      status={getSeatStatus(seat.id)}
+                      onClick={handleSeatClick}
                     />
                   ))}
               </Grid>

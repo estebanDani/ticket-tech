@@ -46,6 +46,9 @@
       ],
       "@/theme/*": [
         "./src/theme/*"
+      ],
+      "@/schemas/*": [
+        "./src/schemas/*"
       ]
     },
     "target": "ES2017"
