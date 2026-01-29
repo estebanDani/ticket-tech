@@ -1,7 +1,7 @@
 import { collection, getDocs, getDoc, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 import { db } from '@/services/firebase';
-import { Movie, CreateMovieDto } from '@/types';
+import { Movie, CreateMovieDto, UpdateMovieDto } from '@/types';
 import { COLLECTIONS } from '@/utils/constants';
 
 export class MovieService {
@@ -62,7 +62,7 @@ export class MovieService {
             throw new Error('Failed to create movie');
         }
     }
-    static async update(id: string, movie: Partial<Movie>): Promise<void> {
+    static async update(id: string, movie: UpdateMovieDto): Promise<void> {
         try {
             if (!id || id.trim() == '') {
                 throw new Error('Invalid movie ID');
