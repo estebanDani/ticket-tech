@@ -66,23 +66,23 @@ export class BookingService {
 
     const { pageSize = 10, lastDoc, filters} = options || {};
 
-    let q = query(collection(db, COLLECTIONS.BOOKINGS));
+    let queryBooking = query(collection(db, COLLECTIONS.BOOKINGS));
 
     if (filters?.userId) {
-      q = query(q, where('userId', '==', filters.userId));
+      queryBooking = query(queryBooking, where('userId', '==', filters.userId));
     }
 
     if (filters?.status) {
-      q = query(q, where('status', '==', filters.status));
+      queryBooking = query(queryBooking, where('status', '==', filters.status));
     }
 
     if (lastDoc) {
-      q = query(q, startAfter(lastDoc));
+      queryBooking = query(queryBooking, startAfter(lastDoc));
     }
 
-    q = query(q, limit(pageSize));
+    queryBooking = query(queryBooking, limit(pageSize));
 
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocs(queryBooking);
 
     const bookings: Booking[] = snapshot.docs.map((doc) => ({
       id: doc.id,
