@@ -8,6 +8,7 @@ import { ArrowBack } from '@mui/icons-material'
 
 import { MovieDetail } from '@/components'
 import { useMovie } from '@/hooks/useMovie'
+import { useBooking } from '@/contexts/BookingContext'
 
 interface MovieDetailClientProps {
   id: string
@@ -16,6 +17,7 @@ interface MovieDetailClientProps {
 export function MovieDetailClient({ id }: MovieDetailClientProps) {
   const router = useRouter()
   const { movie, loading, error } = useMovie(id)
+  const {setMovie} = useBooking()
 
   if (loading) {
     return (
@@ -70,6 +72,7 @@ export function MovieDetailClient({ id }: MovieDetailClientProps) {
               variant="contained"
               size="large"
               sx={{ width: { xs: '100%', md: 260 } }}
+              onClick={()=>setMovie(movie)}
             >
               Ver Horarios y Reservar
             </Button>

@@ -50,7 +50,7 @@ export class BookingService {
         ...data,
         qrCode,
       }
-
+      transaction.set(bookingRef, booking);
       return booking
     })
   }

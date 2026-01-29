@@ -32,7 +32,6 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const setTheater = (theater: Theater | null) => {
     setSelectedTheater(theater);
-    setSelectedShowtime(null);
     setSelectedSeats([]);
   };
 
