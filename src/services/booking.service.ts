@@ -1,4 +1,4 @@
-import {collection, doc, runTransaction} from 'firebase/firestore'
+import {collection, doc, getDocs, limit, query, QueryDocumentSnapshot, runTransaction, startAfter, where} from 'firebase/firestore'
 import QRCode  from 'qrcode'
 
 import { db } from '@/services/firebase'
@@ -54,4 +54,50 @@ export class BookingService {
       return booking
     })
   }
+
+ 
+  static async getAll(options?: { 
+    pageSize?: number; 
+    lastDoc?: QueryDocumentSnapshot;
+    filters?: {
+      userId?:string;
+      status?:'pending' | 'confirmed' | 'cancelled';
+    }}): Promise<{ data: Booking[];lastDoc: QueryDocumentSnapshot | null;}> {
+
+    const { pageSize = 10, lastDoc, filters} = options || {};
+
+    let q = query(collection(db, COLLECTIONS.BOOKINGS));
+
+    if (filters?.userId) {
+      q = query(q, where('userId', '==', filters.userId));
+    }
+
+    if (filters?.status) {
+      q = query(q, where('status', '==', filters.status));
+    }
+
+    if (lastDoc) {
+      q = query(q, startAfter(lastDoc));
+    }
+
+    q = query(q, limit(pageSize));
+
+    const snapshot = await getDocs(q);
+
+    const bookings: Booking[] = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<Booking, 'id'>),
+    }));
+
+    const lastDocs =
+      snapshot.docs.length > 0
+        ? snapshot.docs[snapshot.docs.length - 1]
+        : null;
+
+    return {
+      data: bookings,
+      lastDoc: lastDocs,
+    };
+  }
+
 }
