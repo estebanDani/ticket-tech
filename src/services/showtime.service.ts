@@ -17,8 +17,7 @@ export class ShowtimeService {
                 endTime: doc.data().endTime.toDate(),
             })) as Showtime[];
         } catch (error) {
-            console.error('Error getting showtimes:', error);
-            throw new Error('Failed to fetch showtimes');
+            throw new Error('Failed to fetch showtimes', { cause: error });
         }
     }
 
@@ -42,7 +41,7 @@ export class ShowtimeService {
                 endTime: data.endTime.toDate(),
             } as Showtime;
         } catch (error) {
-            throw new Error('Failed to fetch showtime');
+            throw new Error('Failed to fetch showtime', { cause: error });
         }
     }
 
@@ -64,7 +63,7 @@ export class ShowtimeService {
 
             return showtimes;
         } catch (error) {
-            throw new Error('Failed to fetch showtimes for movie');
+            throw new Error('Failed to fetch showtimes for movie', { cause: error });
         }
     }
 
@@ -87,7 +86,7 @@ export class ShowtimeService {
             } as Showtime;
 
         } catch (error) {
-            throw new Error('Failed to create showtime');
+            throw new Error('Failed to create showtime', { cause: error });
         }
     }
 
@@ -103,7 +102,7 @@ export class ShowtimeService {
             return data.reservedSeats ?? [];
 
         } catch (error) {
-            throw new Error('Failed to fetch reserved seats');
+            throw new Error('Failed to fetch reserved seats', { cause: error });
         }
     }
 
@@ -119,7 +118,7 @@ export class ShowtimeService {
             const docRef = doc(db, COLLECTIONS.SHOWTIMES, id);
             await updateDoc(docRef, showtime);
         } catch (error) {
-            throw new Error('Failed to update showtime');
+            throw new Error('Failed to update showtime', { cause: error });
         }
     }
 
@@ -139,7 +138,7 @@ export class ShowtimeService {
             await deleteDoc(docRef);
 
         } catch (error) {
-            throw new Error('Failed to delete showtime');
+            throw new Error('Failed to delete showtime', { cause: error });
         }
     }
 

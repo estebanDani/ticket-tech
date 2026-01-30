@@ -15,7 +15,7 @@ export class MovieService {
                 ...doc.data(),
             })) as Movie[];
         } catch (error) {
-            throw new Error('Failed to fetch movies');
+            throw new Error('Failed to fetch movies', { cause: error });
         }
     }
     static async getActive(): Promise<Movie[]> {
@@ -40,7 +40,7 @@ export class MovieService {
                 releaseDate: data.releaseDate?.toDate(),
             } as Movie;
         } catch (error) {
-            throw new Error('Failed to fetch movie');
+            throw new Error('Failed to fetch movie', { cause: error });
         }
     }
 
@@ -56,7 +56,7 @@ export class MovieService {
                 ...movie,
             };
         } catch (error) {
-            throw new Error('Failed to create movie');
+            throw new Error('Failed to create movie', { cause: error });
         }
     }
     static async update(id: string, movie: UpdateMovieDto): Promise<void> {
@@ -72,8 +72,7 @@ export class MovieService {
             const docRef = doc(db, COLLECTIONS.MOVIES, id);
             await updateDoc(docRef, movie);
         } catch (error) {
-            console.log(error);
-            throw new Error('Failed to update movie');
+            throw new Error('Failed to update movie', { cause: error });
         }
     }
     static async delete(id: string): Promise<void> {
@@ -84,7 +83,7 @@ export class MovieService {
             const docRef = doc(db, COLLECTIONS.MOVIES, id);
             await deleteDoc(docRef);
         } catch (error) {
-            throw new Error('Failed to delete movie');
+            throw new Error('Failed to delete movie', { cause: error });
         }
     }
 
