@@ -15,7 +15,6 @@ export class MovieService {
                 ...doc.data(),
             })) as Movie[];
         } catch (error) {
-            console.error('Error getting movies:', error);
             throw new Error('Failed to fetch movies');
         }
     }
@@ -41,7 +40,6 @@ export class MovieService {
                 releaseDate: data.releaseDate?.toDate(),
             } as Movie;
         } catch (error) {
-            console.error(`Error getting movie ${id}:`, error);
             throw new Error('Failed to fetch movie');
         }
     }
@@ -58,7 +56,6 @@ export class MovieService {
                 ...movie,
             };
         } catch (error) {
-            console.error('Error creating movie:', error);
             throw new Error('Failed to create movie');
         }
     }
@@ -75,7 +72,6 @@ export class MovieService {
             const docRef = doc(db, COLLECTIONS.MOVIES, id);
             await updateDoc(docRef, movie);
         } catch (error) {
-            console.log(error);
             throw new Error('Failed to update movie');
         }
     }
@@ -87,7 +83,6 @@ export class MovieService {
             const docRef = doc(db, COLLECTIONS.MOVIES, id);
             await deleteDoc(docRef);
         } catch (error) {
-            console.log(error);
             throw new Error('Failed to delete movie');
         }
     }
