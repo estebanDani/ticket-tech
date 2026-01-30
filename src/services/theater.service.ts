@@ -64,7 +64,30 @@ const create = async (theater: Omit<Theater, 'id' | 'capacity' | 'seatMap'>): Pr
 const update = async (id: string, theater: Partial<Theater>): Promise<void> => {
     try {
         const docRef = doc(db, COLLECTIONS.THEATERS, id);
-        await updateDoc(docRef, theater);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            throw new Error("Theater not found");
+        }
+
+        const currentData = docSnap.data() as Theater;
+        const updates = { ...theater };
+        const hasRowChanged = updates.rows !== undefined && updates.rows !== currentData.rows;
+        const hasSeatsChanged = updates.seatsPerRow !== undefined && updates.seatsPerRow !== currentData.seatsPerRow;
+
+        if (hasRowChanged || hasSeatsChanged) {
+            const newRows = updates.rows || currentData.rows;
+            const newSeatsPerRow = updates.seatsPerRow || currentData.seatsPerRow;
+
+            if (newRows <= 0 || newSeatsPerRow <= 0) {
+                throw new Error("Rows and seats per row must be greater than 0");
+            }
+            const newSeatMap = seatMapGenerator(newRows, newSeatsPerRow);
+            updates.seatMap = newSeatMap;
+            updates.capacity = newSeatMap.length;
+        }
+
+        await updateDoc(docRef, updates);
     } catch (error) {
         console.error('Error updating theater:', error);
         throw error;
@@ -73,6 +96,12 @@ const update = async (id: string, theater: Partial<Theater>): Promise<void> => {
 const deleteTheater = async (id: string): Promise<void> => {
     try {
         const docRef = doc(db, COLLECTIONS.THEATERS, id);
+        
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+            throw new Error("Theater not found to delete");
+        }
+
         await deleteDoc(docRef);
     } catch (error) {
         console.error('Error deleting theater:', error);
