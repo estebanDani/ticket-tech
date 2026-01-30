@@ -3,7 +3,7 @@ export interface Movie {
     title: string;
     synopsis: string;
     duration: number;
-    genre: string [];
+    genre: string[];
     rating: string;
     posterUrl: string;
     trailerUrl: string;
@@ -13,3 +13,4 @@ export interface Movie {
 }
 
 export type CreateMovieDto = Omit<Movie, 'id'>;
+export type UpdateMovieDto = Partial<Omit<Movie, 'id'>>;
