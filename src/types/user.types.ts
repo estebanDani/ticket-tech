@@ -5,3 +5,5 @@ export interface User {
     role:'user' | 'admin';
     createdAt: Date;
 }
+
+export type CreateUserDto = Omit<User, 'uid'>
