@@ -71,7 +71,7 @@ const update = async (id: string, theater: Partial<Theater>): Promise<void> => {
         }
 
         const currentData = docSnap.data() as Theater;
-        let updates = { ...theater };
+        const updates = { ...theater };
         const hasRowChanged = updates.rows !== undefined && updates.rows !== currentData.rows;
         const hasSeatsChanged = updates.seatsPerRow !== undefined && updates.seatsPerRow !== currentData.seatsPerRow;
 
