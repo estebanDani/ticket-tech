@@ -42,7 +42,6 @@ export class ShowtimeService {
                 endTime: data.endTime.toDate(),
             } as Showtime;
         } catch (error) {
-            console.error(`Error getting showtime ${id}:`, error);
             throw new Error('Failed to fetch showtime');
         }
     }
@@ -65,7 +64,6 @@ export class ShowtimeService {
 
             return showtimes;
         } catch (error) {
-            console.error(`Error getting showtimes for movie ${movieId}:`, error);
             throw new Error('Failed to fetch showtimes for movie');
         }
     }
@@ -89,7 +87,6 @@ export class ShowtimeService {
             } as Showtime;
 
         } catch (error) {
-            console.error('Error creating showtime:', error);
             throw new Error('Failed to create showtime');
         }
     }
@@ -106,7 +103,6 @@ export class ShowtimeService {
             return data.reservedSeats ?? [];
 
         } catch (error) {
-            console.error(`Error getting reserved seats for showtime ${showtimeId}:`, error);
             throw new Error('Failed to fetch reserved seats');
         }
     }
@@ -123,7 +119,6 @@ export class ShowtimeService {
             const docRef = doc(db, COLLECTIONS.SHOWTIMES, id);
             await updateDoc(docRef, showtime);
         } catch (error) {
-            console.error(`Error updating showtime:`, error);
             throw new Error('Failed to update showtime');
         }
     }
@@ -144,7 +139,6 @@ export class ShowtimeService {
             await deleteDoc(docRef);
 
         } catch (error) {
-            console.error(`Error deleting showtime ${id}:`, error);
             throw new Error('Failed to delete showtime');
         }
     }
