@@ -1,7 +1,8 @@
-import { CreateUserDto, User } from "@/types";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "./firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+
+import { auth, db } from "@/services/firebase";
+import { CreateUserDto, User } from "@/types";
 import { COLLECTIONS } from "@/utils";
 
 
@@ -52,4 +53,29 @@ export class AuthService {
         }
     }
 
+    static getCurrentUser(): Promise<User | null> {
+        return new Promise((resolve) => {
+            const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+            unsubscribe();
+
+            if (!firebaseUser) {
+                resolve(null);
+                return;
+            }
+
+            const userRef = doc(db, COLLECTIONS.USERS, firebaseUser.uid);
+            const snap = await getDoc(userRef);
+
+            if (!snap.exists()) {
+                resolve(null);
+                return;
+            }
+
+            resolve({
+                uid: firebaseUser.uid,
+                ...(snap.data() as Omit<User, 'uid'>),
+            });
+            });
+        });
+    }
 }
