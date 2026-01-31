@@ -7,6 +7,7 @@ import { SnackbarProvider } from 'notistack'
 
 import { theme } from '@/theme/theme'
 import { BookingProvider } from '@/contexts/BookingContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -21,7 +22,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         }}
       >
         <BookingProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </BookingProvider>
       </SnackbarProvider>
     </ThemeProvider>
