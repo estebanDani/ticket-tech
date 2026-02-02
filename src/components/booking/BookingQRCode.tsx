@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { Box, Button, Paper, Typography, Stack, useTheme } from '@mui/material';
+import { Button, Paper, Typography, Stack, useTheme } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
