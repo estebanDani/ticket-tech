@@ -7,8 +7,8 @@ import { Box, Button, CircularProgress, TextField, Typography} from '@mui/materi
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { loginSchema } from '@/schemas/login.schema';
-import { useAuth } from '@/contexts/AuthContext';
+import { loginSchema } from '@/schemas';
+import { useAuth } from '@/contexts'
 import { showError } from '@/utils';
 import { useRouter } from 'next/navigation';
 
@@ -34,6 +34,7 @@ export default function LoginPage() {
     } catch {
       showError('Failed to Login. Please check your credentials and try again.');
     }finally{
+      
       setLoading(false);
     }
   };
