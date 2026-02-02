@@ -3,11 +3,12 @@ export interface Showtime {
     movieId: string;
     theaterId: string;
     startTime: Date;
-    endTime: Date; 
+    endTime: Date;
     price: number;
     availableSeats: number;
     reservedSeats: string[];
-    date:string;
+    date: string;
 }
 
 export type CreateShowtimeDto = Omit<Showtime, 'id'>;
+export type UpdateShowtimeDto = Partial<Omit<Showtime, 'id'>>;
