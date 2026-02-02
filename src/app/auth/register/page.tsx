@@ -7,8 +7,8 @@ import { Box, Button, CircularProgress, TextField, Typography} from '@mui/materi
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { registerSchema } from '@/schemas/register.schema';
-import { useAuth } from '@/contexts/AuthContext';
+import { registerSchema } from '@/schemas';
+import { useAuth } from '@/contexts';
 import { showError } from '@/utils';
 import { CreateUserDto } from '@/types';
 import { useRouter } from 'next/navigation';
