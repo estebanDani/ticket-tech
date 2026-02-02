@@ -1,3 +1,5 @@
+'use client'
+import { useMemo } from "react";
 import { Chip } from "@mui/material";
 import { theme } from "@/theme/theme";
 
@@ -34,14 +36,14 @@ export const BookingChip = ({ status }: ChipProps) => {
                 };
         }
     };
-
+    const statusMemo = useMemo(() => statusInfo(), [status]);
     return (
         <Chip
-            label={statusInfo().label}
+            label={statusMemo.label}
             sx={{
                 width: 120,
-                backgroundColor: statusInfo().backgroundColor,
-                color: statusInfo().color
+                backgroundColor: statusMemo.backgroundColor,
+                color: statusMemo.color
             }}
         />
     )

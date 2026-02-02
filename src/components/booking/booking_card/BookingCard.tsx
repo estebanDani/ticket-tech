@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, Button, Typography, Chip, Card, CardMedia, Badge } from '@mui/material';
 import { theme } from '@/theme/theme'
 import { Booking } from '@/types';
-import { useMovie } from '@/hooks/useMovie';
-import { useShowtime } from '@/hooks/useShowtime';
-import { useTheater } from '@/hooks/useTheater';
+import { useShowtime, useTheater, useMovie } from '@/hooks';
 import { BookingChip } from './BookingChip';
 import { QrModal } from './QrModal';
+import { formatDateWithYear, formatTime } from '@/utils';
 
 interface BookingCardProps {
     booking: Booking;
@@ -17,25 +16,6 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
     const { theater } = useTheater(showtime?.theaterId)
     const [openModal, setOpenModal] = useState(false)
 
-    const formatDate = (date: Date | undefined) => {
-        if (!date) return 'Fecha no disponible';
-
-        return date.toLocaleDateString('es-BO', {
-            weekday: 'short',
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-        });
-    };
-    const formatTime = (date: Date | undefined) => {
-        if (!date) return 'Hora no disponible';
-
-        return date.toLocaleTimeString('es-BO', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-    };
     const bookingData = {
         id: booking.id,
         status: booking.status,
@@ -44,7 +24,7 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
             posterUrl: movie?.posterUrl || 'https://es.web.img2.acsta.net/pictures/14/11/03/11/00/378754.jpg'
         },
         showtime: {
-            date: formatDate(showtime?.startTime),
+            date: formatDateWithYear(showtime?.startTime),
             time: formatTime(showtime?.startTime),
         },
         seats: booking.seats.join(', '),
@@ -53,27 +33,29 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
         price: booking.totalPreice,
     };
 
+    const bookingMemo = useMemo(() => bookingData, [booking]);
+
     return (
         <>
             <Card sx={{ p: 2, borderRadius: 2 }}>
                 <Box sx={styles.container}>
                     <CardMedia
                         component="img"
-                        image={bookingData.movie.posterUrl}
-                        alt={bookingData.movie.title}
+                        image={bookingMemo.movie.posterUrl}
+                        alt={bookingMemo.movie.title}
                         sx={{
                             width: 120,
                             height: 180,
                         }}
                     />
                     <Box sx={styles.info}>
-                        <BookingChip status={bookingData.status} />
-                        <Typography variant='h6' fontWeight={700}>{bookingData.movie.title}</Typography>
+                        <BookingChip status={bookingMemo.status} />
+                        <Typography variant='h6' fontWeight={700}>{bookingMemo.movie.title}</Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography variant='caption'>{bookingData.showtime.date} ⬥ ⏰ {bookingData.showtime.time}</Typography>
-                            <Typography variant='caption'>{bookingData.theater} ⬥ 🪑 {bookingData.seats} ⬥ 💰 {bookingData.price}</Typography>
+                            <Typography variant='caption'>{bookingMemo.showtime.date} ⬥ ⏰ {bookingMemo.showtime.time}</Typography>
+                            <Typography variant='caption'>{bookingMemo.theater} ⬥ 🪑 {bookingMemo.seats} ⬥ 💰 {bookingMemo.price}</Typography>
                         </Box>
-                        <Typography variant='caption'>#{bookingData.id}</Typography>
+                        <Typography variant='caption'>#{bookingMemo.id}</Typography>
                         <Box sx={styles.buttons}>
                             <Button
                                 variant='outlined'
@@ -101,8 +83,8 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
             <QrModal
                 open={openModal}
                 onClose={() => setOpenModal(false)}
-                qrCode={bookingData.qrCode}
-                idReserva={bookingData.id}
+                qrCode={bookingMemo.qrCode}
+                idReserva={bookingMemo.id}
             />
         </>
     )
