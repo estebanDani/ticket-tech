@@ -19,16 +19,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUserState] = useState<User | null>(null);
     const [loading, setLoadingState] = useState<boolean>(true);
 
-    useEffect(() => {
-        AuthService.getCurrentUser()
-            .then((currentUser) => {
-                setUserState(currentUser);
-                setLoadingState(false);
-            })
-            .catch(() => {
-                setUserState(null);
-                setLoadingState(false);
-            });
+    const getCurrentUser = async () => {
+
+        try {
+            const currentUser = await  AuthService.getCurrentUser()
+            setUserState(currentUser);
+        } catch  {
+            setUserState(null);
+        }finally {
+            setLoadingState(false);
+        }
+    }
+
+    useEffect( () => {
+        getCurrentUser();
     },[])
 
     const login = async (email: string, password: string) => {
