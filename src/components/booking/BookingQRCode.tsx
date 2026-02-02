@@ -41,7 +41,7 @@ export const BookingQRCode: React.FC<BookingQRCodeProps> = ({
         elevation={3} 
         sx={{ 
           p: 2, 
-          bgcolor: '#fff', 
+          bgcolor: 'background.paper', 
           borderRadius: 2,
           display: 'flex',
           flexDirection: 'column',
@@ -55,8 +55,8 @@ export const BookingQRCode: React.FC<BookingQRCodeProps> = ({
           size={size}
           level={"H"} 
           includeMargin={true}
-          bgColor={"#ffffff"}
-          fgColor={"#000000"}
+          bgColor={theme.palette.background.paper}
+          fgColor={theme.palette.text.primary}
         />
         
         {showLabel && (
