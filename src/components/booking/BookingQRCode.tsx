@@ -3,8 +3,7 @@
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Button, Paper, Typography, Stack, useTheme } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
-import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import { QrCodeScanner, Download } from '@mui/icons-material';
 
 interface BookingQRCodeProps {
   data: string;         
@@ -61,7 +60,7 @@ export const BookingQRCode: React.FC<BookingQRCodeProps> = ({
         
         {showLabel && (
           <Stack direction="row" alignItems="center" spacing={1} color="black">
-             <QrCodeScannerIcon fontSize="small" />
+             <QrCodeScanner fontSize="small" />
              <Typography variant="caption" fontWeight="bold">
                 Escanear en entrada
              </Typography>
@@ -71,7 +70,7 @@ export const BookingQRCode: React.FC<BookingQRCodeProps> = ({
 
       {downloadable && (
         <Button 
-          startIcon={<DownloadIcon />} 
+          startIcon={<Download />} 
           variant="outlined" 
           size="small"
           onClick={handleDownload}
