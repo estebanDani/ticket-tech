@@ -71,12 +71,14 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
                             >
                                 Detalles
                             </Button>
-                            <Button
-                                variant='outlined'
-                                sx={{ color: theme.palette.error.main, borderColor: theme.palette.error.main }}
-                            >
-                                X Cancelar
-                            </Button>
+                            {bookingData.status === 'pending' &&
+                                <Button
+                                    variant='outlined'
+                                    sx={{ color: theme.palette.error.main, borderColor: theme.palette.error.main }}
+                                >
+                                    X Cancelar
+                                </Button>
+                            }
                         </Box>
                     </Box>
                 </Box>
