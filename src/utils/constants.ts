@@ -27,6 +27,8 @@ export const GENRE_LIST = [
   { value: GenereMovies.ADVENTURE, label: 'Aventura' },
   { value: GenereMovies.FANTASY, label: 'Fantasía' },
 ];
+export const RATINGS_LIST = ["G","PG","PG-13","R","NC-17",] as const;
+
 
 export const BOOKING_LABEL_MAP = new Map<number, string>([
   [0, 'Volver a Horarios'],
