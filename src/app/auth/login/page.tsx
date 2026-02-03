@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Box, Button, CircularProgress, TextField, Typography} from '@mui/material';
-
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { Alert, Box, Button, CircularProgress, TextField, Typography} from '@mui/material';
 
 import { loginSchema } from '@/schemas';
 import { useAuth } from '@/contexts'
 import { showError } from '@/utils';
-import { useRouter } from 'next/navigation';
 
 type LoginFormData = {
   email: string;
@@ -22,6 +22,10 @@ export default function LoginPage() {
   const { login} = useAuth(); 
   const [loadingPage, setLoading] = useState(false);
 
+  const searchParams = useSearchParams();
+
+const redirectTo = searchParams.get('redirect') || '/';
+
   const { register, handleSubmit, formState: { errors }} = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
   });
@@ -30,7 +34,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       await login(data.email, data.password);
-      router.push(`/`);
+      router.push(redirectTo);
     } catch {
       showError('Failed to Login. Please check your credentials and try again.');
     }finally{
@@ -41,12 +45,17 @@ export default function LoginPage() {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
+    display="flex"
+    flexDirection="column"
+    justifyContent="center"
+    alignItems="center"
+    minHeight="100vh"
     >
+    {searchParams.get('message') === 'auth-required' && (
+      <Alert severity="warning" sx={{ mb: 2 }}>
+        Debes iniciar sesión
+      </Alert>
+    )}
       <Box width={350}>
         <Typography variant="h5" mb={2} textAlign="center">
           Iniciar sesión
