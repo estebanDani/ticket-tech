@@ -11,7 +11,7 @@ interface FormData {
 export const checkoutSchema: yup.ObjectSchema<FormData> = yup.object({
   name: yup
     .string()
-    .required('Nombre requerido')
+    .required('Campo requerido')
     .min(2, 'El nombre debe tener al menos 2 letras')
     .matches(
       /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/,
@@ -20,12 +20,12 @@ export const checkoutSchema: yup.ObjectSchema<FormData> = yup.object({
 
   email: yup
     .string()
-    .required('Email requerido')
+    .required('Campo requerido')
     .email('Formato de email inválido'),
 
   phone: yup
     .string()
-    .required('Teléfono requerido')
+    .required('Campo requerido')
     .matches(/^[0-9]+$/, 'El teléfono solo debe contener números')
     .min(7, 'El teléfono debe tener al menos 7 dígitos')
     .max(10, 'El teléfono no debe tener más de 10 dígitos'),
