@@ -69,10 +69,10 @@ export default function Home() {
             onChange={(e) => setSelectedGenre(e.target.value)}
           >
             {GENRE_LIST.map((genre) => (
-                  <MenuItem key={genre.value} value={genre.value}>
-                    {genre.label}
-                  </MenuItem>
-                ))}
+              <MenuItem key={genre.value} value={genre.value}>
+                {genre.label}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
