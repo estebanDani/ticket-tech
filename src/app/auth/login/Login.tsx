@@ -17,7 +17,7 @@ type LoginFormData = {
   password: string;
 };
 
-export default function LoginPage() {
+export default function LoginClient() {
   const router = useRouter();
   const { login} = useAuth(); 
   const [loadingPage, setLoading] = useState(false);
