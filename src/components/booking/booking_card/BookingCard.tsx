@@ -16,24 +16,25 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
     const { theater } = useTheater(showtime?.theaterId)
     const [openModal, setOpenModal] = useState(false)
 
-    const bookingData = {
-        id: booking.id,
-        status: booking.status,
-        movie: {
-            title: movie?.title || 'Cargando...',
-            posterUrl: movie?.posterUrl || 'https://es.web.img2.acsta.net/pictures/14/11/03/11/00/378754.jpg'
-        },
-        showtime: {
-            date: formatDateWithYear(showtime?.startTime),
-            time: formatTime(showtime?.startTime),
-        },
-        seats: booking.seats.join(', '),
-        theater: theater?.name || 'Cargando...',
-        qrCode: booking.qrCode,
-        price: booking.totalPreice,
-    };
+    const bookingData = useMemo(() => {
+        return {
+            id: booking.id,
+            status: booking.status,
+            movie: {
+                title: movie?.title || 'Cargando...',
+                posterUrl: movie?.posterUrl || 'https://es.web.img2.acsta.net/pictures/14/11/03/11/00/378754.jpg'
+            },
+            showtime: {
+                date: formatDateWithYear(showtime?.startTime),
+                time: formatTime(showtime?.startTime),
+            },
+            seats: booking.seats.join(', '),
+            theater: theater?.name || 'Cargando...',
+            qrCode: booking.qrCode,
+            price: booking.totalPreice,
+        };
+    }, [booking, movie, showtime, theater]);
 
-    const bookingMemo = useMemo(() => bookingData, [booking]);
 
     return (
         <>
@@ -41,21 +42,21 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
                 <Box sx={styles.container}>
                     <CardMedia
                         component="img"
-                        image={bookingMemo.movie.posterUrl}
-                        alt={bookingMemo.movie.title}
+                        image={bookingData.movie.posterUrl}
+                        alt={bookingData.movie.title}
                         sx={{
                             width: 120,
                             height: 180,
                         }}
                     />
                     <Box sx={styles.info}>
-                        <BookingChip status={bookingMemo.status} />
-                        <Typography variant='h6' fontWeight={700}>{bookingMemo.movie.title}</Typography>
+                        <BookingChip status={bookingData.status} />
+                        <Typography variant='h6' fontWeight={700}>{bookingData.movie.title}</Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography variant='caption'>{bookingMemo.showtime.date} ⬥ ⏰ {bookingMemo.showtime.time}</Typography>
-                            <Typography variant='caption'>{bookingMemo.theater} ⬥ 🪑 {bookingMemo.seats} ⬥ 💰 {bookingMemo.price}</Typography>
+                            <Typography variant='caption'>{bookingData.showtime.date} ⬥ ⏰ {bookingData.showtime.time}</Typography>
+                            <Typography variant='caption'>{bookingData.theater} ⬥ 🪑 {bookingData.seats} ⬥ 💰 {bookingData.price}</Typography>
                         </Box>
-                        <Typography variant='caption'>#{bookingMemo.id}</Typography>
+                        <Typography variant='caption'>#{bookingData.id}</Typography>
                         <Box sx={styles.buttons}>
                             <Button
                                 variant='outlined'
@@ -70,12 +71,14 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
                             >
                                 Detalles
                             </Button>
-                            <Button
-                                variant='outlined'
-                                sx={{ color: theme.palette.error.main, borderColor: theme.palette.error.main }}
-                            >
-                                X Cancelar
-                            </Button>
+                            {bookingData.status === 'pending' &&
+                                <Button
+                                    variant='outlined'
+                                    sx={{ color: theme.palette.error.main, borderColor: theme.palette.error.main }}
+                                >
+                                    X Cancelar
+                                </Button>
+                            }
                         </Box>
                     </Box>
                 </Box>
@@ -83,8 +86,8 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
             <QrModal
                 open={openModal}
                 onClose={() => setOpenModal(false)}
-                qrCode={bookingMemo.qrCode}
-                idReserva={bookingMemo.id}
+                qrCode={bookingData.qrCode}
+                idReserva={bookingData.id}
             />
         </>
     )
