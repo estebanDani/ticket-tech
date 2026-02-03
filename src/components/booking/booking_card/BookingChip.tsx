@@ -8,7 +8,8 @@ interface ChipProps {
 }
 
 export const BookingChip = ({ status }: ChipProps) => {
-    const statusInfo = () => {
+
+    const statusInfo = useMemo(() => {
         switch (status) {
             case 'pending':
                 return {
@@ -35,15 +36,14 @@ export const BookingChip = ({ status }: ChipProps) => {
                     backgroundColor: theme.palette.grey[800]
                 };
         }
-    };
-    const statusMemo = useMemo(() => statusInfo(), [status]);
+    }, [status]);
     return (
         <Chip
-            label={statusMemo.label}
+            label={statusInfo.label}
             sx={{
                 width: 120,
-                backgroundColor: statusMemo.backgroundColor,
-                color: statusMemo.color
+                backgroundColor: statusInfo.backgroundColor,
+                color: statusInfo.color
             }}
         />
     )
