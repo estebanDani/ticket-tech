@@ -93,7 +93,6 @@ export default function Home() {
           <MovieGrid movies={filteredMovies} loading={loading} />
         )}
       </Container>
-
       <Footer />
     </>
   )

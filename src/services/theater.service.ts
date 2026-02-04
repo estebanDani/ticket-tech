@@ -96,7 +96,7 @@ const update = async (id: string, theater: Partial<Theater>): Promise<void> => {
 const deleteTheater = async (id: string): Promise<void> => {
     try {
         const docRef = doc(db, COLLECTIONS.THEATERS, id);
-        
+
         const docSnap = await getDoc(docRef);
         if (!docSnap.exists()) {
             throw new Error("Theater not found to delete");
@@ -118,17 +118,15 @@ export default {
 }
 
 const seatMapGenerator = (rows: number, seatsPerRow: number): Seat[] => {
-    const seats: Seat[] = [];
-    for (let i = 0; i < rows; i++) {
-        const rowLabel = String.fromCharCode(65 + i);
-
-        for (let j = 1; j < seatsPerRow; j++) {
+    const seats: Seat[] = []
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < seatsPerRow; col++) {
             seats.push({
-                id: `${rowLabel}${j}`,
-                row: rowLabel,
-                number: j,
-                type: 'normal',
-                position: { x: j, y: i }
+                id: `${String.fromCharCode(65 + row)}${col + 1}`,
+                number: col + 1,
+                position: { x: col, y: row },
+                row: String.fromCharCode(65 + row),
+                type: col === 1 ? 'disabled' : 'normal',
             })
         }
     }
