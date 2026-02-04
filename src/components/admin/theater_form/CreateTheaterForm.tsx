@@ -1,4 +1,3 @@
-// components/theater/CreateTheaterForm.tsx
 'use client';
 
 import { useState } from 'react';
@@ -18,8 +17,8 @@ const CreateTheaterForm = () => {
         createTheater
     } = useNewTheater();
 
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,10 +27,14 @@ const CreateTheaterForm = () => {
 
         if (result.success) {
             setSuccessMessage('¡Sala creada exitosamente!');
-            setErrorMessage('');
+            setErrorMessage(null);
+
+            setTimeout(() => {
+                setSuccessMessage(null);
+            }, 3000);
         } else {
             setErrorMessage(result.error || 'Error al crear la sala');
-            setSuccessMessage('');
+            setSuccessMessage(null);
         }
     };
 
