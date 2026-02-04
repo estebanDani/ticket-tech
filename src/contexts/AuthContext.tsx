@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const loggedUser = await AuthService.login(email, password);
             setUserState(loggedUser);
+            document.cookie = "authToken=true; path=/";
         } finally {
             setLoadingState(false);
         }
