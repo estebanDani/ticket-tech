@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Box, Button, Typography, Card, CardMedia, Skeleton } from '@mui/material';
+import { Box, Button, Typography, Card, CardMedia } from '@mui/material';
 import { theme } from '@/theme/theme'
 import { Booking } from '@/types';
 import { useShowtime, useTheater, useMovie } from '@/hooks';

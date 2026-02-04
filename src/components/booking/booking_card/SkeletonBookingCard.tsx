@@ -1,5 +1,5 @@
 
-import { Box, Button, Card, Skeleton } from '@mui/material';
+import { Box, Card, Skeleton } from '@mui/material';
 import { theme } from '@/theme/theme'
 
 export const SkeletonBookingCard = () => {
