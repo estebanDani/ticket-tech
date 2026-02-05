@@ -9,8 +9,7 @@ import { MovieDetail } from './movies/MovieDetail'
 import { SeatButton } from './seats/SeatButton';
 import { ShowtimeCard } from './showtimes/ShowtimeCard';
 import { ShowtimesPageClient } from './showtimes/ShowtimesPageClient';
-import { MovieForm } from './admin/MovieForm';
-
+import { MovieForm } from './admin/movie_form/MovieForm';
 export { 
     MovieCard, 
     MovieGrid, 

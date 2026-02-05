@@ -23,35 +23,10 @@ import {
 } from "@mui/material";
 import { Movie, CreateMovieDto } from "@/types";
 import { GENRE_LIST, RATINGS_LIST, MOVIE_INITIAL_VALUES } from "@/utils";
+import { movieSchema } from "@/schemas";
 
-const schema = yup.object({
-  title: yup.string().required("El título es obligatorio"),
-  synopsis: yup.string()
-    .required("La sinopsis es obligatoria")
-    .min(10, "Mínimo 10 caracteres"),
-  duration: yup.number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .required("La duración es obligatoria")
-    .min(1, "Mínimo 1 minuto"),
-  genre: yup.array()
-    .of(yup.string().required())
-    .min(1, "Selecciona al menos un género")
-    .required(),
-  rating: yup.string().required("Clasificación obligatoria"),
-  posterUrl: yup.string()
-    .url("Debe ser una URL válida")
-    .required("URL del póster obligatoria"),
-  trailerUrl: yup.string()
-    .url("Debe ser una URL válida")
-    .required("URL del trailer obligatoria"),
-  releaseDate: yup.date()
-    .required("Fecha obligatoria")
-    .typeError("Fecha inválida"),
-  isActive: yup.boolean().required(),
-  createdAt: yup.date().default(() => new Date())
-}).required();
 
-type MovieFormData = yup.InferType<typeof schema>;
+type MovieFormData = yup.InferType<typeof movieSchema>;
 
 interface MovieFormProps {
   initialData?: Movie; 
@@ -64,7 +39,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
   onSubmit, 
   isLoading = false 
 }) => {
-  
+
   const {
     register,
     handleSubmit,
@@ -72,7 +47,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
     reset,
     formState: { errors },
   } = useForm<MovieFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(movieSchema),
     defaultValues: {
       ...MOVIE_INITIAL_VALUES,
       releaseDate: new Date(),
@@ -92,7 +67,8 @@ export const MovieForm: React.FC<MovieFormProps> = ({
   }, [initialData, reset]);
 
   const onFormSubmit: SubmitHandler<MovieFormData> = async (data) => {
-    await onSubmit(data);
+     await onSubmit(data);
+    
   };
 
   const isEditMode = !!initialData;
