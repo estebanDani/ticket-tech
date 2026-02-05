@@ -29,13 +29,7 @@ interface HeaderProps {
 
 export function Header({ searchValue, onChangeSearch }: HeaderProps) {
   const router = useRouter();
-  //const { user, logout } = useAuth();
-  const user = { 
-  uid: '123', 
-  email: 'usuario@prueba.com', 
-  displayName: 'Juan Perez' 
-}; 
-const logout = async () => console.log("Cerrando sesión fake...");
+  const { user, logout } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
