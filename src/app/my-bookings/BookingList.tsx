@@ -1,29 +1,51 @@
 import { Box, Typography } from '@mui/material'
-import SkeletonBookingCard from '@/components/booking/booking_card/SkeletonBookingCard'
+import { useBookings } from '@/hooks'
 import { BookingCard } from '@/components/booking/booking_card/BookingCard'
-import { Booking } from '@/types'
+import SkeletonCard from './SkeletonCard'
 
-interface BookingListProps {
-    bookings: Booking[]
-    loading: boolean
-}
 
-export const BookingList = ({ bookings, loading }: BookingListProps) => {
+const ListContainer = ({ children }: { children: React.ReactNode }) => {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {loading ? (
-                Array.from({ length: 3 }).map((_, index) => (
-                    <SkeletonBookingCard key={index} />
-                ))
-            ) : bookings.length === 0 ? (
-                <Typography variant='h6' sx={{ mb: 3, fontWeight: 'bold' }}>
-                    No tienes reservas
-                </Typography>
-            ) : (
-                bookings.map((booking) => (
-                    <BookingCard key={booking.id} booking={booking} />
-                ))
-            )}
+            {children}
         </Box>
     )
+}
+
+export const BookingList = () => {
+    const { bookings, loading } = useBookings()
+
+    if (loading) {
+        return (
+            <ListContainer>
+                {Array.from({ length: 5 }).map((_, index) => (
+                    <SkeletonCard key={index} />
+                ))}
+            </ListContainer>
+        )
+    }
+
+    if (bookings.length === 0) {
+        return (
+            <ListContainer>
+                <Typography variant="h6" color="black">
+                    🎬 No tienes reservas aún
+                </Typography>
+                <Typography variant="body2" color="black" sx={{ mt: 1 }}>
+                    ¡Reserva tus películas favoritas!
+                </Typography>
+            </ListContainer>
+        )
+    }
+
+    return (
+        <ListContainer>
+            {bookings.map((booking) => (
+                <BookingCard key={booking.id}
+                    booking={booking}
+                />
+            ))}
+        </ListContainer>
+    )
+
 }

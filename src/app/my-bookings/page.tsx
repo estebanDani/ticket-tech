@@ -1,12 +1,10 @@
 'use client'
-import { useBookings } from '@/hooks'
 import { Container, Typography, Button, Box, Select, MenuItem } from '@mui/material'
 import { BookingList } from './BookingList'
 import { ArrowBack } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 
 export default function MyBookingsPage() {
-    const { bookings, loading } = useBookings()
     const router = useRouter()
     return (
         <Container maxWidth={false} disableGutters sx={{ p: 4 }}>
@@ -19,7 +17,7 @@ export default function MyBookingsPage() {
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 2, my: 8 }}>
                 <Select
                     value="Todas"
-                    onChange={(e) => console.log(e.target.value)}
+                    onChange={(e) => e.target.value}
                     sx={{ width: 120 }}
                 >
                     <MenuItem value="Todas">Todas</MenuItem>
@@ -29,7 +27,7 @@ export default function MyBookingsPage() {
                 </Select>
                 <Select
                     value="Este Mes"
-                    onChange={(e) => console.log(e.target.value)}
+                    onChange={(e) => e.target.value}
                     sx={{ width: 150 }}
                 >
                     <MenuItem value="Este Mes">Este Mes</MenuItem>
@@ -37,7 +35,7 @@ export default function MyBookingsPage() {
                     <MenuItem value="Año Pasado">Año Pasado</MenuItem>
                 </Select>
             </Box>
-            <BookingList bookings={bookings} loading={loading} />
+            <BookingList />
         </Container>
     )
 }
