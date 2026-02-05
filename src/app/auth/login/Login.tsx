@@ -23,8 +23,7 @@ export default function LoginClient() {
   const [loadingPage, setLoading] = useState(false);
 
   const searchParams = useSearchParams();
-
-const redirectTo = searchParams.get('redirect') || '/';
+  const redirectTo = searchParams.get('redirect') || '/';
 
   const { register, handleSubmit, formState: { errors }} = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
