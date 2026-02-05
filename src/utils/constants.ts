@@ -1,3 +1,5 @@
+import { CreateMovieDto } from "@/types";
+
 export const COLLECTIONS = {
   MOVIES: 'movies',
   THEATERS: 'theaters',
@@ -35,6 +37,18 @@ export const BOOKING_LABEL_MAP = new Map<number, string>([
   [1, 'Volver a Selección de Asientos'],
   [2, 'Volver'],
 ]);
+export const MOVIE_INITIAL_VALUES: CreateMovieDto = {
+  title: "",
+  synopsis: "",
+  duration: 0,
+  genre: [],
+  rating: "",
+  posterUrl: "",
+  trailerUrl: "",
+  isActive: true,
+  releaseDate: new Date(), 
+  createdAt: new Date(),
+};
 
 
 export enum PAYMETMETHOD_ENUM {Cash ='cash' , Card ='card' ,Transfer= 'transfer'};

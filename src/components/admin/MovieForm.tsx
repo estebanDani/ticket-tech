@@ -22,7 +22,7 @@ import {
   Switch
 } from "@mui/material";
 import { Movie, CreateMovieDto } from "@/types";
-import { GENRE_LIST, RATINGS_LIST } from "@/utils";
+import { GENRE_LIST, RATINGS_LIST, MOVIE_INITIAL_VALUES } from "@/utils";
 
 const schema = yup.object({
   title: yup.string().required("El título es obligatorio"),
@@ -74,13 +74,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
   } = useForm<MovieFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      title: "",
-      synopsis: "",
-      duration: 0,
-      genre: [],
-      rating: "",
-      posterUrl: "",
-      trailerUrl: "", 
+      ...MOVIE_INITIAL_VALUES,
       releaseDate: new Date(),
       isActive: true,
       createdAt: new Date(),
