@@ -1,3 +1,5 @@
+import { CreateMovieDto } from "@/types";
+
 export const COLLECTIONS = {
   MOVIES: 'movies',
   THEATERS: 'theaters',
@@ -27,12 +29,26 @@ export const GENRE_LIST = [
   { value: GenereMovies.ADVENTURE, label: 'Aventura' },
   { value: GenereMovies.FANTASY, label: 'Fantasía' },
 ];
+export const RATINGS_LIST = ["G","PG","PG-13","R","NC-17",] as const;
+
 
 export const BOOKING_LABEL_MAP = new Map<number, string>([
   [0, 'Volver a Horarios'],
   [1, 'Volver a Selección de Asientos'],
   [2, 'Volver'],
 ]);
+export const MOVIE_INITIAL_VALUES: CreateMovieDto = {
+  title: "",
+  synopsis: "",
+  duration: 0,
+  genre: [],
+  rating: "",
+  posterUrl: "",
+  trailerUrl: "",
+  isActive: true,
+  releaseDate: new Date(), 
+  createdAt: new Date(),
+};
 
 
 export enum PAYMETMETHOD_ENUM {Cash ='cash' , Card ='card' ,Transfer= 'transfer'};
