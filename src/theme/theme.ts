@@ -32,7 +32,7 @@ export const theme = createTheme({
       secondary: '#ffffff',
     },
     grey: {
-      100: '#121212',
+      100: '#EAEFEF',
       200: '#343434',
       300: '#333',
       400: '#444',
