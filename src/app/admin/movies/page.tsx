@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
-import {Button, Dialog} from '@mui/material/';
+import { useState } from 'react';
+import { Button, Dialog } from '@mui/material';
 
 import { showError, showSuccess } from '@/utils';
 import { CreateMovieDto } from '@/types';
@@ -12,11 +12,8 @@ import { useMovies } from '@/hooks';
 
 export default function MoviesPage() {
   const { load } = useMovies();
-  const [open, setOpen] = React.useState(false);
-  const [submitting, setSubmitting] = React.useState(false);
-
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const handleSubmit = async (data: CreateMovieDto) => {
     setSubmitting(true);
@@ -25,7 +22,7 @@ export default function MoviesPage() {
       await MovieService.create(data);
 
       showSuccess('Película creada correctamente');
-      handleClose();
+      setOpen(false);
       await load();
 
     } catch {
@@ -37,7 +34,7 @@ export default function MoviesPage() {
 
   return (
     <>
-      <Button variant="contained" onClick={handleClickOpen}>
+      <Button variant="contained" onClick={()=>setOpen(true)}>
         Nueva Película
       </Button>
 
@@ -45,7 +42,7 @@ export default function MoviesPage() {
         fullWidth
         maxWidth="md"
         open={open}
-        onClose={handleClose}
+        onClose={()=>setOpen(false)}
       >
         <MovieForm
           onSubmit={handleSubmit}
