@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {Table, TableBody, TableCell,TableContainer,TableHead,TableRow,Paper,Button,ButtonGroup,Typography,Box,TablePagination, Tooltip} from '@mui/material';
 
 import { CheckBox, Delete, Edit } from '@mui/icons-material';
@@ -28,6 +28,19 @@ export default function MovieTable({ movies, onEdit, onDelete }: Props) {
     setPage(0);
   };
 
+  
+  // const paginatedMovies = movies.slice(
+    //   page * rowsPerPage,
+    //   page * rowsPerPage + rowsPerPage
+    // );
+    
+  const paginatedMovies = useMemo(()=>{
+    return movies.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    )},[page,rowsPerPage,movies])
+      
+      
   if (!movies.length) {
     return (
       <Box sx={{ p: 4, textAlign: 'center' }}>
@@ -35,12 +48,6 @@ export default function MovieTable({ movies, onEdit, onDelete }: Props) {
       </Box>
     );
   }
-
-  const paginatedMovies = movies.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
   return (
     <Paper>
       <TableContainer>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Box, Button, CircularProgress, Dialog, InputAdornment, Paper, TextField } from '@mui/material';
 
 import { showError, showSuccess } from '@/utils';
@@ -13,21 +13,24 @@ import { FormDelete } from '@/components/admin/movie_form/FormDelete';
 import MovieTable from '@/components/admin/movie_form/MovieTable';
 import { Search } from '@mui/icons-material';
 
+enum Modo{
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete'
+}
 
 export default function MoviesPage() {
   const {movies, load, loading } = useMovies();
 
   const [open, setOpen] = useState<boolean>(false);
-  const [mode, setMode] = useState<'create' | 'update' | 'delete' | null>(null);
+  const [mode, setMode] = useState<Modo | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [search, setSearch] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(search.toLowerCase())
-  );
+  
 
-  const handleOpen = (mode: 'create' | 'update' | 'delete', movie?: Movie) => {
+  const handleOpen = (mode:Modo, movie?: Movie) => {
     setMode(mode);
     setSelectedMovie(movie ?? null);
     setOpen(true);
@@ -84,6 +87,13 @@ export default function MoviesPage() {
     }
   };
 
+  const filteredMovies = useMemo(()=>{
+    console.log(search)
+   return  movies.filter((movie) =>
+     movie.title.toLowerCase().includes(search.toLowerCase())
+   );
+  },[movies,search]) 
+
   if (loading) {
     return (
       <Box sx={{ display: 'grid', placeItems: 'center', py: 6 }}>
@@ -103,7 +113,7 @@ export default function MoviesPage() {
           alignItems: "center",
         }}
       >
-        <Button variant="contained" onClick={() => handleOpen("create")}>
+        <Button variant="contained" onClick={() => handleOpen(Modo.CREATE)}>
           Nueva Película
         </Button>
 
@@ -153,8 +163,8 @@ export default function MoviesPage() {
       </Dialog>
       <MovieTable
         movies={filteredMovies}
-        onEdit={(movie) => handleOpen('update', movie)}
-        onDelete={(movie) => handleOpen('delete', movie)}
+        onEdit={(movie) => handleOpen(Modo.UPDATE, movie)}
+        onDelete={(movie) => handleOpen(Modo.DELETE, movie)}
       />
     </>
   );
