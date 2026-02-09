@@ -42,6 +42,13 @@ const schema = yup.object({
 
 type ShowtimeFormData = yup.InferType<typeof schema>;
 
+const SHOWTIME_INITIAL = {
+  movieId: "",
+  theaterId: "",
+  price: 0,
+  startTime: new Date(), 
+};
+
 interface ShowtimeFormProps {
   initialData?: Showtime;
   movies: Movie[];        
@@ -72,9 +79,7 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
   } = useForm<ShowtimeFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      movieId: "",
-      theaterId: "",
-      price: 0,
+      ...SHOWTIME_INITIAL,
       startTime: new Date(),
     },
   });
@@ -175,7 +180,6 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
         <form onSubmit={handleSubmit(onFormSubmit)} noValidate>
           <Grid container spacing={3}>
             
-            {/* 1. PELÍCULA */}
             <Grid size={{ xs: 12 }}>
               <FormControl fullWidth error={!!errors.movieId}>
                 <InputLabel

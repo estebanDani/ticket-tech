@@ -13,7 +13,7 @@ import {
 
 import { Header, Footer, MovieGrid } from '@/components'
 import { useActiveMovies } from '@/hooks/useActiveMovies'
-import { GenereMovies, GENRE_LIST } from '@/utils'
+import { GenereMovies, GENRE_LIST, searchMovie } from '@/utils'
 
 export default function Home() {
   const { movies, loading, error } = useActiveMovies()
@@ -26,17 +26,7 @@ export default function Home() {
   }
 
   const filteredMovies = useMemo(() => {
-    return movies.filter(movie => {
-      const matchesTitle = movie.title
-        .toLowerCase()
-        .includes(searchValue.toLowerCase())
-
-      const matchesGenre =
-        selectedGenre === GenereMovies.ALL ||
-        movie.genre?.includes(selectedGenre)
-
-      return matchesTitle && matchesGenre
-    })
+    return searchMovie(movies, searchValue, selectedGenre)
   }, [movies, searchValue, selectedGenre])
 
   return (
