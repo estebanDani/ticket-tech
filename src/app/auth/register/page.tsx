@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Box, Button, CircularProgress, TextField, Typography} from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,15 +20,15 @@ type RegisterFormData = {
 };
 
 const DEFAULT_VALUES: RegisterFormData = {
-  user:{
-    displayName:'',
-    email:'',
-    role:'user',
+  user: {
+    displayName: '',
+    email: '',
+    role: 'admin',
     createdAt: new Date()
   },
-  password:'',
-  passwordConfirm:''
-  
+  password: '',
+  passwordConfirm: ''
+
 };
 
 const FORM_OPTIONS = {
@@ -38,10 +38,10 @@ const FORM_OPTIONS = {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { register} = useAuth(); 
+  const { register } = useAuth();
   const [loadingPage, setLoading] = useState(false);
 
-  const { control , handleSubmit} = useForm<RegisterFormData>({
+  const { control, handleSubmit } = useForm<RegisterFormData>({
     resolver: yupResolver(registerSchema),
     ...FORM_OPTIONS,
   });
@@ -51,7 +51,7 @@ export default function RegisterPage() {
       setLoading(true);
       await register(data.user, data.password);
       router.push(`/auth/login`);
-    } catch  {
+    } catch {
       showError('Failed to Register. Please check your credentials and try again.');
     } finally {
       setLoading(false);
@@ -86,8 +86,8 @@ export default function RegisterPage() {
                   fullWidth
                   margin="none"
                 />
-            
-            )}/>
+
+              )} />
             <Typography  >Email</Typography>
             <Controller
               name="user.email"
@@ -100,7 +100,7 @@ export default function RegisterPage() {
                   error={!!fieldState.error}
                   helperText={fieldState.error?.message}
                 />
-            )}
+              )}
             />
             <Typography>Contraseña</Typography>
             <Controller
@@ -115,7 +115,7 @@ export default function RegisterPage() {
                   error={!!fieldState.error}
                   helperText={fieldState.error?.message}
                 />
-            )}
+              )}
             />
 
             <Typography>Contraseña</Typography>
@@ -131,7 +131,7 @@ export default function RegisterPage() {
                   error={!!fieldState.error}
                   helperText={fieldState.error?.message}
                 />
-            )}
+              )}
             />
           </Box>
           <Button
