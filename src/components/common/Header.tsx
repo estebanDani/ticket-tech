@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext'; 
-import { Person, Logout,Menu as MenuIcon, ConfirmationNumber} from '@mui/icons-material';
+import { useAuth } from '@/contexts/AuthContext';
+import { Person, Logout, Menu as MenuIcon, ConfirmationNumber } from '@mui/icons-material';
 
 import {
   InputAdornment,
@@ -63,7 +63,7 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
 
   const handleLogout = async () => {
     handleCloseUserMenu();
-    handleClose(); 
+    handleClose();
     await logout();
     router.push('/login');
   };
@@ -142,7 +142,7 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
                   </Avatar>
                 </IconButton>
               </Tooltip>
-              
+
               <Menu
                 sx={{ mt: '45px' }}
                 anchorEl={anchorElUser}
@@ -162,21 +162,21 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
                 </Box>
                 <Divider />
                 <MenuItem onClick={() => navigateTo('/my-bookings')}>
-                  <ListItemIcon><ConfirmationNumber fontSize="small"/></ListItemIcon>
+                  <ListItemIcon><ConfirmationNumber fontSize="small" /></ListItemIcon>
                   Mis Reservas
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
-                  <ListItemIcon><Logout fontSize="small"/></ListItemIcon>
+                  <ListItemIcon><Logout fontSize="small" /></ListItemIcon>
                   Cerrar Sesión
                 </MenuItem>
               </Menu>
             </>
           ) : (
             <>
-              <Button color="inherit" startIcon={<Person />} onClick={() => router.push('/login')}>
+              <Button color="inherit" startIcon={<Person />} onClick={() => router.push('/auth/login')}>
                 Login
               </Button>
-              <Button color="inherit" onClick={() => router.push('/register')}>
+              <Button color="inherit" onClick={() => router.push('/auth/register')}>
                 Register
               </Button>
             </>
@@ -186,11 +186,11 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
         <Box sx={{ display: { xs: 'block', md: 'none' }, ml: 'auto' }}>
           <IconButton color="inherit" onClick={handleOpen}>
             {user ? (
-               <Avatar sx={{ width: 24, height: 24, fontSize: '0.8rem', bgcolor: 'primary.main' }}>
-                 {getInitials(user.displayName || user.email)}
-               </Avatar>
+              <Avatar sx={{ width: 24, height: 24, fontSize: '0.8rem', bgcolor: 'primary.main' }}>
+                {getInitials(user.displayName || user.email)}
+              </Avatar>
             ) : (
-               <MenuIcon />
+              <MenuIcon />
             )}
           </IconButton>
 
