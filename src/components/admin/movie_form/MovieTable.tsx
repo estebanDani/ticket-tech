@@ -28,12 +28,6 @@ export default function MovieTable({ movies, onEdit, onDelete }: Props) {
     setPage(0);
   };
 
-  
-  // const paginatedMovies = movies.slice(
-    //   page * rowsPerPage,
-    //   page * rowsPerPage + rowsPerPage
-    // );
-    
   const paginatedMovies = useMemo(()=>{
     return movies.slice(
       page * rowsPerPage,

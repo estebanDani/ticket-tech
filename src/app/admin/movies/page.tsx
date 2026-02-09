@@ -88,7 +88,6 @@ export default function MoviesPage() {
   };
 
   const filteredMovies = useMemo(()=>{
-    console.log(search)
    return  movies.filter((movie) =>
      movie.title.toLowerCase().includes(search.toLowerCase())
    );
