@@ -5,4 +5,5 @@ export * from './sortShowtimes'
 export * from './formatDateLabel'
 export * from './formatDateWithYear'
 export * from './formatTime'
+export * from './searchMovie'
 
