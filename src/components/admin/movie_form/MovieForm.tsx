@@ -41,18 +41,23 @@ const formatDateForInput = (date: Date | string | undefined): string => {
   return dateObj.toISOString().split('T')[0];
 };
 
-const toDate = (value: any): Date => {
+const toDate = (value: unknown): Date => {
   if (!value) return new Date();
 
-  if (value.toDate && typeof value.toDate === 'function') {
+  if (typeof value === 'object' && value !== null && 'toDate' in value && typeof value.toDate === 'function') {
     return value.toDate();
   }
+
   if (value instanceof Date) {
     return value;
   }
 
-  const date = new Date(value);
-  return isNaN(date.getTime()) ? new Date() : date;
+  if (typeof value === 'string' || typeof value === 'number') {
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? new Date() : date;
+  }
+
+  return new Date();
 };
 
 export const MovieForm: React.FC<MovieFormProps> = ({
