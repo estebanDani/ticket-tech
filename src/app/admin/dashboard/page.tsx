@@ -1,17 +1,17 @@
 'use client';
 
 import {Box,Drawer, CssBaseline, AppBar, Toolbar, Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Inbox, Mail, Movie, TheaterComedy} from '@mui/icons-material';
+import { Dashboard, ListAlt, Movie, TheaterComedy, Theaters} from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 const drawerWidth = 240;
 
 const drawerItems = [
-  { text: 'Dashboard', icon: <Inbox />, path: '/admin/dashboard' },
+  { text: 'Dashboard', icon: <Dashboard />, path: '/admin/dashboard' },
   { text: 'Películas', icon: <Movie />,path: '/admin/movies' },
-  { text: 'Salas', icon: <TheaterComedy />, path: '/admin/theaters' },
-  { text: 'Funciones', icon: <Mail /> , path: '/admin/showtimes'},
-  { text: 'Reservas', icon: <Mail />,path: '/admin/bookings' },
+  { text: 'Salas', icon: <Theaters />, path: '/admin/theaters' },
+  { text: 'Funciones', icon: <TheaterComedy /> , path: '/admin/showtimes'},
+  { text: 'Reservas', icon: <ListAlt />,path: '/admin/bookings' },
 ];
 
 
