@@ -2,16 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import { Box, Button, CircularProgress, Dialog, InputAdornment, Paper, TextField } from '@mui/material';
+import { Search } from '@mui/icons-material';
 
+import { useMovies } from '@/hooks';
+import { MovieService } from '@/services';
 import { showError, showSuccess } from '@/utils';
 import { CreateMovieDto, Movie } from '@/types';
-import { MovieService } from '@/services';
-import { useMovies } from '@/hooks';
-
-import { MovieForm } from '@/components';
-import { FormDelete } from '@/components/admin/movie_form/FormDelete';
-import MovieTable from '@/components/admin/movie_form/MovieTable';
-import { Search } from '@mui/icons-material';
+import { FormDelete, MovieForm, MovieTable } from '@/components';
 
 enum Modo{
   CREATE = 'create',
@@ -88,9 +85,9 @@ export default function MoviesPage() {
   };
 
   const filteredMovies = useMemo(()=>{
-   return  movies.filter((movie) =>
-     movie.title.toLowerCase().includes(search.toLowerCase())
-   );
+    return  movies.filter((movie) =>
+      movie.title.toLowerCase().includes(search.toLowerCase())
+    );
   },[movies,search]) 
 
   if (loading) {

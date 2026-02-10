@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import {Table, TableBody, TableCell,TableContainer,TableHead,TableRow,Paper,Button,ButtonGroup,Typography,Box,TablePagination, Tooltip} from '@mui/material';
-
 import { CheckBox, Delete, Edit } from '@mui/icons-material';
+
 import { Movie } from '@/types';
 import { formatDuration } from '@/utils';
 
@@ -13,9 +13,9 @@ interface Props {
   onDelete: (movie: Movie) => void;
 }
 
-export default function MovieTable({ movies, onEdit, onDelete }: Props) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+export const MovieTable = ({ movies, onEdit, onDelete }: Props)=> {
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);

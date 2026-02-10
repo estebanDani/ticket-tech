@@ -7,7 +7,7 @@ interface FormDeleteProps {
   submit: boolean
 }
 
-export function FormDelete({ title, handleDelete, submit }: FormDeleteProps) {
+export const FormDelete = ({ title, handleDelete, submit }: FormDeleteProps)=> {
   return (
     <>
         <DialogTitle>Eliminar película</DialogTitle>
