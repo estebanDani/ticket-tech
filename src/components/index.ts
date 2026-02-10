@@ -10,6 +10,8 @@ import { SeatButton } from './seats/SeatButton';
 import { ShowtimeCard } from './showtimes/ShowtimeCard';
 import { ShowtimesPageClient } from './showtimes/ShowtimesPageClient';
 import { MovieForm } from './admin/movie_form/MovieForm';
+import { BookingQRCode } from './booking/BookingQRCode'
+import { BookingDetailsModal } from './booking/booking_card/BookingDetails'
 export { 
     MovieCard, 
     MovieGrid, 
@@ -22,4 +24,6 @@ export {
     ShowtimeCard,
     ShowtimesPageClient,
     MovieForm,
+    BookingQRCode,
+    BookingDetailsModal
 };
