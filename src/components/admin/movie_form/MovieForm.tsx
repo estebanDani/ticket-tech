@@ -29,7 +29,7 @@ import { movieSchema } from "@/schemas";
 type MovieFormData = yup.InferType<typeof movieSchema>;
 
 interface MovieFormProps {
-  initialData?: Movie;
+  initialData?: Movie | null;
   onSubmit: SubmitHandler<CreateMovieDto>;
   isLoading?: boolean;
 }

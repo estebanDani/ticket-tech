@@ -40,19 +40,19 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
             <DialogContent>
                 <DialogContentText id="delete-dialog-description" sx={{ color: 'black' }}>
                     {itemName ? (
-                        <>
+                        <div>
                             ¿Estás seguro de que deseas eliminar <strong>"{itemName}"</strong>?
                             <br />
                             <br />
                             Esta acción no se puede deshacer.
-                        </>
+                        </div>
                     ) : (
-                        <>
+                        <div>
                             ¿Estás seguro de que deseas eliminar este elemento?
                             <br />
                             <br />
                             Esta acción no se puede deshacer.
-                        </>
+                        </div>
                     )}
                 </DialogContentText>
             </DialogContent>

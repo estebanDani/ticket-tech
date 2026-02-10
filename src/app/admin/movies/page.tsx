@@ -15,7 +15,7 @@ export default function MoviesPage() {
   const { movies, load } = useMovies();
   const [open, setOpen] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [selectedMovie, setSelectedMovie] = useState<Movie | undefined>(undefined);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [movieToDelete, setMovieToDelete] = useState<Movie | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
@@ -34,7 +34,7 @@ export default function MoviesPage() {
       }
 
       setOpen(false);
-      setSelectedMovie(undefined);
+      setSelectedMovie(null);
       await load();
     } catch {
       showError('Ocurrió un error al procesar la película');
@@ -44,7 +44,7 @@ export default function MoviesPage() {
   };
 
   const handleOpenCreate = () => {
-    setSelectedMovie(undefined);
+    setSelectedMovie(null);
     setOpen(true);
   };
 
@@ -82,7 +82,7 @@ export default function MoviesPage() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedMovie(undefined);
+    setSelectedMovie(null);
   };
 
   return (
