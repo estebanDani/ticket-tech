@@ -9,15 +9,12 @@ export default function TheatersPage() {
   const { theaters } = useTheaters();
 
   const handleOpenCreate = () => {
-    console.log('Crear sala')
   }
 
   const handleEdit = (theater: Theater) => {
-    console.log('Editar sala', theater)
   }
 
   const handleDelete = (theater: Theater) => {
-    console.log('Eliminar sala', theater)
   }
 
   return (
