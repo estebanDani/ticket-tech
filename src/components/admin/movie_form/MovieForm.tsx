@@ -9,7 +9,7 @@ import {
   Button,
   TextField,
   MenuItem,
-  Grid, 
+  Grid,
   Typography,
   Paper,
   Select,
@@ -29,15 +29,41 @@ import { movieSchema } from "@/schemas";
 type MovieFormData = yup.InferType<typeof movieSchema>;
 
 interface MovieFormProps {
-  initialData?: Movie; 
-  onSubmit: SubmitHandler<CreateMovieDto>; 
+  initialData?: Movie | null;
+  onSubmit: SubmitHandler<CreateMovieDto>;
   isLoading?: boolean;
 }
 
-export const MovieForm: React.FC<MovieFormProps> = ({ 
-  initialData, 
-  onSubmit, 
-  isLoading = false 
+const formatDateForInput = (date: Date | string | undefined): string => {
+  if (!date) return '';
+  const dateObj = date instanceof Date ? date : new Date(date);
+  if (isNaN(dateObj.getTime())) return '';
+  return dateObj.toISOString().split('T')[0];
+};
+
+const toDate = (value: unknown): Date => {
+  if (!value) return new Date();
+
+  if (typeof value === 'object' && value !== null && 'toDate' in value && typeof value.toDate === 'function') {
+    return value.toDate();
+  }
+
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? new Date() : date;
+  }
+
+  return new Date();
+};
+
+export const MovieForm: React.FC<MovieFormProps> = ({
+  initialData,
+  onSubmit,
+  isLoading = false
 }) => {
 
   const {
@@ -48,6 +74,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
     formState: { errors },
   } = useForm<MovieFormData>({
     resolver: yupResolver(movieSchema),
+    mode: 'onChange',
     defaultValues: {
       ...MOVIE_INITIAL_VALUES,
       releaseDate: new Date(),
@@ -58,19 +85,26 @@ export const MovieForm: React.FC<MovieFormProps> = ({
 
   useEffect(() => {
     if (initialData) {
-      reset({
+      const formData = {
         ...initialData,
-        releaseDate: new Date(initialData.releaseDate),
-        createdAt: new Date(initialData.createdAt),
+        releaseDate: toDate(initialData.releaseDate),
+        createdAt: toDate(initialData.createdAt),
+      };
+
+      reset(formData);
+    } else {
+      reset({
+        ...MOVIE_INITIAL_VALUES,
+        releaseDate: new Date(),
+        isActive: true,
+        createdAt: new Date(),
       });
     }
   }, [initialData, reset]);
 
   const onFormSubmit: SubmitHandler<MovieFormData> = async (data) => {
-     await onSubmit(data);
-    
+    await onSubmit(data);
   };
-
   const isEditMode = !!initialData;
 
   return (
@@ -81,12 +115,12 @@ export const MovieForm: React.FC<MovieFormProps> = ({
 
       <form onSubmit={handleSubmit(onFormSubmit)} noValidate>
         <Grid container spacing={3}>
-          
+
           <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               label="Título"
-              InputLabelProps={{ shrink: true, sx: {color: 'text.primary'} }} 
+              InputLabelProps={{ shrink: true, sx: { color: 'text.primary' } }}
               {...register("title")}
               error={!!errors.title}
               helperText={errors.title?.message}
@@ -99,7 +133,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
               multiline
               rows={3}
               label="Sinopsis"
-              InputLabelProps={{ shrink: true, sx: {color: 'text.primary'}}} 
+              InputLabelProps={{ shrink: true, sx: { color: 'text.primary' } }}
               {...register("synopsis")}
               error={!!errors.synopsis}
               helperText={errors.synopsis?.message}
@@ -111,8 +145,8 @@ export const MovieForm: React.FC<MovieFormProps> = ({
               fullWidth
               type="number"
               label="Duración (min)"
-              InputLabelProps={{ shrink: true, sx: {color: 'text.primary'} }} 
-              {...register("duration")}
+              InputLabelProps={{ shrink: true, sx: { color: 'text.primary' } }}
+              {...register("duration", { valueAsNumber: true })}
               error={!!errors.duration}
               helperText={errors.duration?.message}
             />
@@ -120,21 +154,14 @@ export const MovieForm: React.FC<MovieFormProps> = ({
 
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormControl fullWidth error={!!errors.rating}>
-                <InputLabel
-                shrink
-                sx={{ color: 'text.primary' }}
-                >              
+              <InputLabel shrink sx={{ color: 'text.primary' }}>
                 Clasificación
-                </InputLabel>
+              </InputLabel>
               <Controller
                 name="rating"
                 control={control}
                 render={({ field }) => (
-                  <Select 
-                    {...field} 
-                    label="Clasificación"
-                    notched 
-                  >
+                  <Select {...field} label="Clasificación" notched>
                     {RATINGS_LIST.map((r) => (
                       <MenuItem key={r} value={r}>{r}</MenuItem>
                     ))}
@@ -147,12 +174,9 @@ export const MovieForm: React.FC<MovieFormProps> = ({
 
           <Grid size={{ xs: 12 }}>
             <FormControl fullWidth error={!!errors.genre}>
-                <InputLabel
-                shrink
-                sx={{ color: 'text.primary' }}
-                >              
-                    Géneros
-                </InputLabel>
+              <InputLabel shrink sx={{ color: 'text.primary' }}>
+                Géneros
+              </InputLabel>
               <Controller
                 name="genre"
                 control={control}
@@ -164,10 +188,8 @@ export const MovieForm: React.FC<MovieFormProps> = ({
                     renderValue={(selected) => (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                         {selected.map((val) => {
-
                           const genreObj = GENRE_LIST.find(g => g.value === val);
                           const labelToShow = genreObj ? genreObj.label : val;
-                          
                           return (
                             <Chip key={val} label={labelToShow} size="small" />
                           );
@@ -175,7 +197,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
                       </Box>
                     )}
                   >
-                    {GENRE_LIST.map(({value, label}) => (
+                    {GENRE_LIST.map(({ value, label }) => (
                       <MenuItem key={value} value={value}>
                         {label}
                       </MenuItem>
@@ -191,7 +213,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
             <TextField
               fullWidth
               label="URL Poster"
-              InputLabelProps={{ shrink: true, sx: {color: 'text.primary'} }} 
+              InputLabelProps={{ shrink: true, sx: { color: 'text.primary' } }}
               {...register("posterUrl")}
               error={!!errors.posterUrl}
               helperText={errors.posterUrl?.message}
@@ -202,7 +224,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
             <TextField
               fullWidth
               label="URL Trailer"
-              InputLabelProps={{ shrink: true, sx: {color: 'text.primary'} }} 
+              InputLabelProps={{ shrink: true, sx: { color: 'text.primary' } }}
               {...register("trailerUrl")}
               error={!!errors.trailerUrl}
               helperText={errors.trailerUrl?.message}
@@ -210,14 +232,24 @@ export const MovieForm: React.FC<MovieFormProps> = ({
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
-            <TextField
-              fullWidth
-              type="date"
-              label="Fecha Estreno"
-              InputLabelProps={{ shrink: true, sx: {color: 'text.primary'} }} 
-              {...register("releaseDate")}
-              error={!!errors.releaseDate}
-              helperText={errors.releaseDate?.message}
+            <Controller
+              name="releaseDate"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  type="date"
+                  label="Fecha Estreno"
+                  InputLabelProps={{ shrink: true, sx: { color: 'text.primary' } }}
+                  value={formatDateForInput(field.value)}
+                  onChange={(e) => {
+                    const dateValue = e.target.value ? new Date(e.target.value) : new Date();
+                    field.onChange(dateValue);
+                  }}
+                  error={!!errors.releaseDate}
+                  helperText={errors.releaseDate?.message}
+                />
+              )}
             />
           </Grid>
 
@@ -228,10 +260,10 @@ export const MovieForm: React.FC<MovieFormProps> = ({
               render={({ field }) => (
                 <FormControlLabel
                   control={
-                    <Switch 
-                      checked={field.value} 
-                      onChange={(e) => field.onChange(e.target.checked)} 
-                      color="primary" 
+                    <Switch
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      color="primary"
                     />
                   }
                   label="Película Activa (En Cartelera)"
@@ -249,7 +281,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({
               disabled={isLoading}
               sx={{ mt: 2 }}
             >
-              {isLoading ? "Guardando..." : isEditMode ? "Actualizar Pelicula" : "Crear Pelicula"}
+              {isLoading ? "Guardando..." : isEditMode ? "Actualizar Película" : "Crear Película"}
             </Button>
           </Grid>
 
