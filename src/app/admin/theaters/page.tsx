@@ -6,7 +6,7 @@ import { Theater } from '@/types'
 import { useTheaters } from '@/hooks'
 
 export default function TheatersPage() {
-  const { theaters, loading } = useTheaters();
+  const { theaters } = useTheaters();
 
   const handleOpenCreate = () => {
     console.log('Crear sala')
