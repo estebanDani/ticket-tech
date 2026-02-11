@@ -1,5 +1,5 @@
 'use client';
-
+import { useMemo } from 'react';
 import { Box, Drawer, CssBaseline, AppBar, Toolbar, Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { Dashboard, ListAlt, Movie, TheaterComedy, Theaters } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
@@ -24,7 +24,9 @@ export default function AdminPage({
 
     const pathName = usePathname();
 
-    const currentItem = drawerItems.find(item => pathName.startsWith(item.path));
+    const currentItem = useMemo(() => {
+        return drawerItems.find(item => pathName.startsWith(item.path))
+    }, [pathName]);
 
     return (
         <Box sx={{ display: 'flex' }}>

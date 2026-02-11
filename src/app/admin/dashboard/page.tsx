@@ -5,9 +5,7 @@ import { Movie, Paid, TheaterComedy, ListAlt } from '@mui/icons-material';
 import { DataCard } from './DataCard';
 import { PieChart } from '@mui/x-charts';
 import { theme } from '@/theme/theme';
-import { useBookings } from '@/hooks';
-import { useShowtimes } from '@/hooks';
-import { useMovies } from '@/hooks';
+import { useBookings, useShowtimes, useMovies } from '@/hooks';
 
 export default function DashboardPage() {
 
@@ -15,12 +13,28 @@ export default function DashboardPage() {
   const { movies } = useMovies();
   const { showtimes } = useShowtimes();
 
-  const today = new Date().toDateString();
-  const todayString = new Date().toISOString().split('T')[0];
+  const { today, todayString } = useMemo(() => {
+    const now = new Date();
+    return {
+      today: now.toDateString(),
+      todayString: now.toISOString().split('T')[0]
+    };
+  }, []);
 
-  const bookingsIncome = bookings.reduce((acc, booking) => acc + booking.totalPreice, 0);
-  const totalBookingsToday = bookings.filter(booking => booking.bookingDate.toDate().toDateString() == today).length;
-  const totalShowtimesToday = showtimes.filter(showtime => showtime.date === todayString).length;
+  const bookingsIncome = useMemo(() =>
+    bookings.reduce((acc, booking) => acc + booking.totalPreice, 0),
+    [bookings]
+  );
+
+  const totalBookingsToday = useMemo(() =>
+    bookings.filter(booking => booking.bookingDate.toDate().toDateString() === today).length,
+    [bookings, today]
+  );
+
+  const totalShowtimesToday = useMemo(() =>
+    showtimes.filter(showtime => showtime.date === todayString).length,
+    [showtimes, todayString]
+  );
 
   const values = useMemo(() => {
     return {
@@ -30,6 +44,7 @@ export default function DashboardPage() {
       income: `${bookingsIncome} Bs.`,
     }
   }, [movies, totalShowtimesToday, totalBookingsToday, bookingsIncome]);
+
   const dataStats = useMemo(() => [
     {
       title: 'Total de Películas',
