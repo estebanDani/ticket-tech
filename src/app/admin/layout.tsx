@@ -1,14 +1,14 @@
 'use client'
 import { Container } from '@mui/material';
-import DashboardPage from './dashboard/page';
+import AdminPage from './page';
 import { useAuth } from '@/contexts';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function AdminLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
 
     const { user, loading } = useAuth();
@@ -23,12 +23,12 @@ export default function AdminLayout({
     if (loading) return null;
 
     return (
-    <div>
-        <Container maxWidth={false} sx={{ py: 2}}>
-            <DashboardPage>
-                {children}
-            </DashboardPage>
-        </Container>
-    </div>
+        <div>
+            <Container maxWidth={false} sx={{ py: 2 }}>
+                <AdminPage>
+                    {children}
+                </AdminPage>
+            </Container>
+        </div>
     );
 }

@@ -7,8 +7,8 @@ import { format, startOfDay } from "date-fns";
 import { DateSelector } from "@/components/common/DateSelector";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { ShowtimeCard } from "@/components/showtimes/ShowtimeCard";
-import { useShowtimes } from "@/hooks/useShowtimes";
-import { useMovie } from "@/hooks/useMovie";
+import { useShowtimesByMovie } from "@/hooks";
+import { useMovie } from "@/hooks";
 
 type Props = { movieId: string };
 
@@ -18,7 +18,7 @@ export function ShowtimesPageClient({ movieId }: Props) {
     showtimes,
     loading: showtimesLoading,
     error: showtimesError,
-  } = useShowtimes(movieId);
+  } = useShowtimesByMovie(movieId);
 
   const loading = movieLoading || showtimesLoading;
   const error = movieError || showtimesError;
