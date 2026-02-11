@@ -4,31 +4,20 @@ import { Box, Container, Button, Dialog } from '@mui/material'
 import { useTheaters } from '@/hooks'
 import { CreateTheaterDto, Theater } from '@/types'
 import { theaterService } from '@/services'
-import { showError, showSuccess } from '@/utils'
+import { showError, showSuccess, State } from '@/utils'
 import PageHeader from '@/components/common/PageHeader'
 import { CreateTheaterForm, TheaterFormDelete, TheaterTable } from '@/components'
 
-enum Estado {
-  CREATE ='create',
-  UPDATE ='update',
-  DELETE ='delete'
-}
 
 export default function TheatersPage() {
   const { theaters,load } = useTheaters();
   const [open,setOpen] = useState<boolean>(false)
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [estado,setEstado] = useState<Estado | null>(null);
+  const [state,setState] = useState<State | null>(null);
   const [selectedTheater,setSelectedTheater] = useState<Theater | null>()
 
-  const handleOpen = (theater:Theater |null, estado:string) =>{
-    if (estado === 'update') {
-      setEstado(Estado.UPDATE)
-    }else if (estado === 'delete'){
-      setEstado(Estado.DELETE)
-    }else{
-      setEstado(Estado.CREATE)
-    }
+  const handleOpen = (theater:Theater |null, state:State) =>{
+    setState(state)
     setSelectedTheater(theater)
     setOpen(true)
   }
@@ -40,7 +29,7 @@ export default function TheatersPage() {
       await theaterService.create(data);
       setOpen(false)
       setSelectedTheater(null)
-      setEstado(null)
+      setState(null)
       showSuccess("Sala creada Correctamente");
       await load();
     } catch {
@@ -61,7 +50,7 @@ export default function TheatersPage() {
       await theaterService.update(selectedTheater.id,data);
       setOpen(false)
       setSelectedTheater(null)
-      setEstado(null)
+      setState(null)
       showSuccess('Sala actualizada correctamente')
       await load();
     } catch {
@@ -82,7 +71,7 @@ export default function TheatersPage() {
       await theaterService.delete(selectedTheater.id);
       setOpen(false)
       setSelectedTheater(null)
-      setEstado(null)
+      setState(null)
       showSuccess("Sala Eliminada Correctamente");
       await load();
     } catch {
@@ -101,7 +90,7 @@ export default function TheatersPage() {
           description="Administra tus salas"
           icon="🎪"
         />
-        <Button variant="contained" onClick={()=>handleOpen(null,'create')}>
+        <Button variant="contained" onClick={()=>handleOpen(null,State.CREATE)}>
           Nueva Sala
         </Button>
       </Box>
@@ -112,20 +101,20 @@ export default function TheatersPage() {
       />
 
       <Dialog fullWidth maxWidth="md" disableRestoreFocus open={open} onClose={()=>setOpen(false)}>
-        {estado === 'create' && 
+        {state === 'create' && 
         <CreateTheaterForm
           initialData={selectedTheater}
           onSubmit={handleCreate}
           isLoading={submitting}
         />}
-        {estado === 'update' &&selectedTheater &&<>
+        {state === 'update' &&selectedTheater &&<>
         <CreateTheaterForm 
           initialData={selectedTheater}
           onSubmit={handleUpdate}
           isLoading={submitting}
         />
         </>}
-        {estado === 'delete'&& selectedTheater && 
+        {state === 'delete'&& selectedTheater && 
         
         <TheaterFormDelete
           handleDelete={handleDelete}
