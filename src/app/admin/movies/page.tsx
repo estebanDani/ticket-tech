@@ -1,87 +1,90 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Box, Button, CircularProgress, Dialog, InputAdornment, Paper, TextField } from '@mui/material';
+import { Button, Dialog, Container, Box, TextField, InputAdornment } from '@mui/material';
+import PageHeader from '@/components/common/PageHeader';
+import { showError, showSuccess } from '@/utils';
+import { CreateMovieDto, Movie, UpdateMovieDto } from '@/types';
+import { MovieService } from '@/services';
+import { MovieForm } from '@/components';
+import { DeleteModal } from '@/components/common/DeleteModal';
+import { useMovies } from '@/hooks';
+import { MovieTable } from './MovieTable';
 import { Search } from '@mui/icons-material';
 
-import { useMovies } from '@/hooks';
-import { MovieService } from '@/services';
-import { showError, showSuccess } from '@/utils';
-import { CreateMovieDto, Movie } from '@/types';
-import { FormDelete, MovieForm, MovieTable } from '@/components';
-
-enum Modo{
-  CREATE = 'create',
-  UPDATE = 'update',
-  DELETE = 'delete'
-}
-
 export default function MoviesPage() {
-  const {movies, load, loading } = useMovies();
-
+  const { movies, load } = useMovies();
   const [open, setOpen] = useState<boolean>(false);
-  const [mode, setMode] = useState<Modo | null>(null);
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const [search, setSearch] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [movieToDelete, setMovieToDelete] = useState<Movie | null>(null);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
 
-  
-
-  const handleOpen = (mode:Modo, movie?: Movie) => {
-    setMode(mode);
-    setSelectedMovie(movie ?? null);
-    setOpen(true);
-  };
-  
-  const handleCreate = async (data: CreateMovieDto) => {
-    setSubmitting(true);
-    
-    try {
-      await MovieService.create(data);
-      
-      showSuccess('Película creada correctamente');
-      setOpen(false);
-      await load();
-      
-    } catch {
-      showError( 'Ocurrió un error al crear la película');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleUpdate = async () => {
-     if (!selectedMovie) return;
-    setSubmitting(true);
-    try {
-      await MovieService.update(selectedMovie?.id, selectedMovie);
-      showSuccess('Película actualizada correctamente');
-      setOpen(false);
-      await load();
-      
-    } catch(error) {
-      console.error(error)
-      showError( 'Ocurrió un error al crear la película');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if(!selectedMovie) return;
+  const handleSubmit = async (data: CreateMovieDto) => {
     setSubmitting(true);
 
     try {
-      await MovieService.delete(selectedMovie.id);
-      showSuccess('Película eliminada correctamente');
+      if (selectedMovie) {
+        const updateData: UpdateMovieDto = data;
+        await MovieService.update(selectedMovie.id, updateData);
+        showSuccess("Película Actualizada Correctamente");
+      } else {
+        await MovieService.create(data);
+        showSuccess("Película Creada Correctamente");
+      }
+
       setOpen(false);
       setSelectedMovie(null);
       await load();
     } catch {
-      showError('Ocurrió un error al eliminar la película');
+      showError('Ocurrió un error al procesar la película');
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleOpenCreate = () => {
+    setSelectedMovie(null);
+    setOpen(true);
+  };
+
+  const handleOpenEdit = (movie: Movie) => {
+    setSelectedMovie(movie);
+    setOpen(true);
+  };
+
+  const handleOpenDeleteDialog = (movie: Movie) => {
+    setMovieToDelete(movie);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setMovieToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!movieToDelete) return;
+
+    setDeleting(true);
+
+    try {
+      await MovieService.delete(movieToDelete.id);
+      showSuccess("Película Eliminada Correctamente");
+      await load();
+      handleCloseDeleteDialog();
+    } catch {
+      showError('Ocurrió un error al eliminar la película');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedMovie(null);
   };
 
   const filteredMovies = useMemo(()=>{
@@ -90,78 +93,54 @@ export default function MoviesPage() {
     );
   },[movies,search]) 
 
-  if (loading) {
-    return (
-      <Box sx={{ display: 'grid', placeItems: 'center', py: 6 }}>
-        <CircularProgress />
-      </Box>
-    )
-  }
-  
   return (
-    <>
-      <Paper
-        elevation={3}
-        sx={{
-          padding: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Button variant="contained" onClick={() => handleOpen(Modo.CREATE)}>
-          Nueva Película
-        </Button>
+    <Container maxWidth={false} sx={{ p: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <PageHeader title="Películas" description="Gestiona las películas de tu cine" icon="📽️" />
 
-        <TextField
-          size="small"
-          placeholder="Buscar película..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
-      </Paper>
-      <br />
-      <Dialog
-        fullWidth
-        maxWidth="md"
-        open={open}
-        onClose={()=>setOpen(false)}
-      >
-        {mode === 'create' && (
-          <MovieForm onSubmit={handleCreate} isLoading={submitting} />
-        )}
-
-        {mode === 'update' && selectedMovie && (
-          <MovieForm
-            initialData={selectedMovie}
-            onSubmit={handleUpdate}
-            isLoading={submitting}
+        <Box display="flex" alignItems="center" gap={1}>
+          <TextField
+            size="small"
+            placeholder="Buscar película..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              },
+            }}
           />
-        )}
-
-        {mode === 'delete' && selectedMovie && (
-          <FormDelete
-            title={selectedMovie.title}
-            handleDelete={handleDelete}
-            submit={submitting}
-          />
-        )}
-
-      </Dialog>
+          <Button  variant="contained" onClick={handleOpenCreate}>
+            Nueva Película
+          </Button>
+        </Box>
+      </Box>
       <MovieTable
         movies={filteredMovies}
-        onEdit={(movie) => handleOpen(Modo.UPDATE, movie)}
-        onDelete={(movie) => handleOpen(Modo.DELETE, movie)}
+        onEdit={handleOpenEdit}
+        onDelete={handleOpenDeleteDialog}
       />
-    </>
+
+      <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
+        <MovieForm
+          initialData={selectedMovie}
+          onSubmit={handleSubmit}
+          isLoading={submitting}
+        />
+      </Dialog>
+
+      <DeleteModal
+        open={deleteDialogOpen}
+        title="Confirmar Eliminación"
+        itemName={movieToDelete?.title}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        isDeleting={deleting}
+      />
+    </Container>
   );
 }

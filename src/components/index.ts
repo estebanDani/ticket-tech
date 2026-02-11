@@ -9,9 +9,8 @@ import { MovieDetail } from './movies/MovieDetail'
 import { SeatButton } from './seats/SeatButton';
 import { ShowtimeCard } from './showtimes/ShowtimeCard';
 import { ShowtimesPageClient } from './showtimes/ShowtimesPageClient';
+import { ShowtimeForm } from './admin/ShowtimeForm';
 import { MovieForm } from './admin/movie_form/MovieForm';
-import { MovieTable } from './admin/movie_form/MovieTable';
-import { FormDelete } from './admin/movie_form/FormDelete';
 export { 
     MovieCard, 
     MovieGrid, 
@@ -24,6 +23,5 @@ export {
     ShowtimeCard,
     ShowtimesPageClient,
     MovieForm,
-    MovieTable,
-    FormDelete
+    ShowtimeForm,
 };
