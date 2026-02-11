@@ -11,6 +11,9 @@ import { ShowtimeCard } from './showtimes/ShowtimeCard';
 import { ShowtimesPageClient } from './showtimes/ShowtimesPageClient';
 import { ShowtimeForm } from './admin/ShowtimeForm';
 import { MovieForm } from './admin/movie_form/MovieForm';
+import  CreateTheaterForm  from './admin/theater_form/CreateTheaterForm';
+import  {TheaterFormDelete}  from './admin/theater_form/TheaterFormDelete';
+import  TheaterTable  from './admin/theater_form/TheaterTable';
 export { 
     MovieCard, 
     MovieGrid, 
@@ -24,4 +27,7 @@ export {
     ShowtimesPageClient,
     MovieForm,
     ShowtimeForm,
+    CreateTheaterForm,
+    TheaterFormDelete,
+    TheaterTable
 };

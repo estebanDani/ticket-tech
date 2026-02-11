@@ -1,14 +1,12 @@
 "use client"
-import { Box, Container, Button, Dialog } from '@mui/material'
-import PageHeader from '@/components/common/PageHeader'
-import TheaterTable from '../../../components/admin/theater_form/TheaterTable'
-import { useTheaters } from '@/hooks'
 import { useState } from 'react'
-import CreateTheaterForm from '@/components/admin/theater_form/CreateTheaterForm'
+import { Box, Container, Button, Dialog } from '@mui/material'
+import { useTheaters } from '@/hooks'
 import { CreateTheaterDto, Theater } from '@/types'
 import { theaterService } from '@/services'
 import { showError, showSuccess } from '@/utils'
-import { TheaterFormDelete } from '@/components/admin/theater_form/TheaterFormDelete'
+import PageHeader from '@/components/common/PageHeader'
+import { CreateTheaterForm, TheaterFormDelete, TheaterTable } from '@/components'
 
 enum Estado {
   CREATE ='create',
@@ -115,7 +113,7 @@ export default function TheatersPage() {
 
       <Dialog fullWidth maxWidth="md" disableRestoreFocus open={open} onClose={()=>setOpen(false)}>
         {estado === 'create' && 
-        <CreateTheaterForm 
+        <CreateTheaterForm
           initialData={selectedTheater}
           onSubmit={handleCreate}
           isLoading={submitting}
