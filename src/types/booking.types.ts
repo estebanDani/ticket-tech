@@ -1,14 +1,16 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Booking {
     id: string;
     userId: string;
     showtimeId: string;
     movieId: string;
-    seats: string [];
+    seats: string[];
     totalPreice: number;
     status: 'pending' | 'confirmed' | 'cancelled';
     paymentMethod: string;
-    bookingDate:Date;
+    bookingDate: Timestamp;
     qrCode: string;
 }
 
-export type CreateBookingDto = Omit<Booking, 'id'| 'qrCode'>;
+export type CreateBookingDto = Omit<Booking, 'id' | 'qrCode'>;
