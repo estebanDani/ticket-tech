@@ -1,6 +1,6 @@
 'use client'
 import { useMemo } from 'react'
-import { Grid, Container, Card, CardHeader, CardContent, Typography } from '@mui/material'
+import { Grid, Container, Card, CardHeader, CardContent } from '@mui/material'
 import { Movie, Paid, TheaterComedy, ListAlt } from '@mui/icons-material';
 import { DataCard } from './DataCard';
 import { PieChart } from '@mui/x-charts';
