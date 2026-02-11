@@ -14,8 +14,8 @@ import { Theater } from '@/types';
 
 interface TheaterTableProps {
     theaters: Theater[];
-    onEdit: (theater: Theater) => void;
-    onDelete: (theater: Theater) => void;
+    onEdit: (theater: Theater,estado:string) => void;
+    onDelete: (theater: Theater,estado:string) => void;
 }
 
 const TheaterTable = ({ theaters, onEdit, onDelete }: TheaterTableProps) => {
@@ -52,7 +52,7 @@ const TheaterTable = ({ theaters, onEdit, onDelete }: TheaterTableProps) => {
                                         variant="outlined"
                                         size="small"
                                         title="Editar"
-                                        onClick={() => onEdit(theater)}
+                                        onClick={() => onEdit(theater,'update')}
                                     >
                                         <Edit />
                                     </Button>
@@ -61,7 +61,7 @@ const TheaterTable = ({ theaters, onEdit, onDelete }: TheaterTableProps) => {
                                         color="error"
                                         size="small"
                                         title="Eliminar"
-                                        onClick={() => onDelete(theater)}
+                                        onClick={() => onDelete(theater,'delete')}
                                     >
                                         <Delete />
                                     </Button>
