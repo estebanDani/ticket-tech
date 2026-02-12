@@ -7,6 +7,7 @@ interface UseTheatersResult {
     theaters: Theater[]
     loading: boolean
     error: string | null
+    load: () => Promise<void>
 }
 
 
@@ -15,38 +16,38 @@ export function useTheaters(): UseTheatersResult {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
+    const loadTheaters = async (isMounted:boolean) => {
+        try {
+            setLoading(true)
+            setError(null)
+
+            const data = await theaterService.getAll()
+
+            if (!isMounted) return
+            setTheaters(data)
+        } catch (err: unknown) {
+            if (!isMounted) return
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : 'Error al cargar salas'
+            )
+        } finally {
+            if (isMounted) {
+                setLoading(false)
+            }
+        }
+    }
     useEffect(() => {
         let isMounted = true
 
-        const loadTheaters = async () => {
-            try {
-                setLoading(true)
-                setError(null)
 
-                const data = await theaterService.getAll()
-
-                if (!isMounted) return
-                setTheaters(data)
-            } catch (err: unknown) {
-                if (!isMounted) return
-                setError(
-                    err instanceof Error
-                        ? err.message
-                        : 'Error al cargar salas'
-                )
-            } finally {
-                if (isMounted) {
-                    setLoading(false)
-                }
-            }
-        }
-
-        loadTheaters()
+        loadTheaters(isMounted)
 
         return () => {
             isMounted = false
         }
     }, [])
 
-    return { theaters, loading, error }
+    return { theaters, loading, error, load:()=>loadTheaters(true)}
 }
