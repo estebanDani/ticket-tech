@@ -1,27 +1,15 @@
 'use client'
 import { useMemo, useState } from "react";
-import { Button, Box, LinearProgress, Typography, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from "@mui/material";
+import { Button, Box, LinearProgress, Typography, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination, Paper } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
-interface EnrichedShowtime {
-  id: string;
-  movieId: string;
-  theaterId: string;
-  startTime: Date;
-  endTime: Date;
-  price: number;
-  availableSeats: number;
-  reservedSeats: string[];
-  date: string;
-  movieName: string;
-  theaterName: string;
-}
-
 interface Props {
-  showtimes: EnrichedShowtime[];
+  showtimes: any[];
+  onEdit: (showtime: any) => void;
+  onDelete: (showtime: any) => void;
 }
 
-export function ShowtimesTable({ showtimes }: Props) {
+export function ShowtimesTable({ showtimes, onEdit, onDelete }: Props) {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
@@ -29,40 +17,35 @@ export function ShowtimesTable({ showtimes }: Props) {
     setPage(newPage);
   };
   
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const paginatedShowtimes = useMemo(()=>{
-    return showtimes.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
-    )
-  },[page,rowsPerPage,showtimes])
+  const paginatedShowtimes = useMemo(() => {
+    return showtimes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  }, [page, rowsPerPage, showtimes]);
 
   return (
-    <>
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Pélicula</TableCell>
+              <TableCell>Película</TableCell>
               <TableCell>Sala</TableCell>
-              <TableCell>Fecha Estreno</TableCell>
+              <TableCell>Fecha</TableCell>
               <TableCell>Hora</TableCell>
               <TableCell>Precio</TableCell>
-              <TableCell>Ocupación Asientos</TableCell>
-              <TableCell>Acciones</TableCell>
+              <TableCell>Ocupación</TableCell>
+              <TableCell align="right">Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedShowtimes.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                  No hay salas registradas
+                <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                  No hay funciones registradas
                 </TableCell>
               </TableRow>
             ) : (
@@ -71,49 +54,30 @@ export function ShowtimesTable({ showtimes }: Props) {
                   <TableCell>{showtime.movieName}</TableCell>
                   <TableCell>{showtime.theaterName}</TableCell>
                   <TableCell>{showtime.date}</TableCell>
-                  <TableCell>{(()=>{
-                    const date = new Date(showtime.startTime);
-                    return (date.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit"}))
-                  })()}
+                  <TableCell>
+                    {new Date(showtime.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </TableCell>
                   <TableCell>Bs {showtime.price}</TableCell>
                   <TableCell>
                     {(() => {
-                      const total = showtime.availableSeats + showtime.reservedSeats.length;
-                      const occupied = showtime.reservedSeats.length;
+                      const total = showtime.availableSeats + (showtime.reservedSeats?.length || 0);
+                      const occupied = showtime.reservedSeats?.length || 0;
                       const percentage = total ? (occupied / total) * 100 : 0;
                       return (
-                        <Box sx={{ width: "100%", mt: 2 }} alignItems="center">
-                          <LinearProgress
-                            variant="determinate"
-                            value={percentage}
-                            sx={{ mb: 0, height: 15 }}
-                          />
-                          <Typography align="center">{occupied} / {total}</Typography>
+                        <Box sx={{ minWidth: 100 }}>
+                          <LinearProgress variant="determinate" value={percentage} sx={{ height: 8, borderRadius: 5 }} />
+                          <Typography variant="caption">{occupied} / {total}</Typography>
                         </Box>
                       );
                     })()}
                   </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        title="Editar"
-                        onClick={() =>{}}
-                      >
-                        <Edit />
+                  <TableCell align="right">
+                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                      <Button variant="outlined" size="small" onClick={() => onEdit(showtime)}>
+                        <Edit fontSize="small" />
                       </Button>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        size="small"
-                        title="Eliminar"
-                        onClick={() => {}}
-                      >
-                        <Delete />
+                      <Button variant="outlined" color="error" size="small" onClick={() => onDelete(showtime)}>
+                        <Delete fontSize="small" />
                       </Button>
                     </Box>
                   </TableCell>
@@ -125,14 +89,14 @@ export function ShowtimesTable({ showtimes }: Props) {
       </TableContainer>
       <TablePagination
         component="div"
-        labelRowsPerPage={'Cantidad por pagina'}
         count={showtimes.length}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         rowsPerPageOptions={[5, 10, 15]}
+        labelRowsPerPage="Filas por página"
       />
-    </>
+    </Paper>
   );
 }

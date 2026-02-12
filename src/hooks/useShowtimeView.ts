@@ -1,53 +1,54 @@
+"use client";
+
 import { MovieService, ShowtimeService, theaterService } from "@/services";
 import { useEffect, useState } from "react";
+import { Movie, Theater } from "@/types";
 
 interface EnrichedShowtime {
-    id: string;
-    movieId: string;
-    theaterId: string;
-    startTime: Date;
-    endTime: Date;
-    price: number;
-    availableSeats: number;
-    reservedSeats: string[];
-    date: string;
-    movieName: string;
-    theaterName: string;
+  id: string;
+  movieId: string;
+  theaterId: string;
+  startTime: Date;
+  endTime: Date;
+  price: number;
+  availableSeats: number;
+  reservedSeats: string[];
+  date: string;
+  movieName: string;
+  theaterName: string;
 }
 
-type MovieMap = Record<string, string>;
-
 export const useShowtimesView = () => {
-    const [data, setData] = useState<EnrichedShowtime[]>([]);
-    const [movies, setMovie] = useState<MovieMap>({});
+  const [data, setData] = useState<EnrichedShowtime[]>([]);
+  const [moviesMap, setMoviesMap] = useState<Record<string, string>>({});
+  const [moviesList, setMoviesList] = useState<Movie[]>([]);
+  const [theaters, setTheaters] = useState<Theater[]>([]);
 
-    const load = async () => {
-        const [showtimes, movies, theaters] = await Promise.all([
-        ShowtimeService.getAll(),
-        MovieService.getAll(),
-        theaterService.getAll(),
-        ]);
+  const load = async () => {
+    const [showtimes, movies, theatersData] = await Promise.all([
+      ShowtimeService.getAll(),
+      MovieService.getAll(),
+      theaterService.getAll(),
+    ]);
 
-        const movieMap = Object.fromEntries(
-            movies.map((m) => [m.id, m.title])
-        );
+    const movieMap = Object.fromEntries(movies.map((m) => [m.id, m.title]));
+    const theaterMap = Object.fromEntries(theatersData.map((t) => [t.id, t.name]));
 
-        const theaterMap = Object.fromEntries(
-        theaters.map((t) => [t.id, t.name])
-        );
+    const enriched = showtimes.map((s) => ({
+      ...s,
+      movieName: movieMap[s.movieId] || "—",
+      theaterName: theaterMap[s.theaterId] || "—",
+    }));
 
-        const enriched = showtimes.map((s) => ({
-        ...s,
-        movieName: movieMap[s.movieId] ? movieMap[s.movieId] : "—",
-        theaterName: theaterMap[s.theaterId]? theaterMap[s.theaterId]: "—",
-        }));
-        setMovie(movieMap)
-        setData(enriched);
-    };
+    setMoviesMap(movieMap);
+    setMoviesList(movies);
+    setTheaters(theatersData);
+    setData(enriched);
+  };
 
-    useEffect(() => {
-        load();
-    }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
-    return { showtimes: data, movies, load };
+  return { showtimes: data, moviesMap, moviesList, theaters, load };
 };
