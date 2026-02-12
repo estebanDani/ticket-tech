@@ -5,7 +5,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField, MenuItem, Grid, Typography, Paper } from "@mui/material";
 import { showtimeSchema } from "@/schemas";
-import { EnrichedShowtime, Movie, Theater, CreateShowtimeDto } from "@/types";
+import { EnrichedShowtime, Theater, CreateShowtimeDto } from "@/types";
 import * as yup from "yup";
 
 type ShowtimeFormData = yup.InferType<typeof showtimeSchema>;

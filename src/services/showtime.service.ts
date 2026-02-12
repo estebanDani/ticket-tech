@@ -110,7 +110,6 @@ export class ShowtimeService {
                 throw new Error('Invalid showtime ID');
             }
             
-            // Usamos Record<string, unknown> en lugar de any
             const payload: Record<string, unknown> = { ...showtime };
             
             if (showtime.startTime) {
@@ -128,22 +127,17 @@ export class ShowtimeService {
     }
 
     static async delete(id: string): Promise<void> {
-        try {
-            if (!id || id.trim() === '') {
-                throw new Error('Invalid showtime ID');
-            }
-
-            const reservedSeats = await ShowtimeService.getReservedSeats(id);
-
-            if (reservedSeats.length > 0) {
-                throw new Error('No se puede eliminar: La función ya tiene asientos reservados.');
-            }
-            
-            const docRef = doc(db, COLLECTIONS.SHOWTIMES, id);
-            await deleteDoc(docRef);
-
-        } catch (error) {
-            throw error;
+        if (!id || id.trim() === '') {
+            throw new Error('Invalid showtime ID');
         }
+
+        const reservedSeats = await ShowtimeService.getReservedSeats(id);
+
+        if (reservedSeats.length > 0) {
+            throw new Error('No se puede eliminar: La función ya tiene asientos reservados.');
+        }
+        
+        const docRef = doc(db, COLLECTIONS.SHOWTIMES, id);
+        await deleteDoc(docRef);
     }
 }
