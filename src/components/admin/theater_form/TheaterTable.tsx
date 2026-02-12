@@ -11,11 +11,13 @@ import {
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { Theater } from '@/types';
+import { State } from '@/utils';
+
 
 interface TheaterTableProps {
     theaters: Theater[];
-    onEdit: (theater: Theater) => void;
-    onDelete: (theater: Theater) => void;
+    onEdit: (theater: Theater,estado:State) => void;
+    onDelete: (theater: Theater,estado:State) => void;
 }
 
 const TheaterTable = ({ theaters, onEdit, onDelete }: TheaterTableProps) => {
@@ -52,7 +54,7 @@ const TheaterTable = ({ theaters, onEdit, onDelete }: TheaterTableProps) => {
                                         variant="outlined"
                                         size="small"
                                         title="Editar"
-                                        onClick={() => onEdit(theater)}
+                                        onClick={() => onEdit(theater,State.UPDATE)}
                                     >
                                         <Edit />
                                     </Button>
@@ -61,7 +63,7 @@ const TheaterTable = ({ theaters, onEdit, onDelete }: TheaterTableProps) => {
                                         color="error"
                                         size="small"
                                         title="Eliminar"
-                                        onClick={() => onDelete(theater)}
+                                        onClick={() => onDelete(theater,State.DELETE)}
                                     >
                                         <Delete />
                                     </Button>

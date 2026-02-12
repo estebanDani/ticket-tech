@@ -12,9 +12,9 @@ export interface BookingWithDetails extends Booking {
 }
 
 export class BookingService {
-  
+
   static async create(data: CreateBookingDto): Promise<Booking> {
-    
+
     const bookingRef = doc(collection(db, COLLECTIONS.BOOKINGS))
     const showtimeRef = doc(db, COLLECTIONS.SHOWTIMES, data.showtimeId)
 
@@ -47,7 +47,8 @@ export class BookingService {
         reservedSeats: [...reservedSeats, ...data.seats],
       })
       const qrCode = await QRCode.toDataURL(bookingRef.id)
-      
+
+      //generateQR
       const booking: Booking = {
         id: bookingRef.id,
         ...data,
@@ -61,10 +62,10 @@ export class BookingService {
   static async getByUser(userId: string): Promise<BookingWithDetails[]> {
     try {
       const bookingsRef = collection(db, COLLECTIONS.BOOKINGS);
-      
+
       const queryGetByUser = query(
-        bookingsRef, 
-        where("userId", "==", userId), 
+        bookingsRef,
+        where("userId", "==", userId),
         orderBy("bookingDate", "desc")
       );
 
@@ -85,7 +86,7 @@ export class BookingService {
 
       const bookingsWithDetails = await Promise.all(
         rawBookings.map(async (booking) => {
-          
+
           const [movieSnap, showtimeSnap] = await Promise.all([
             getDoc(doc(db, COLLECTIONS.MOVIES, booking.movieId)),
             getDoc(doc(db, COLLECTIONS.SHOWTIMES, booking.showtimeId))
@@ -118,16 +119,17 @@ export class BookingService {
       throw new Error("No se pude cargar");
     }
   }
- 
-  static async getAll(options?: { 
-    pageSize?: number; 
+
+  static async getAll(options?: {
+    pageSize?: number;
     lastDoc?: QueryDocumentSnapshot;
     filters?: {
-      userId?:string;
-      status?:'pending' | 'confirmed' | 'cancelled';
-    }}): Promise<{ data: Booking[];lastDoc: QueryDocumentSnapshot | null;}> {
+      userId?: string;
+      status?: 'pending' | 'confirmed' | 'cancelled';
+    }
+  }): Promise<{ data: Booking[]; lastDoc: QueryDocumentSnapshot | null; }> {
 
-    const { pageSize = 10, lastDoc, filters} = options || {};
+    const { pageSize = 10, lastDoc, filters } = options || {};
 
     let queryBooking = query(collection(db, COLLECTIONS.BOOKINGS));
 

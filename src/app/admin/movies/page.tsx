@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Button, Dialog, Container, Box } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { Button, Dialog, Container, Box, TextField, InputAdornment } from '@mui/material';
 import PageHeader from '@/components/common/PageHeader';
 import { showError, showSuccess } from '@/utils';
 import { CreateMovieDto, Movie, UpdateMovieDto } from '@/types';
@@ -10,6 +10,7 @@ import { MovieForm } from '@/components';
 import { DeleteModal } from '@/components/common/DeleteModal';
 import { useMovies } from '@/hooks';
 import { MovieTable } from './MovieTable';
+import { Search } from '@mui/icons-material';
 
 export default function MoviesPage() {
   const { movies, load } = useMovies();
@@ -19,6 +20,7 @@ export default function MoviesPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [movieToDelete, setMovieToDelete] = useState<Movie | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
 
   const handleSubmit = async (data: CreateMovieDto) => {
     setSubmitting(true);
@@ -85,17 +87,40 @@ export default function MoviesPage() {
     setSelectedMovie(null);
   };
 
+  const filteredMovies = useMemo(()=>{
+    return  movies.filter((movie) =>
+      movie.title.toLowerCase().includes(search.toLowerCase())
+    );
+  },[movies,search]) 
+
   return (
     <Container maxWidth={false} sx={{ p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <PageHeader title="Películas" description="Gestiona las películas de tu cine" icon="📽️" />
-        <Button variant="contained" onClick={handleOpenCreate}>
-          Nueva Película
-        </Button>
-      </Box>
 
+        <Box display="flex" alignItems="center" gap={1}>
+          <TextField
+            size="small"
+            placeholder="Buscar película..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+          <Button  variant="contained" onClick={handleOpenCreate}>
+            Nueva Película
+          </Button>
+        </Box>
+      </Box>
       <MovieTable
-        movies={movies}
+        movies={filteredMovies}
         onEdit={handleOpenEdit}
         onDelete={handleOpenDeleteDialog}
       />

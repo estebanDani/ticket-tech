@@ -1,16 +1,26 @@
 import { createTheme } from '@mui/material/styles'
 
+declare module '@mui/material/styles' {
+  interface Palette {
+    violet: Palette['primary']
+  }
+  interface PaletteOptions {
+    violet?: PaletteOptions['primary']
+  }
+}
+
 export const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
+      light: "#cfdbfc",
       main: '#1976d2',
     },
     secondary: {
       main: '#dc004e',
     },
     warning: {
-      light: "#FFFFD6",
+      light: "#fcf7e8",
       main: '#ff9800',
     },
     error: {
@@ -19,13 +29,18 @@ export const theme = createTheme({
       dark: '#c62828',
     },
     success: {
-      light: '#4caf50',
+      light: '#e9fce9',
       main: '#2e7d32',
       dark: '#1b5e20',
     },
     background: {
       default: '#f5f5f5',
       paper: '#ffffff',
+    },
+    violet: {
+      main: '#6700dc',
+      light: '#d8b6f2',
+      dark: '#2c0152',
     },
     text: {
       primary: '#000000',

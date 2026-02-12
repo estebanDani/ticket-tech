@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import {useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { Box,  CircularProgress,  Grid,  } from '@mui/material';
+import { Box, CircularProgress, Grid, } from '@mui/material';
 
 import PaymentMethodForm from '@/components/booking/PaymentMethodForm';
 import UserDataForm from '@/components/booking/UserDataForm';
@@ -14,21 +14,17 @@ import { checkoutSchema } from '@/schemas/checkout.schema';
 import { PAYMETMETHOD_ENUM, showError } from '@/utils';
 import { BookingService } from '@/services/booking.service';
 import { useBooking } from '@/contexts/BookingContext';
+import { useAuth } from '@/contexts';
+import { Timestamp } from 'firebase/firestore';
 
 interface FormData {
-  name: string;
-  email: string;
-  phone: string;
   terms: boolean;
   confirm: boolean;
 }
 
 const DEFAULT_VALUES: FormData = {
-  name: '',
-  email: '',
-  phone: '',
-  terms:false,
-  confirm:false
+  terms: false,
+  confirm: false
 };
 
 const FORM_OPTIONS = {
@@ -39,11 +35,11 @@ const FORM_OPTIONS = {
 export default function CheckoutPage() {
   const { showtimeId } = useParams();
   const router = useRouter();
-  const { selectedSeats,selectedShowtime, clearBooking } = useBooking();
+  const { selectedSeats, selectedShowtime, clearBooking } = useBooking();
+  const { user } = useAuth();
 
-  /* ---------------- STATE ---------------- */
+
   const [paymentMethod, setPaymentMethod] = useState<PAYMETMETHOD_ENUM>(PAYMETMETHOD_ENUM.Card);
-
   const [loading, setLoading] = useState<boolean>(false);
 
   const { control, handleSubmit } = useForm<FormData>({
@@ -51,58 +47,68 @@ export default function CheckoutPage() {
     ...FORM_OPTIONS,
   });
 
+  useEffect(() => {
+    if (!selectedSeats || !selectedShowtime) {
+      router.push('/');
+    }
+  }, [selectedSeats, selectedShowtime, router]);
+
 
   const onSubmit = async () => {
 
     setLoading(true);
+    if (!user) return;
 
-    try{
+    try {
       if (!selectedShowtime) {
         showError('No showtime selected');
         setLoading(false);
         return;
       }
-      
+
       const response = await BookingService.create({
-        userId:'',
+        userId: user.uid,
         showtimeId: showtimeId as string,
         movieId: selectedShowtime?.movieId ?? '',
         seats: selectedSeats,
         totalPreice: selectedShowtime.price * selectedSeats.length,
-        status:'pending',
+        status: 'pending',
         paymentMethod,
-        bookingDate: new Date()
+        bookingDate: Timestamp.now()
       })
 
       router.push(`/booking/${showtimeId}/tickets/${response.id}`);
-    }catch(error){
+    } catch (error) {
       showError(error as string || 'Ocurrio un error al procesar la reserva')
-    }finally{
+    } finally {
       clearBooking();
       setLoading(false);
     }
   };
 
+
+
   if (loading) {
-      return (
-        <Box sx={{ display: 'grid', placeItems: 'center', py: 6 }}>
-          <CircularProgress />
-        </Box>
-      )
-    }
+    return (
+      <Box sx={{ display: 'grid', placeItems: 'center', py: 6 }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
     <Grid container spacing={4} direction={{ xs: 'column', lg: 'row' }}>
-      <Grid  size={{ xs: 12, lg: 8 }}>
+      <Grid size={{ xs: 12, lg: 8 }}>
         <PaymentMethodForm
           value={paymentMethod}
           onChange={setPaymentMethod}
         />
         <UserDataForm
           control={control}
+          userData={user}
         />
       </Grid>
-      <Grid size={{ xs:12, lg:4 }}>
+      <Grid size={{ xs: 12, lg: 4 }}>
         <BookingSummary
           onConfirm={handleSubmit(onSubmit)}
         />

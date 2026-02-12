@@ -1,20 +1,22 @@
 import { useMovies } from "./useMovies";
 import { useMovie } from "./useMovie";
 import { useActiveMovies } from "./useActiveMovies";
-import { useShowtimes } from "./useShowtimes";
+import { useShowtimesByMovie } from "./useShowtimesByMovie";
 import { useShowtime } from "./useShowtime";
 import { useTheaters } from "./useTheaters";
 import { useTheater } from "./useTheater";
 import { useBookings } from "./useBookings";
+import { useShowtimes } from "./useShowtimes";
 
 export {
     useMovies,
     useMovie,
     useActiveMovies,
     useShowtimes,
+    useShowtimesByMovie,
     useShowtime,
     useTheaters,
     useTheater,
-    useBookings
+    useBookings,
 }
 

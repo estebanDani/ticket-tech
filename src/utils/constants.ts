@@ -8,6 +8,12 @@ export const COLLECTIONS = {
   USERS: 'users',
 } as const;
 
+export enum State {
+  CREATE ='create',
+  UPDATE ='update',
+  DELETE ='delete'
+}
+
 export const GenereMovies = {
     ALL : 'all',
     ACTION:'Acción',
