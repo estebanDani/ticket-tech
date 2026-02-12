@@ -11,6 +11,8 @@ import { ShowtimeCard } from './showtimes/ShowtimeCard';
 import { ShowtimesPageClient } from './showtimes/ShowtimesPageClient';
 import { ShowtimeForm } from './admin/ShowtimeForm';
 import { MovieForm } from './admin/movie_form/MovieForm';
+import  ShowtimesFilters  from './admin/showtime/ShowtimesFilters';
+import { ShowtimesTable } from './admin/showtime/ShowtimesTable';
 export { 
     MovieCard, 
     MovieGrid, 
@@ -24,4 +26,6 @@ export {
     ShowtimesPageClient,
     MovieForm,
     ShowtimeForm,
+    ShowtimesFilters,
+    ShowtimesTable
 };

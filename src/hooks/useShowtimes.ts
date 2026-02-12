@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { ShowtimeService } from "@/services";
 import { Showtime } from "@/types";
