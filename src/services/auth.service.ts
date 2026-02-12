@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, query, collection, getDocs, where } from "firebase/firestore";
 
 import { auth, db } from "@/services/firebase";
 import { CreateUserDto, User } from "@/types";
@@ -8,15 +8,15 @@ import { COLLECTIONS } from "@/utils";
 
 
 export class AuthService {
-    
-    static async register(data:CreateUserDto, password:string):Promise<User>{
+
+    static async register(data: CreateUserDto, password: string): Promise<User> {
 
         try {
-            const resp  = await  createUserWithEmailAndPassword(auth,data.email,password)
+            const resp = await createUserWithEmailAndPassword(auth, data.email, password)
             const userAuth = resp.user
-            await setDoc(doc(db,COLLECTIONS.USERS,userAuth.uid),data)
+            await setDoc(doc(db, COLLECTIONS.USERS, userAuth.uid), data)
 
-            return{
+            return {
                 uid: userAuth.uid,
                 ...data
             }
@@ -26,27 +26,27 @@ export class AuthService {
         }
     }
 
-    static async login(email:string,password:string):Promise<User>{
+    static async login(email: string, password: string): Promise<User> {
         try {
-            const resp =await signInWithEmailAndPassword(auth,email,password)
+            const resp = await signInWithEmailAndPassword(auth, email, password)
             const userAuth = resp.user
 
-            const userDoc = await getDoc(doc(db, COLLECTIONS.USERS , userAuth.uid))
+            const userDoc = await getDoc(doc(db, COLLECTIONS.USERS, userAuth.uid))
 
             return {
                 uid: userAuth.uid,
-                ...userDoc.data() as Omit<User,'uid'>
+                ...userDoc.data() as Omit<User, 'uid'>
             }
         } catch (error) {
-         console.error('Error logging in user:', error);
-         throw new Error('Failed to login user');   
+            console.error('Error logging in user:', error);
+            throw new Error('Failed to login user');
         }
 
     }
 
-    static async logout(){
+    static async logout() {
         try {
-            await auth.signOut()   
+            await auth.signOut()
         } catch (error) {
             console.error('Error logging out user:', error);
             throw new Error('Failed to logout user');
@@ -56,26 +56,39 @@ export class AuthService {
     static getCurrentUser(): Promise<User | null> {
         return new Promise((resolve) => {
             const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-            unsubscribe();
+                unsubscribe();
 
-            if (!firebaseUser) {
-                resolve(null);
-                return;
-            }
+                if (!firebaseUser) {
+                    resolve(null);
+                    return;
+                }
 
-            const userRef = doc(db, COLLECTIONS.USERS, firebaseUser.uid);
-            const snap = await getDoc(userRef);
+                const userRef = doc(db, COLLECTIONS.USERS, firebaseUser.uid);
+                const snap = await getDoc(userRef);
 
-            if (!snap.exists()) {
-                resolve(null);
-                return;
-            }
+                if (!snap.exists()) {
+                    resolve(null);
+                    return;
+                }
 
-            resolve({
-                uid: firebaseUser.uid,
-                ...(snap.data() as Omit<User, 'uid'>),
-            });
+                resolve({
+                    uid: firebaseUser.uid,
+                    ...(snap.data() as Omit<User, 'uid'>),
+                });
             });
         });
     }
+    static async getAllUsers(): Promise<User[]> {
+        try {
+            const userQuery = query(collection(db, COLLECTIONS.USERS), where('role', '==', 'user'));
+            const userDoc = await getDocs(userQuery);
+            return userDoc.docs.map((doc) => ({
+                uid: doc.id,
+                ...(doc.data() as Omit<User, 'uid'>),
+            }));
+        } catch (error) {
+            throw new Error('Failed to get all users');
+        }
+    }
+
 }

@@ -7,6 +7,7 @@ import { useTheaters } from "./useTheaters";
 import { useTheater } from "./useTheater";
 import { useBookings } from "./useBookings";
 import { useShowtimes } from "./useShowtimes";
+import { useClients } from "./useCleints";
 
 export {
     useMovies,
@@ -18,5 +19,6 @@ export {
     useTheaters,
     useTheater,
     useBookings,
+    useClients,
 }
 

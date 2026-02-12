@@ -13,4 +13,10 @@ export interface Booking {
     qrCode: string;
 }
 
+export interface BookingWithDetails extends Booking {
+    movie: string;
+    theater: string;
+    user: string;
+}
+
 export type CreateBookingDto = Omit<Booking, 'id' | 'qrCode'>;
