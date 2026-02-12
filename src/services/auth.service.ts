@@ -87,7 +87,7 @@ export class AuthService {
                 ...(doc.data() as Omit<User, 'uid'>),
             }));
         } catch (error) {
-            throw new Error('Failed to get all users');
+            throw new Error('Failed to get all users', { cause: error });
         }
     }
 
