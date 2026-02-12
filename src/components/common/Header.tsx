@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Person, Logout, Menu as MenuIcon, ConfirmationNumber } from '@mui/icons-material';
+import { Person, Logout, Menu as MenuIcon, ConfirmationNumber, AdminPanelSettings } from '@mui/icons-material';
 
 import {
   InputAdornment,
@@ -165,6 +165,12 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
                   <ListItemIcon><ConfirmationNumber fontSize="small" /></ListItemIcon>
                   Mis Reservas
                 </MenuItem>
+                
+                <MenuItem onClick={() => navigateTo('/admin')}>
+                  <ListItemIcon><AdminPanelSettings fontSize="small" /></ListItemIcon>
+                  Administrar
+                </MenuItem>
+
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon><Logout fontSize="small" /></ListItemIcon>
                   Cerrar Sesión
@@ -204,6 +210,9 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
               [
                 <MenuItem key="reservas" onClick={() => navigateTo('/my-bookings')}>
                   Mis Reservas
+                </MenuItem>,
+                <MenuItem key="admin" onClick={() => navigateTo('/admin')}>
+                  Administrar
                 </MenuItem>,
                 <MenuItem key="logout" onClick={handleLogout}>
                   Cerrar Sesión
