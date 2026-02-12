@@ -15,3 +15,6 @@ export interface Seat {
     type: 'normal' | 'disabled';
     position: { x: number, y: number };
 }
+
+export type CreateTheaterDto = Omit<Theater, 'id'|'capacity'|'seatMap'>;
+
