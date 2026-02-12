@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import { useBookings } from '@/hooks/useBookings'
+import { useBookings } from '@/hooks'
 import { BookingCard } from '@/components/booking/booking_card/BookingCard'
 import SkeletonBookingCard from './SkeletonCard'
 

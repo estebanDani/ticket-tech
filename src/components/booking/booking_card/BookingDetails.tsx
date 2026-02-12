@@ -97,7 +97,7 @@ export const BookingDetailsModal = ({ open, onClose, data }: BookingDetailsModal
                                 </Typography>
                                 <Chip 
                                     label={data.status.toUpperCase()} 
-                                    color={statusColors[data.status] || 'default'} 
+                                    color={statusColors[data.status] ?? 'default'} 
                                     size="small" 
                                     sx={{ mt: 1, fontWeight: 'bold' }} 
                                 />

@@ -4,12 +4,13 @@ import { Container, Typography, Button, Box, Select, MenuItem } from '@mui/mater
 import { BookingList } from './BookingList'
 import { ArrowBack } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
+import { STATE_BOOKING } from '@/utils'
 
 export default function MyBookingsPage() {
     const router = useRouter()
-    
-    const [statusFilter, setStatusFilter] = useState('Todas')
-    const [dateFilter, setDateFilter] = useState('Todos')
+
+    const [statusFilter, setStatusFilter] = useState<string>(STATE_BOOKING.ALL);
+    const [dateFilter, setDateFilter] = useState<string>(STATE_BOOKING.ALL);
 
     return (
         <Container maxWidth={false} disableGutters sx={{ p: 4 }}>
@@ -27,10 +28,10 @@ export default function MyBookingsPage() {
                     sx={{ width: 150, height: 40 }}
                     size="small"
                 >
-                    <MenuItem value="Todas">Todas</MenuItem>
-                    <MenuItem value="confirmed">Confirmadas</MenuItem>
-                    <MenuItem value="pending">Pendientes</MenuItem>
-                    <MenuItem value="cancelled">Canceladas</MenuItem>
+                    <MenuItem value={STATE_BOOKING.ALL}>Todas</MenuItem>
+                    <MenuItem value={STATE_BOOKING.CONFIRMED}>Confirmadas</MenuItem>
+                    <MenuItem value={STATE_BOOKING.PENDING}>Pendientes</MenuItem>
+                    <MenuItem value={STATE_BOOKING.CANCELLED}>Canceladas</MenuItem>
                 </Select>
                 <Select
                     value={dateFilter}

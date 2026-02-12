@@ -30,11 +30,11 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
     const { showtime } = useShowtime(booking.showtimeId)
     const { theater } = useTheater(showtime?.theaterId)
     
-    const [openQrModal, setOpenQrModal] = useState(false)
-    const [openDetailsModal, setOpenDetailsModal] = useState(false)
+    const [openQrModal, setOpenQrModal] = useState<boolean>(false)
+    const [openDetailsModal, setOpenDetailsModal] = useState<boolean>(false)
     
-    const [openCancelConfirm, setOpenCancelConfirm] = useState(false)
-    const [cancelling, setCancelling] = useState(false)
+    const [openCancelConfirm, setOpenCancelConfirm] = useState<boolean>(false)
+    const [cancelling, setCancelling] = useState<boolean>(false)
 
     const bookingData = useMemo(() => {
         return {
