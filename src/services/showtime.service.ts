@@ -9,10 +9,10 @@ export class ShowtimeService {
         try {
             const snapshot = await getDocs(collection(db, COLLECTIONS.SHOWTIMES));
 
-            return snapshot.docs.map((doc) => {
-                const data = doc.data();
+            return snapshot.docs.map((docSnapshot) => {
+                const data = docSnapshot.data();
                 return {
-                    id: doc.id,
+                    id: docSnapshot.id,
                     ...data,
                     startTime: data.startTime?.toDate() || new Date(),
                     endTime: data.endTime?.toDate() || new Date(),
@@ -54,10 +54,10 @@ export class ShowtimeService {
 
             const querySnapshot = await getDocs(showtimeRef);
 
-            return querySnapshot.docs.map((doc) => {
-                const data = doc.data();
+            return querySnapshot.docs.map((docSnapshot) => {
+                const data = docSnapshot.data();
                 return {
-                    id: doc.id,
+                    id: docSnapshot.id,
                     ...data,
                     startTime: data.startTime?.toDate() || new Date(),
                     endTime: data.endTime?.toDate() || new Date(),
@@ -97,7 +97,7 @@ export class ShowtimeService {
                 throw new Error('Showtime not found');
             }
             const data = snapshot.data();
-            return data.reservedSeats ?? [];
+            return (data.reservedSeats as string[]) ?? [];
 
         } catch (error) {
             throw new Error('Failed to fetch reserved seats', { cause: error });
@@ -110,7 +110,8 @@ export class ShowtimeService {
                 throw new Error('Invalid showtime ID');
             }
             
-            const payload: any = { ...showtime };
+            // Usamos Record<string, unknown> en lugar de any
+            const payload: Record<string, unknown> = { ...showtime };
             
             if (showtime.startTime) {
                 payload.startTime = Timestamp.fromDate(new Date(showtime.startTime));

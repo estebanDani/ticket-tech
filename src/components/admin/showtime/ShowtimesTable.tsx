@@ -2,11 +2,12 @@
 import { useMemo, useState } from "react";
 import { Button, Box, LinearProgress, Typography, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination, Paper } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import { EnrichedShowtime } from "@/types";
 
 interface Props {
-  showtimes: any[];
-  onEdit: (showtime: any) => void;
-  onDelete: (showtime: any) => void;
+  showtimes: EnrichedShowtime[];
+  onEdit: (showtime: EnrichedShowtime) => void;
+  onDelete: (showtime: EnrichedShowtime) => void;
 }
 
 export function ShowtimesTable({ showtimes, onEdit, onDelete }: Props) {

@@ -1,16 +1,20 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, TextField, MenuItem, Grid, Typography, Paper} from "@mui/material";
+import { Button, TextField, MenuItem, Grid, Typography, Paper } from "@mui/material";
 import { showtimeSchema } from "@/schemas";
+import { EnrichedShowtime, Movie, Theater, CreateShowtimeDto } from "@/types";
+import * as yup from "yup";
+
+type ShowtimeFormData = yup.InferType<typeof showtimeSchema>;
 
 interface ShowtimeFormProps {
-  initialData?: any | null;
+  initialData?: EnrichedShowtime | null;
   movies: Record<string, string>;
-  theaters: any[];
-  onSubmit: (data: any) => Promise<void>;
+  theaters: Theater[];
+  onSubmit: (data: CreateShowtimeDto) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -27,7 +31,7 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
     control,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<ShowtimeFormData>({
     resolver: yupResolver(showtimeSchema),
     mode: 'onChange',
     defaultValues: {
@@ -48,15 +52,19 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
 
   const isEditMode = !!initialData;
 
+  const handleFormSubmit: SubmitHandler<ShowtimeFormData> = async (data) => {
+    await onSubmit(data as unknown as CreateShowtimeDto);
+  };
+
   return (
     <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
       <Typography variant="h5" fontWeight="bold" mb={3} color="primary">
         {isEditMode ? "✏️ Editar Función" : "🎬 Nueva Función"}
       </Typography>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
         <Grid container spacing={3}>
-            <Grid size={12}>
+          <Grid size={12}>
             <TextField
               select
               fullWidth
@@ -126,7 +134,7 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
                   onChange={(e) => {
                     const [hours, minutes] = e.target.value.split(':');
                     const date = new Date();
-                    date.setHours(parseInt(hours), parseInt(minutes));
+                    date.setHours(parseInt(hours, 10), parseInt(minutes, 10));
                     field.onChange(date);
                   }}
                   error={!!errors.startTime}
