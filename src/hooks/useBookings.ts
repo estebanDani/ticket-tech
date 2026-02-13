@@ -1,51 +1,38 @@
-'use client'
-import { useState, useEffect } from 'react'
-import type { Booking } from '@/types'
-import { BookingService } from '@/services/booking.service'
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { BookingService, BookingWithDetails } from '@/services/booking.service';
 
-interface UseBookingsResult {
-    bookings: Booking[]
-    loading: boolean
-    error: string | null
-}
-
-export const useBookings = (): UseBookingsResult => {
-    const [bookings, setBookings] = useState<Booking[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
+export const useBookings = () => {
+    const { user } = useAuth();
+    const [bookings, setBookings] = useState<BookingWithDetails[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        let isMounted = true
+        const fetchBookings = async () => {
+            if (!user) return;
 
-        const loadBookings = async () => {
             try {
-                setLoading(true)
-                setError(null)
+                setLoading(true);
+                const data = await BookingService.getByUser(user.uid);
+                
+                const sortedData = data.sort((a, b) => {
+                    const dateA = a.showtime?.startTime ? new Date(a.showtime.startTime).getTime() : 0;
+                    const dateB = b.showtime?.startTime ? new Date(b.showtime.startTime).getTime() : 0;
+                    return dateB - dateA;
+                });
 
-                const response = await BookingService.getAll()
-
-                if (!isMounted) return
-                setBookings(response.data)
-            } catch (err: unknown) {
-                if (!isMounted) return
-                setError(
-                    err instanceof Error
-                        ? err.message
-                        : 'Error al cargar reservas'
-                )
+                setBookings(sortedData);
+            } catch (err) {
+                console.error("Error fetching bookings:", err);
+                setError('Error al cargar las reservas');
             } finally {
-                if (isMounted) {
-                    setLoading(false)
-                }
+                setLoading(false);
             }
-        }
+        };
 
-        loadBookings()
+        fetchBookings();
+    }, [user]);
 
-        return () => {
-            isMounted = false
-        }
-    }, [])
-
-    return { bookings, loading, error }
-}
+    return { bookings, loading, error };
+};

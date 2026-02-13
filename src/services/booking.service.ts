@@ -1,8 +1,8 @@
-import { collection, doc, getDoc, getDocs, orderBy, query, runTransaction, where, limit, QueryDocumentSnapshot, startAfter } from 'firebase/firestore'
-import QRCode from 'qrcode'
+import {collection, doc, getDoc, getDocs, orderBy, query, runTransaction, where, limit, QueryDocumentSnapshot, startAfter, updateDoc} from 'firebase/firestore'
+import QRCode  from 'qrcode'
 
-import { db } from '@/services/firebase'
-import type { Booking, CreateBookingDto } from '@/types'
+import { db, } from '@/services/firebase'
+import type { Booking,CreateBookingDto } from '@/types'
 import { COLLECTIONS } from '@/utils'
 import { Movie, Showtime } from '@/types'
 
@@ -30,7 +30,6 @@ export class BookingService {
       const availableSeats: number = showtime.availableSeats
       const reservedSeats: string[] = showtime.reservedSeats || []
 
-      //comprobar asientos
       const alreadyReserved = data.seats.some((seat) =>
         reservedSeats.includes(seat)
       )
@@ -43,7 +42,6 @@ export class BookingService {
         throw new Error('There are not enough available seats')
       }
 
-      //updateShowtime
       transaction.update(showtimeRef, {
         availableSeats: availableSeats - data.seats.length,
         reservedSeats: [...reservedSeats, ...data.seats],
@@ -94,10 +92,22 @@ export class BookingService {
             getDoc(doc(db, COLLECTIONS.SHOWTIMES, booking.showtimeId))
           ]);
 
+          let showtimeData: Showtime | undefined = undefined;
+
+          if (showtimeSnap.exists()) {
+              const data = showtimeSnap.data();
+              showtimeData = {
+                  id: showtimeSnap.id,
+                  ...data,
+                  startTime: data.startTime?.toDate ? data.startTime.toDate() : new Date(data.startTime),
+                  endTime: data.endTime?.toDate ? data.endTime.toDate() : new Date(data.endTime),
+              } as Showtime;
+          }
+
           return {
             ...booking,
             movie: movieSnap.exists() ? ({ id: movieSnap.id, ...movieSnap.data() } as Movie) : undefined,
-            showtime: showtimeSnap.exists() ? ({ id: showtimeSnap.id, ...showtimeSnap.data() } as Showtime) : undefined,
+            showtime: showtimeData,
           };
         })
       );
@@ -153,6 +163,18 @@ export class BookingService {
       data: bookings,
       lastDoc: lastDocs,
     };
+  }
+
+  static async cancel(bookingId: string): Promise<void> {
+    try {
+      const bookingRef = doc(db, COLLECTIONS.BOOKINGS, bookingId);
+      await updateDoc(bookingRef, {
+        status: 'cancelled'
+      });
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+      throw error;
+    }
   }
 
 }

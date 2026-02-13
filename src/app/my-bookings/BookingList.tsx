@@ -1,8 +1,12 @@
 import { Box, Typography } from '@mui/material'
 import { useBookings } from '@/hooks'
 import { BookingCard } from '@/components/booking/booking_card/BookingCard'
-import SkeletonCard from './SkeletonCard'
+import SkeletonBookingCard from './SkeletonCard'
 
+interface BookingListProps {
+    statusFilter?: string;
+    dateFilter?: string;
+}
 
 const ListContainer = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -12,14 +16,31 @@ const ListContainer = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-export const BookingList = () => {
+export const BookingList = ({ statusFilter = 'Todas', dateFilter = 'Todos' }: BookingListProps) => {
     const { bookings, loading } = useBookings()
+
+    const filteredBookings = bookings.filter(booking => {
+        if (statusFilter !== 'Todas' && booking.status !== statusFilter) {
+            return false;
+        }
+
+        if (!booking.showtime) {
+            return false;
+        }
+        const showTime = new Date(booking.showtime.startTime);
+        const now = new Date();
+        
+        if (dateFilter === 'future' && showTime < now) return false;
+        if (dateFilter === 'past' && showTime >= now) return false;
+
+        return true;
+    });
 
     if (loading) {
         return (
             <ListContainer>
                 {Array.from({ length: 5 }).map((_, index) => (
-                    <SkeletonCard key={index} />
+                    <SkeletonBookingCard key={index} />
                 ))}
             </ListContainer>
         )
@@ -28,11 +49,21 @@ export const BookingList = () => {
     if (bookings.length === 0) {
         return (
             <ListContainer>
-                <Typography variant="h6" color="black">
-                    🎬 No tienes reservas aún
+                <Typography variant="h6" color="text.primary" align="center" sx={{ mt: 4 }}>
+                    🎬 No tienes reservas en tu historial
                 </Typography>
-                <Typography variant="body2" color="black" sx={{ mt: 1 }}>
-                    ¡Reserva tus películas favoritas!
+                <Typography variant="body2" color="text.secondary" align="center">
+                    ¡Ve a la cartelera y reserva tu primera película!
+                </Typography>
+            </ListContainer>
+        )
+    }
+
+    if (filteredBookings.length === 0) {
+        return (
+             <ListContainer>
+                <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+                    No hay reservas que coincidan con los filtros seleccionados.
                 </Typography>
             </ListContainer>
         )
@@ -40,8 +71,9 @@ export const BookingList = () => {
 
     return (
         <ListContainer>
-            {bookings.map((booking) => (
-                <BookingCard key={booking.id}
+            {filteredBookings.map((booking) => (
+                <BookingCard 
+                    key={booking.id}
                     booking={booking}
                 />
             ))}

@@ -11,6 +11,8 @@ import { ShowtimeCard } from './showtimes/ShowtimeCard';
 import { ShowtimesPageClient } from './showtimes/ShowtimesPageClient';
 import { ShowtimeForm } from './admin/ShowtimeForm';
 import { MovieForm } from './admin/movie_form/MovieForm';
+import { BookingQRCode } from './booking/BookingQRCode'
+import { BookingDetailsModal } from './booking/booking_card/BookingDetails'
 import  ShowtimesFilters  from './admin/showtime/ShowtimesFilters';
 import { ShowtimesTable } from './admin/showtime/ShowtimesTable';
 import  CreateTheaterForm  from './admin/theater_form/CreateTheaterForm';
@@ -28,6 +30,8 @@ export {
     ShowtimeCard,
     ShowtimesPageClient,
     MovieForm,
+    BookingQRCode,
+    BookingDetailsModal,
     ShowtimeForm,
     ShowtimesFilters,
     ShowtimesTable,

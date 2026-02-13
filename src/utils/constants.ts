@@ -65,3 +65,9 @@ export const PAYMETMETHOD_MAP = new Map<PAYMETMETHOD_ENUM, string>([
   [PAYMETMETHOD_ENUM.Transfer,'📲 Transferencia bancaria']
 ])
 
+export const STATE_BOOKING = {
+  ALL: 'Todas',
+  CONFIRMED: 'confirmed',
+  PENDING: 'pending',
+  CANCELLED: 'cancelled',
+} as const;
