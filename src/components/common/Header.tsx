@@ -65,7 +65,7 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
     handleCloseUserMenu();
     handleClose();
     await logout();
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   const navigateTo = (path: string) => {
