@@ -37,7 +37,7 @@ const FORM_OPTIONS = {
 export default function CheckoutPage() {
   const { showtimeId } = useParams();
   const router = useRouter();
-  const { selectedSeats, selectedShowtime, clearBooking } = useBooking();
+  const { selectedSeats, selectedShowtime } = useBooking();
   const { user } = useAuth();
 
   const [paymentMethod, setPaymentMethod] = useState<PAYMETMETHOD_ENUM>(PAYMETMETHOD_ENUM.Card);
