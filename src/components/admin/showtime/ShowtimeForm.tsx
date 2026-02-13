@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField, MenuItem, Grid, Typography, Paper } from "@mui/material";
 import { showtimeSchema } from "@/schemas";
 import { EnrichedShowtime, Theater, CreateShowtimeDto } from "@/types";
 import * as yup from "yup";
+import { SHOWTIME_INITIAL } from "@/utils"
 
 type ShowtimeFormData = yup.InferType<typeof showtimeSchema>;
 
@@ -29,26 +30,13 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
     register,
     handleSubmit,
     control,
-    reset,
     formState: { errors },
   } = useForm<ShowtimeFormData>({
     resolver: yupResolver(showtimeSchema),
     mode: 'onChange',
-    defaultValues: {
-      price: 0,
-      availableSeats: 0,
-      date: new Date().toISOString().split('T')[0]
-    },
+    defaultValues: SHOWTIME_INITIAL,
   });
 
-  useEffect(() => {
-    if (initialData) {
-      reset({
-        ...initialData,
-        startTime: new Date(initialData.startTime),
-      });
-    }
-  }, [initialData, reset]);
 
   const isEditMode = !!initialData;
 

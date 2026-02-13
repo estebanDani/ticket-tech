@@ -71,3 +71,9 @@ export const STATE_BOOKING = {
   PENDING: 'pending',
   CANCELLED: 'cancelled',
 } as const;
+export const SHOWTIME_INITIAL = {
+  movieId: "",
+  theaterId: "",
+  price: 35,
+  startTime: new Date(),
+};
