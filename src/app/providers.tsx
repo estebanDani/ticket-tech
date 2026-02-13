@@ -8,26 +8,29 @@ import { SnackbarProvider } from 'notistack'
 import { theme } from '@/theme/theme'
 import { BookingProvider } from '@/contexts/BookingContext'
 import { AuthProvider } from '@/contexts/AuthContext'
+import { SearchProvider } from '@/contexts/SearchContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AppRouterCacheProvider options={{ key: 'mui' }}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SnackbarProvider
-        maxSnack={3}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <BookingProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </BookingProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <SearchProvider>
+            <BookingProvider>
+              <AuthProvider>
+                {children}
+              </AuthProvider>
+            </BookingProvider>
+          </SearchProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
     </AppRouterCacheProvider>
   )
 }
