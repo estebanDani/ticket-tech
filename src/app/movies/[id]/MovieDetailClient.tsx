@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { Box, Button, CircularProgress, Container, Typography } from '@mui/material'
+import { Box, Button, Container, Typography } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 
 import { MovieDetail } from '@/components'

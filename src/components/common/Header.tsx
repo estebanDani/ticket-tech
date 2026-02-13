@@ -23,9 +23,6 @@ import {
   ListItemIcon
 } from '@mui/material';
 
-interface HeaderProps {
-}
-
 export function Header() {
   const router = useRouter();
   const { user, logout } = useAuth();

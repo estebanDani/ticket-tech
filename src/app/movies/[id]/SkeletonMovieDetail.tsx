@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Box, Grid, Card, CardMedia, Stack, Chip, Divider, Typography, Skeleton } from '@mui/material'
+import { Container, Box, Grid, Card, CardMedia, Stack, Divider, Typography, Skeleton } from '@mui/material'
 import { theme } from '@/theme/theme'
 export const SkeletonMovieDetail = () => {
     return (
