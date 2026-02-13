@@ -7,16 +7,16 @@ import { CreateTheaterDto } from '@/types';
 import { SubmitHandler } from 'react-hook-form';
 
 interface MovieFormProps {
-  initialData?: CreateTheaterDto | null,
-  onSubmit: SubmitHandler<CreateTheaterDto>,
-  isLoading?: boolean
+    initialData?: CreateTheaterDto | null,
+    onSubmit: SubmitHandler<CreateTheaterDto>,
+    isLoading?: boolean
 }
 
 const CreateTheaterForm = ({
     initialData,
     onSubmit,
-    isLoading =false
-}:MovieFormProps) => {
+    isLoading = false
+}: MovieFormProps) => {
 
 
     const [formData, setFormData] = useState({
@@ -57,34 +57,34 @@ const CreateTheaterForm = ({
     }, [formData.name, formData.rows, formData.seatsPerRow])
 
     const handleChange = (field: keyof typeof formData, value: string | number) => {
-            setFormData(prev => ({
-                ...prev,
-                [field]: value
-            }));
-        };
-    
-        const toggleAmenity = (amenity: string) => {
-            setFormData(prev => ({
-                ...prev,
-                amenities: prev.amenities.includes(amenity)
-                    ? prev.amenities.filter(a => a !== amenity)
-                    : [...prev.amenities, amenity]
-            }));
-        };
-    
-        const previewCapacity = useMemo(() => {
-            return formData.rows * formData.seatsPerRow;
-        }, [formData.rows, formData.seatsPerRow]);
-    
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
+    const toggleAmenity = (amenity: string) => {
+        setFormData(prev => ({
+            ...prev,
+            amenities: prev.amenities.includes(amenity)
+                ? prev.amenities.filter(a => a !== amenity)
+                : [...prev.amenities, amenity]
+        }));
+    };
+
+    const previewCapacity = useMemo(() => {
+        return formData.rows * formData.seatsPerRow;
+    }, [formData.rows, formData.seatsPerRow]);
+
     useEffect(() => {
         if (initialData) {
-          setFormData(initialData)
-        }else{
+            setFormData(initialData)
+        } else {
             setErrors({
-            name: '',
-            rows: '',
-            seatsPerRow: '',
-        })
+                name: '',
+                rows: '',
+                seatsPerRow: '',
+            })
         }
     }, [initialData]);
 
@@ -98,9 +98,9 @@ const CreateTheaterForm = ({
 
 
     return (
-        <Container maxWidth="md" sx={{mt:2,mb:2 }} >
-            <Typography variant='h4' sx={{ mb: 3 }}>
-                {isEditMode ? "✏️ Editar Sala" : "🎬 Nueva Sala"}
+        <Container maxWidth="md" sx={{ mt: 2, mb: 2 }} >
+            <Typography variant="h5" fontWeight="bold" mb={3} color="primary">
+                {isEditMode ? "✏️ Editar Sala" : "🏟️ Nueva Sala"}
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TheaterFormFields
@@ -111,7 +111,7 @@ const CreateTheaterForm = ({
                     toggleAmenity={toggleAmenity}
                 />
 
-                <Button variant="contained" type="submit" disabled={!validation.isValid ||  isLoading} fullWidth sx={{ mt: 2 }}>
+                <Button variant="contained" type="submit" disabled={!validation.isValid || isLoading} fullWidth sx={{ mt: 2 }}>
                     {/* {isLoading ? (
                         <>
                             <CircularProgress size={24} sx={{ mr: 1 }} />
