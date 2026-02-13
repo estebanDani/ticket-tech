@@ -36,8 +36,6 @@ export function Header() {
   const { searchValue, setSearchValue } = useSearch();
   const pathname = usePathname();
   const arrayPath = pathname.split('/').filter(Boolean);
-  console.log('ruta actual', pathname);
-
 
   const getDynamicTitle = () => {
     if (arrayPath.length === 0) return '1. HOME CARTELERA';
