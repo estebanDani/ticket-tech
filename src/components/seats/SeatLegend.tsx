@@ -20,7 +20,7 @@ const SeatLegend = () => {
     return (
         <Box sx={{ ...styles.container }}>
             {LegendItems.map((item, index) => (
-                <Box sx={styles.subContainer} key={`legend-item-${index}`}>
+                <Box sx={styles.subContainer } key={`legend-item-${index}`}>
                     <Chip sx={{ ...styles.seat, backgroundColor: item.color }} />
                     <Typography variant='h6'>{item.label}</Typography>
                 </Box>
@@ -43,7 +43,7 @@ const styles = {
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         marginBottom: '20px',
         width: '100%',
-
+        flexWrap: 'wrap-reverse'
     },
     subContainer: {
         display: 'flex',

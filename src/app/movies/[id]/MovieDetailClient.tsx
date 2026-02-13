@@ -3,12 +3,13 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { Box, Button, CircularProgress, Container, Typography } from '@mui/material'
+import { Box, Button, Container, Typography } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 
 import { MovieDetail } from '@/components'
 import { useMovie } from '@/hooks/useMovie'
 import { useBooking } from '@/contexts/BookingContext'
+import { SkeletonMovieDetail } from './SkeletonMovieDetail'
 
 interface MovieDetailClientProps {
   id: string
@@ -17,12 +18,12 @@ interface MovieDetailClientProps {
 export function MovieDetailClient({ id }: MovieDetailClientProps) {
   const router = useRouter()
   const { movie, loading, error } = useMovie(id)
-  const {setMovie} = useBooking()
+  const { setMovie } = useBooking()
 
   if (loading) {
     return (
       <Box sx={{ display: 'grid', placeItems: 'center', py: 6 }}>
-        <CircularProgress />
+        <SkeletonMovieDetail />
       </Box>
     )
   }
@@ -72,7 +73,7 @@ export function MovieDetailClient({ id }: MovieDetailClientProps) {
               variant="contained"
               size="large"
               sx={{ width: { xs: '100%', md: 260 } }}
-              onClick={()=>setMovie(movie)}
+              onClick={() => setMovie(movie)}
             >
               Ver Horarios y Reservar
             </Button>

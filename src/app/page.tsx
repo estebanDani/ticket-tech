@@ -11,19 +11,16 @@ import {
   MenuItem,
 } from '@mui/material'
 
-import { Header, Footer, MovieGrid } from '@/components'
+import { Footer, MovieGrid } from '@/components'
 import { useActiveMovies } from '@/hooks/useActiveMovies'
 import { GenereMovies, GENRE_LIST, searchMovie } from '@/utils'
+import { useSearch } from '@/contexts/SearchContext'
 
 export default function Home() {
   const { movies, loading, error } = useActiveMovies()
 
-  const [searchValue, setSearchValue] = useState('')
+  const { searchValue } = useSearch()
   const [selectedGenre, setSelectedGenre] = useState<string>(GenereMovies.ALL)
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value)
-  }
 
   const filteredMovies = useMemo(() => {
     return searchMovie(movies, searchValue, selectedGenre)
@@ -31,11 +28,6 @@ export default function Home() {
 
   return (
     <>
-      <Header
-        searchValue={searchValue}
-        onChangeSearch={handleSearch}
-      />
-
       <Container maxWidth={false} disableGutters sx={{ py: 4 }}>
         <Typography
           variant="h2"

@@ -69,55 +69,55 @@ export const SeatGrid: React.FC<SeatGridProps> = ({ seatMap, reservedSeats }) =>
         🎥 PANTALLA
       </Paper>
 
-      <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-        {Object.keys(rows)
-          .sort()
-          .map((rowLabel) => (
-            <Grid
-              key={rowLabel}
-              container
-              sx={{
-                mb: 1,
-                display: 'grid',
-                gap: 1,
-                gridTemplateColumns: 'auto 1fr',
-                alignItems: 'center',
-              }}
-            >
-              <Typography
-                variant="body2"
-                sx={{
-                  color: 'grey.800',
-                  fontWeight: 'bold',
-                  width: 30,
-                  textAlign: 'center',
-                }}
-              >
-                {rowLabel}
-              </Typography>
-
+      <Box sx={{ width:'100%',overflowX: 'auto', display: "flex", justifyContent: "space-around",  }}>
+        <Box>
+          {Object.keys(rows)
+            .sort()
+            .map((rowLabel) => (
               <Grid
+                key={rowLabel}
+                container
                 sx={{
+                  mb: 1,
                   display: 'grid',
                   gap: 1,
-                  gridAutoFlow: 'column',
-                  justifyContent: 'center',
-                  placeItems: 'center',
+                  gridTemplateColumns: 'auto 1fr',
+                  alignItems: 'center',
                 }}
               >
-                {rows[rowLabel]
-                  .sort((a, b) => a.number - b.number)
-                  .map((seat) => (
-                    <SeatButton
-                      key={seat.id}
-                      seat={seat.id}
-                      status={getSeatStatus(seat.id)}
-                      onClick={handleSeatClick}
-                    />
-                  ))}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'grey.800',
+                    fontWeight: 'bold',
+                    width: 30,
+                    textAlign: 'center',
+                  }}
+                >
+                  {rowLabel}
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridAutoFlow: "column",
+                    gap: { xs: 0.5, sm: 1 },
+                  }}
+                >
+                  {rows[rowLabel]
+                    .sort((a, b) => a.number - b.number)
+                    .map((seat) => (
+                      <SeatButton
+                        key={seat.id}
+                        seat={seat.id}
+                        status={getSeatStatus(seat.id)}
+                        onClick={handleSeatClick}
+                      />
+                    ))}
+                </Box>
               </Grid>
-            </Grid>
           ))}
+        </Box>
       </Box>
     </Box>
   );

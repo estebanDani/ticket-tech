@@ -59,9 +59,9 @@ export const BookingsTable: React.FC<BookingsTableProps> = ({
     }
     return (
         <>
-            <TableContainer>
+            <TableContainer sx={{maxHeight: 'calc(100vh - 300px)',overflow: 'auto'}}>
 
-                <Table>
+                <Table sx={{maxWidth: 'auto'}}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Usuario</TableCell>
