@@ -58,9 +58,8 @@ export const MovieTable: React.FC<MovieTableProps> = ({
   }
     return (
         <>
-            <TableContainer>
-
-                <Table>
+            <TableContainer sx={{maxHeight: 'calc(100vh - 300px)',overflow: 'auto'}}>
+                <Table sx={{maxWidth: 'auto'}}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Título</TableCell>
