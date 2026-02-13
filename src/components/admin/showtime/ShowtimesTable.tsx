@@ -45,8 +45,8 @@ export function ShowtimesTable({ showtimes }: Props) {
 
   return (
     <>
-      <TableContainer>
-        <Table>
+      <TableContainer sx={{maxHeight: 'calc(100vh - 300px)',overflow: 'auto'}}>
+        <Table sx={{maxWidth: 'auto'}}>
           <TableHead>
             <TableRow>
               <TableCell>Pélicula</TableCell>

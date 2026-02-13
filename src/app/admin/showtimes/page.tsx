@@ -33,14 +33,16 @@ export default function ShowtimesPage() {
 
   return (
     <Container maxWidth={false} sx={{ mt: 2 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, gap:2,flexWrap:'wrap'}}>
         <PageHeader
           title="Administración de funciones"
           description="Gestiona las funciones del cine"
           icon="🎬"
         />
         
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box sx={{display:'flex',flexWrap:'wrap', alignItems:'center',
+          justifyContent:{ xs: 'space-between', md: 'flex-end' },
+           width: { xs: '100%', md: 'auto' }, gap:1}}>
           <ShowtimesFilters
             moviesfilter ={movies}
             filters={filters}

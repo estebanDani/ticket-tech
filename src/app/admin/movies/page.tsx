@@ -95,11 +95,17 @@ export default function MoviesPage() {
 
   return (
     <Container maxWidth={false} sx={{ p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, gap:2,flexWrap:'wrap'}}>
         <PageHeader title="Películas" description="Gestiona las películas de tu cine" icon="📽️" />
 
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box sx={{display:'flex',flexWrap:'wrap', alignItems:'center',
+          justifyContent:{ xs: 'space-between', md: 'flex-end' },
+           width: { xs: '100%', md: 'auto' }, gap:1}}>
           <TextField
+            fullWidth
+            sx={{
+              width: { xs: '100%', sm: 250 },
+            }}
             size="small"
             placeholder="Buscar película..."
             value={search}

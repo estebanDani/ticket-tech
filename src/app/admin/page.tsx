@@ -1,7 +1,8 @@
 'use client';
-import { useMemo } from 'react';
-import { Box, Drawer, CssBaseline, AppBar, Toolbar, Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Dashboard, ListAlt, Movie, TheaterComedy, Theaters } from '@mui/icons-material';
+import { useMemo, useState } from 'react';
+import { useTheme, useMediaQuery, IconButton, Box, Drawer, CssBaseline, AppBar, Toolbar, Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Dashboard, ListAlt, Movie, TheaterComedy, Theaters, Menu } from '@mui/icons-material';
+
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 const drawerWidth = 240;
@@ -23,6 +24,15 @@ export default function AdminPage({
 }) {
 
     const pathName = usePathname();
+    const theme = useTheme();
+
+    const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+    };
+
 
     const currentItem = useMemo(() => {
         return drawerItems.find(item => pathName.startsWith(item.path))
@@ -33,10 +43,22 @@ export default function AdminPage({
             <CssBaseline />
             <AppBar
                 position="fixed"
-                sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+                sx={{ width: isTablet ? '100%' : `calc(100% - ${drawerWidth}px)`,
+                      ml: isTablet ? 0 : `${drawerWidth}px` }}
             >
                 <Toolbar>
-                    <Typography variant="h6" noWrap component="div">
+                    {isTablet && (
+                        <IconButton
+                        color="inherit"
+                        edge="start"
+                        onClick={handleDrawerToggle}
+                        sx={{ mr: 2 }}
+                        >
+                        <Menu/>
+                        </IconButton>
+                    )}
+
+                    <Typography variant="h6" noWrap>
                         {currentItem ? currentItem.text : 'Admin Dashboard'}
                     </Typography>
                 </Toolbar>
@@ -50,8 +72,9 @@ export default function AdminPage({
                         boxSizing: 'border-box',
                     },
                 }}
-                variant="permanent"
-                anchor="left"
+                variant={isTablet ? "temporary" : "permanent"}
+                open={isTablet ? mobileOpen : true}
+                onClose={handleDrawerToggle}
             >
                 <Toolbar />
                 <Divider />
