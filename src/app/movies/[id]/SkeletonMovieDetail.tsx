@@ -1,6 +1,5 @@
 import React from 'react'
 import { Container, Box, Grid, Card, CardMedia, Stack, Divider, Typography, Skeleton } from '@mui/material'
-import { theme } from '@/theme/theme'
 export const SkeletonMovieDetail = () => {
     return (
         <Container maxWidth={false} sx={{ py: 4, width: '100%' }}>
