@@ -19,6 +19,7 @@ import  CreateTheaterForm  from './admin/theater_form/CreateTheaterForm';
 import  {TheaterFormDelete}  from './admin/theater_form/TheaterFormDelete';
 import  TheaterTable  from './admin/theater_form/TheaterTable';
 import { ShowtimeDelete } from './admin/showtime/ShowtimeDelete'
+import BookingConfirmation from './booking/BookingConfirmation'
 export { 
     MovieCard, 
     MovieGrid, 
@@ -39,5 +40,6 @@ export {
     CreateTheaterForm,
     TheaterFormDelete,
     TheaterTable,
-    ShowtimeDelete
+    ShowtimeDelete,
+    BookingConfirmation
 };

@@ -5,11 +5,13 @@ import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { Box, CircularProgress, Grid, } from '@mui/material';
+import { Box, CircularProgress, Grid } from '@mui/material'; 
 
 import PaymentMethodForm from '@/components/booking/PaymentMethodForm';
 import UserDataForm from '@/components/booking/UserDataForm';
 import BookingSummary from '@/components/booking/BookingSummary';
+import BookingConfirmation from '@/components/booking/BookingConfirmation'; 
+
 import { checkoutSchema } from '@/schemas/checkout.schema';
 import { PAYMETMETHOD_ENUM, showError } from '@/utils';
 import { BookingService } from '@/services/booking.service';
@@ -38,9 +40,9 @@ export default function CheckoutPage() {
   const { selectedSeats, selectedShowtime, clearBooking } = useBooking();
   const { user } = useAuth();
 
-
   const [paymentMethod, setPaymentMethod] = useState<PAYMETMETHOD_ENUM>(PAYMETMETHOD_ENUM.Card);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false); 
 
   const { control, handleSubmit } = useForm<FormData>({
     resolver: yupResolver(checkoutSchema),
@@ -48,14 +50,13 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    if (!selectedSeats || !selectedShowtime) {
+    if ((!selectedSeats.length || !selectedShowtime) && !isSuccess) {
       router.push('/');
     }
-  }, [selectedSeats, selectedShowtime, router]);
+  }, [selectedSeats, selectedShowtime, router, isSuccess]);
 
 
   const onSubmit = async () => {
-
     setLoading(true);
     if (!user) return;
 
@@ -66,34 +67,37 @@ export default function CheckoutPage() {
         return;
       }
 
-      const response = await BookingService.create({
+      await BookingService.create({
         userId: user.uid,
         showtimeId: showtimeId as string,
         movieId: selectedShowtime?.movieId ?? '',
         seats: selectedSeats,
-        totalPreice: selectedShowtime.price * selectedSeats.length,
+        totalPreice: selectedShowtime.price * selectedSeats.length, 
         status: 'pending',
         paymentMethod,
         bookingDate: Timestamp.now()
-      })
+      });
 
-      router.push(`/booking/${showtimeId}/tickets/${response.id}`);
+      setIsSuccess(true);
+      
     } catch (error) {
-      showError(error as string || 'Ocurrio un error al procesar la reserva')
+      console.error(error);
+      showError(typeof error === 'string' ? error : 'Ocurrió un error al procesar la reserva');
     } finally {
-      clearBooking();
       setLoading(false);
     }
   };
 
-
-
   if (loading) {
     return (
-      <Box sx={{ display: 'grid', placeItems: 'center', py: 6 }}>
+      <Box sx={{ display: 'grid', placeItems: 'center', py: 6, minHeight: '50vh' }}>
         <CircularProgress />
       </Box>
     )
+  }
+
+  if (isSuccess) {
+    return <BookingConfirmation />;
   }
 
   return (
