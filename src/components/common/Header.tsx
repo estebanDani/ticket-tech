@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSearch } from '@/contexts/SearchContext';
 import { Person, Logout, Menu as MenuIcon, ConfirmationNumber } from '@mui/icons-material';
 
 import {
@@ -22,18 +23,27 @@ import {
   ListItemIcon
 } from '@mui/material';
 
-interface HeaderProps {
-  searchValue: string;
-  onChangeSearch: (e: React.ChangeEvent<HTMLInputElement>) => void
-}
-
-export function Header({ searchValue, onChangeSearch }: HeaderProps) {
+export function Header() {
   const router = useRouter();
   const { user, logout } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
+  const { searchValue, setSearchValue } = useSearch();
+  const pathname = usePathname();
+  const arrayPath = pathname.split('/').filter(Boolean);
+
+  const getDynamicTitle = () => {
+    if (arrayPath.length === 0) return '1. HOME CARTELERA';
+    if (arrayPath.includes('seats')) return '4. SELECCIONAR ASIENTOS';
+    if (arrayPath.includes('showtimes')) return '3. SELECCIONAR HORARIOS';
+    if (arrayPath.includes('movies')) return '2. DETALLE PELÍCULA';
+    if (arrayPath.includes('checkout')) return '5. CHECKOUT/PAGO';
+    return '';
+  };
+
+  const title = getDynamicTitle();
   const menuProps = {
     anchorOrigin: {
       vertical: 'bottom' as const,
@@ -65,7 +75,7 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
     handleCloseUserMenu();
     handleClose();
     await logout();
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   const navigateTo = (path: string) => {
@@ -104,7 +114,7 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
   return (
     <AppBar position="static">
       <Typography variant="h3" sx={{ textAlign: 'center', paddingTop: '40px' }}>
-        1. HOME CARTELERA
+        {title}
       </Typography>
 
       <Toolbar sx={{ display: 'flex' }}>
@@ -117,7 +127,7 @@ export function Header({ searchValue, onChangeSearch }: HeaderProps) {
         <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 'auto', alignItems: 'center' }}>
           <TextField
             value={searchValue}
-            onChange={onChangeSearch}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder='Buscar...'
             variant="outlined"
             size="small"
