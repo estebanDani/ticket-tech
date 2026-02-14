@@ -42,11 +42,11 @@ export default function BookingsPage() {
       }
     });
   }, [bookings, movies, theaters, showtimes, clients]);
-
+  
   const filterTable = useMemo(() => {
     return DataTable.filter((booking) => {
-      const bookingDate = booking.bookingDate.toDate();
-      const bookingDateString = bookingDate.toISOString().split('T')[0];
+      const bookingDate = booking.bookingDate;
+      const bookingDateString = bookingDate.toString().split('T')[0];
 
       const matchesDate = !filter.date || bookingDateString === filter.date;
       const matchesStatus = !filter.status || booking.status === filter.status;
