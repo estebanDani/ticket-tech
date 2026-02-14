@@ -1,4 +1,6 @@
 import { Timestamp } from "firebase/firestore";
+import { Movie } from "./movie.types";
+import { Showtime } from "./showtime.types";
 
 export interface Booking {
     id: string;
@@ -13,10 +15,14 @@ export interface Booking {
     qrCode: string;
 }
 
+
+
 export interface BookingWithDetails extends Booking {
-    movie: string;
-    theater: string;
-    user: string;
+    movie?: string;
+    theater?: string;
+    user?: string;
+    movieObje?: Movie;
+    showtime?: Showtime;
 }
 
 export type CreateBookingDto = Omit<Booking, 'id' | 'qrCode'>;
