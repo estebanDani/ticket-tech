@@ -25,22 +25,10 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-
+import { showtimeSchema } from '@/schemas'
 import { Movie, Theater, CreateShowtimeDto, Showtime } from "@/types";
 
-const schema = yup.object({
-  movieId: yup.string().required("Debes seleccionar una película"),
-  theaterId: yup.string().required("Debes seleccionar una sala"),
-  price: yup.number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .required("El precio es obligatorio")
-    .min(1, "El precio debe ser mayor a 0"),
-  startTime: yup.date()
-    .required("Fecha y hora obligatoria")
-    .typeError("Fecha inválida"),
-}).required();
-
-type ShowtimeFormData = yup.InferType<typeof schema>;
+type ShowtimeFormData = yup.InferType<typeof showtimeSchema>;
 
 const SHOWTIME_INITIAL = {
   movieId: "",
@@ -77,7 +65,7 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
     reset,
     formState: { errors },
   } = useForm<ShowtimeFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(showtimeSchema),
     defaultValues: {
       ...SHOWTIME_INITIAL,
       startTime: new Date(),
