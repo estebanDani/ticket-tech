@@ -2,14 +2,9 @@ import {collection, doc, getDoc, getDocs, orderBy, query, runTransaction, where,
 import QRCode  from 'qrcode'
 
 import { db, } from '@/services/firebase'
-import type { Booking,CreateBookingDto } from '@/types'
+import type { Booking,BookingWithDetails,CreateBookingDto } from '@/types'
 import { COLLECTIONS } from '@/utils'
 import { Movie, Showtime } from '@/types'
-
-export interface BookingWithDetails extends Booking {
-  movie?: Movie;
-  showtime?: Showtime;
-}
 
 export class BookingService {
 
@@ -106,7 +101,7 @@ export class BookingService {
 
           return {
             ...booking,
-            movie: movieSnap.exists() ? ({ id: movieSnap.id, ...movieSnap.data() } as Movie) : undefined,
+            movieObject: movieSnap.exists() ? ({ id: movieSnap.id, ...movieSnap.data() } as Movie) : undefined,
             showtime: showtimeData,
           };
         })

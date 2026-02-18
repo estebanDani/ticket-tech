@@ -104,7 +104,7 @@ export default function MoviesPage() {
           <TextField
             fullWidth
             sx={{
-              width: { xs: '100%', sm: 250 },
+              width: { xs: 250, sm: 250 },
             }}
             size="small"
             placeholder="Buscar película..."

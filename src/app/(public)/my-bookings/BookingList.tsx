@@ -17,7 +17,7 @@ const ListContainer = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const BookingList = ({ statusFilter = 'Todas', dateFilter = 'Todos' }: BookingListProps) => {
-    const { bookings, loading } = useBookings()
+    const { bookings, loading } = useBookings({onlyCurrentUser:true})
 
     const filteredBookings = bookings.filter(booking => {
         if (statusFilter !== 'Todas' && booking.status !== statusFilter) {

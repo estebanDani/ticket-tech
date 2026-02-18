@@ -19,7 +19,8 @@ import { BookingService } from '@/services';
 import { BookingChip } from './BookingChip';
 import { QrModal } from './QrModal';
 import { BookingDetailsModal } from '@/components';
-import { formatDateWithYear, formatTime } from '@/utils';
+import {  formatDateWithYear, formatTime } from '@/utils';
+import { parseISO } from 'date-fns';
 
 interface BookingCardProps {
     booking: Booking;
@@ -45,7 +46,7 @@ export const BookingCard = ({ booking }: BookingCardProps) => {
                 posterUrl: movie?.posterUrl
             },
             showtime: {
-                date: formatDateWithYear(showtime?.startTime),
+                date: formatDateWithYear(parseISO(showtime?.date || '')),
                 time: formatTime(showtime?.startTime),
             },
             seats: booking.seats.join(', '),

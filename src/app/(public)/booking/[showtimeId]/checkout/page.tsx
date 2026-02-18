@@ -10,7 +10,6 @@ import { Box, CircularProgress, Grid } from '@mui/material';
 import PaymentMethodForm from '@/components/booking/PaymentMethodForm';
 import UserDataForm from '@/components/booking/UserDataForm';
 import BookingSummary from '@/components/booking/BookingSummary';
-import BookingConfirmation from '@/components/booking/BookingConfirmation'; 
 
 import { checkoutSchema } from '@/schemas/checkout.schema';
 import { PAYMETMETHOD_ENUM, showError } from '@/utils';
@@ -42,7 +41,6 @@ export default function CheckoutPage() {
 
   const [paymentMethod, setPaymentMethod] = useState<PAYMETMETHOD_ENUM>(PAYMETMETHOD_ENUM.Card);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false); 
 
   const { control, handleSubmit } = useForm<FormData>({
     resolver: yupResolver(checkoutSchema),
@@ -50,10 +48,10 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    if ((!selectedSeats.length || !selectedShowtime) && !isSuccess) {
+    if (!selectedSeats.length || !selectedShowtime) {
       router.push('/');
     }
-  }, [selectedSeats, selectedShowtime, router, isSuccess]);
+  }, [selectedSeats, selectedShowtime, router]);
 
 
   const onSubmit = async () => {
@@ -77,8 +75,7 @@ export default function CheckoutPage() {
         paymentMethod,
         bookingDate: Timestamp.now()
       });
-
-      setIsSuccess(true);
+      router.push(`/booking/${showtimeId}/tickets`)
       
     } catch (error) {
       console.error(error);
@@ -94,10 +91,6 @@ export default function CheckoutPage() {
         <CircularProgress />
       </Box>
     )
-  }
-
-  if (isSuccess) {
-    return <BookingConfirmation />;
   }
 
   return (
