@@ -1,59 +1,107 @@
-"use client";
+'use client';
 
-import { Container, Box, Button } from "@mui/material";
-import { useMemo, useState } from "react";
-import { useShowtimesView } from "@/hooks/useShowtimeView";
-import PageHeader from "@/components/common/PageHeader";
-import { ShowtimesFilters, ShowtimesTable } from "@/components";
+import { useMemo, useState } from 'react';
+import { Button, Dialog, Container, Box } from '@mui/material';
+import PageHeader from '@/components/common/PageHeader';
+import { showError, showSuccess } from '@/utils';
+import { ShowtimeService } from '@/services';
+import { ShowtimeForm, ShowtimesFilters, ShowtimesTable } from '@/components';
+import { ShowtimeDelete } from '@/components';
+import { useShowtimesView } from '@/hooks/useShowtimeView';
+import { CreateShowtimeDto, EnrichedShowtime } from '@/types';
 
-interface ShowtimesFilters {
-  movieId: string;
-  date: string;
-}
 export default function ShowtimesPage() {
-  const { showtimes ,movies} = useShowtimesView();
-  const [filters, setFilters] = useState<ShowtimesFilters>({
-    movieId: "",
-    date: "",
-  });
+  const { showtimes, moviesMap, moviesList, theaters, load } = useShowtimesView();
+  
+  const [open, setOpen] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [selectedShowtime, setSelectedShowtime] = useState<EnrichedShowtime | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [showtimeToDelete, setShowtimeToDelete] = useState<EnrichedShowtime | null>(null);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  
+  const [filters, setFilters] = useState({ movieId: "", date: "" });
+
+  const handleSubmit = async (data: CreateShowtimeDto) => {
+    setSubmitting(true);
+    try {
+      if (selectedShowtime) {
+        await ShowtimeService.update(selectedShowtime.id, data);
+        showSuccess("Función Actualizada Correctamente");
+      } else {
+        await ShowtimeService.create(data);
+        showSuccess("Función Creada Correctamente");
+      }
+      setOpen(false);
+      setSelectedShowtime(null);
+      await load();
+    } catch {
+      showError('Ocurrió un error al procesar la función');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!showtimeToDelete) return;
+    setDeleting(true);
+    try {
+      await ShowtimeService.delete(showtimeToDelete.id);
+      showSuccess("Función Eliminada Correctamente");
+      await load();
+      setDeleteDialogOpen(false);
+      setShowtimeToDelete(null);
+    } catch {
+      showError('Ocurrió un error al eliminar la función');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const filteredShowtimes = useMemo(() => {
-    return showtimes.filter((s) => {
-      const matchMovie = filters.movieId
-        ? s.movieId === filters.movieId
-        : true;
-
-      const matchDate = filters.date
-        ? s.date === filters.date
-        : true;
-
+    return (showtimes as EnrichedShowtime[]).filter((s) => {
+      const matchMovie = filters.movieId ? s.movieId === filters.movieId : true;
+      const matchDate = filters.date ? s.date === filters.date : true;
       return matchMovie && matchDate;
     });
   }, [showtimes, filters]);
 
   return (
-    <Container maxWidth={false} sx={{ mt: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, gap:2,flexWrap:'wrap'}}>
-        <PageHeader
-          title="Administración de funciones"
-          description="Gestiona las funciones del cine"
-          icon="🎬"
-        />
-        
-        <Box sx={{display:'flex',flexWrap:'wrap', alignItems:'center',
-          justifyContent:{ xs: 'space-between', md: 'flex-end' },
-           width: { xs: '100%', md: 'auto' }, gap:1}}>
-          <ShowtimesFilters
-            moviesfilter ={movies}
-            filters={filters}
-            onChange={setFilters}
-          />
-          <Button variant="contained">
+    <Container maxWidth={false} sx={{ p: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <PageHeader title="Administración de funciones" description="Gestiona el horario del cine" icon="🎬" />
+        <Box display="flex" alignItems="center" gap={1}>
+          <ShowtimesFilters moviesfilter={moviesMap} filters={filters} onChange={setFilters} />
+          <Button variant="contained" onClick={() => { setSelectedShowtime(null); setOpen(true); }}>
             Nueva Función
           </Button>
         </Box>
       </Box>
-      <ShowtimesTable showtimes={filteredShowtimes} />
+
+      <ShowtimesTable 
+        showtimes={filteredShowtimes} 
+        onEdit={(s) => { setSelectedShowtime(s as EnrichedShowtime); setOpen(true); }} 
+        onDelete={(s) => { setShowtimeToDelete(s as EnrichedShowtime); setDeleteDialogOpen(true); }} 
+      />
+
+      <Dialog fullWidth maxWidth="md" open={open} onClose={() => setOpen(false)}>
+        <ShowtimeForm
+          initialData={selectedShowtime ?? undefined}
+          movies={moviesList}
+          theaters={theaters}
+          existingShowtimes={showtimes}
+          onSubmit={handleSubmit}
+          isLoading={submitting}
+        />
+      </Dialog>
+
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <ShowtimeDelete
+            title={showtimeToDelete ? `${showtimeToDelete.movieName} (${showtimeToDelete.date})` : ""}
+            handleDelete={handleConfirmDelete}
+            submit={deleting}
+        />
+      </Dialog>
     </Container>
   );
 }

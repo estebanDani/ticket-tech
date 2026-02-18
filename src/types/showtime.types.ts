@@ -9,6 +9,10 @@ export interface Showtime {
     reservedSeats: string[];
     date: string;
 }
+export interface EnrichedShowtime extends Showtime {
+    movieName: string;
+    theaterName: string;
+}
 
 export type CreateShowtimeDto = Omit<Showtime, 'id'>;
 export type UpdateShowtimeDto = Partial<Omit<Showtime, 'id'>>;
