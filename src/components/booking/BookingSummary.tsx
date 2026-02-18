@@ -1,10 +1,11 @@
 'use client';
 
 import { Card, CardContent, Typography, Divider, Button, Stack, Box} from '@mui/material';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 import { useBooking } from '@/contexts/BookingContext';
+import { formatDateWithYear } from '@/utils';
 
 interface BookingSummaryProps {
   onConfirm: () => void;
@@ -18,7 +19,7 @@ export default function BookingSummary({ onConfirm }: BookingSummaryProps) {
   }
 
   const showtimeDate = new Date(selectedShowtime.startTime);
-  const formattedDate = format(selectedShowtime.date, "EEE d MMMM, yyyy", { locale: es });
+  const formattedDate = formatDateWithYear(parseISO(selectedShowtime.date))
   const formattedTime = format(showtimeDate, "HH:mm", { locale: es });
 
   const seatPrice = selectedShowtime.price; 

@@ -22,7 +22,7 @@ import {
   Home,
   ConfirmationNumber
 } from '@mui/icons-material';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 
@@ -37,7 +37,7 @@ export default function BookingConfirmation() {
   }
 
   const showtimeDate = new Date(selectedShowtime.startTime);
-  const formattedDate = format(selectedShowtime.date, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
+  const formattedDate = format(parseISO(selectedShowtime.date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
   const formattedTime = format(showtimeDate, "HH:mm a", { locale: es });
   
   const totalPrice = selectedShowtime.price * selectedSeats.length;

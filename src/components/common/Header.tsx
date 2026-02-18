@@ -40,6 +40,7 @@ export function Header() {
     if (arrayPath.includes('showtimes')) return '3. SELECCIONAR HORARIOS';
     if (arrayPath.includes('movies')) return '2. DETALLE PELÍCULA';
     if (arrayPath.includes('checkout')) return '5. CHECKOUT/PAGO';
+    if (arrayPath.includes('my-bookings')) return 'MIS   RESERVAS';
     return '';
   };
 
