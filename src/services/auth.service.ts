@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, setDoc, query, collection, getDocs, where } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
 
 import { auth, db } from "@/services/firebase";
 import { CreateUserDto, User } from "@/types";
@@ -80,8 +80,7 @@ export class AuthService {
     }
     static async getAllUsers(): Promise<User[]> {
         try {
-            const userQuery = query(collection(db, COLLECTIONS.USERS), where('role', '==', 'user'));
-            const userDoc = await getDocs(userQuery);
+            const userDoc = await getDocs(collection(db, COLLECTIONS.USERS));
             return userDoc.docs.map((doc) => ({
                 uid: doc.id,
                 ...(doc.data() as Omit<User, 'uid'>),

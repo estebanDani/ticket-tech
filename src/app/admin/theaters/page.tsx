@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import { Box, Container, Button, Dialog } from '@mui/material'
+import { Box, Container, Button, Dialog, CircularProgress } from '@mui/material'
 import { useTheaters } from '@/hooks'
 import { CreateTheaterDto, Theater } from '@/types'
 import { theaterService } from '@/services'
@@ -10,7 +10,7 @@ import { CreateTheaterForm, TheaterFormDelete, TheaterTable } from '@/components
 
 
 export default function TheatersPage() {
-  const { theaters,load } = useTheaters();
+  const { theaters,load ,loading} = useTheaters();
   const [open,setOpen] = useState<boolean>(false)
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [state,setState] = useState<State | null>(null);
@@ -80,7 +80,13 @@ export default function TheatersPage() {
       setSubmitting(false)
     }
   }
-
+  if(loading){
+    return (
+      <Box sx={{ display: 'grid', placeItems: 'center', py: 6, minHeight: '50vh' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
   
   return (
     <Container maxWidth={false} sx={{ mt: 4 }}>

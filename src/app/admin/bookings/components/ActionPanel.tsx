@@ -34,7 +34,7 @@ const ActionPanel = ({
             gap: 2
         }}>
             <TextField
-                label="Fecha"
+                label="Fecha de Reserva"
                 type="date"
                 value={filterDate}
                 onChange={(e) => setFilterDate(e.target.value)}

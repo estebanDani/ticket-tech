@@ -8,6 +8,7 @@ import { useTheater } from "./useTheater";
 import { useBookings } from "./useBookings";
 import { useShowtimes } from "./useShowtimes";
 import { useClients } from "./useCleints";
+import { useBookingAdmin } from "./useBookingAdmin";
 
 export {
     useMovies,
@@ -20,5 +21,6 @@ export {
     useTheater,
     useBookings,
     useClients,
+    useBookingAdmin
 }
 
