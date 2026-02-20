@@ -18,41 +18,45 @@ interface EnrichedShowtime {
   theaterName: string;
 }
 
-export const useShowtimesView = () => {
+export const useShowtimesView = (page: number, pageSize: number) => {
   const [data, setData] = useState<EnrichedShowtime[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [moviesMap, setMoviesMap] = useState<Record<string, string>>({});
   const [moviesList, setMoviesList] = useState<Movie[]>([]);
   const [theaters, setTheaters] = useState<Theater[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const load = async () => {
     setLoading(true);
-    const [showtimes, movies, theatersData] = await Promise.all([
-      ShowtimeService.getAll(),
-      MovieService.getAll(),
-      theaterService.getAll(),
-    ]);
+    try {
+      const [pagedData, movies, theatersData] = await Promise.all([
+        ShowtimeService.getPaged(page, pageSize),
+        MovieService.getAll(),
+        theaterService.getAll(),
+      ]);
 
-    const movieMap = Object.fromEntries(movies.map((m) => [m.id, m.title]));
-    const theaterMap = Object.fromEntries(theatersData.map((t) => [t.id, t.name]));
+      const movieMap = Object.fromEntries(movies.map((m) => [m.id, m.title]));
+      const theaterMap = Object.fromEntries(theatersData.map((t) => [t.id, t.name]));
 
-    const enriched = showtimes.map((s) => ({
-      ...s,
-      movieName: movieMap[s.movieId] || "—",
-      theaterName: theaterMap[s.theaterId] || "—",
-    }));
+      const enriched = pagedData.results.map((s) => ({
+        ...s,
+        movieName: movieMap[s.movieId] || "—",
+        theaterName: theaterMap[s.theaterId] || "—",
+      }));
 
-    setMoviesMap(movieMap);
-    setMoviesList(movies);
-    setTheaters(theatersData);
-    setData(enriched);
-    setLoading(false);
-
+      setMoviesMap(movieMap);
+      setMoviesList(movies);
+      setTheaters(theatersData);
+      setData(enriched);
+      setTotalCount(pagedData.total);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     load();
-  }, []);
+  }, [page]); 
 
-  return { showtimes: data, moviesMap, moviesList, theaters, load , loading};
+  return { showtimes: data, totalCount, moviesMap, moviesList, theaters, load, loading };
 };

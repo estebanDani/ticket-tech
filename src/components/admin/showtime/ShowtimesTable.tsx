@@ -1,6 +1,18 @@
 'use client'
-import { useMemo, useState } from "react";
-import { Button, Box, LinearProgress, Typography, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination, Paper } from "@mui/material";
+import { 
+  Button, 
+  Box, 
+  LinearProgress, 
+  Typography, 
+  Table, 
+  TableHead, 
+  TableRow, 
+  TableCell, 
+  TableBody, 
+  TableContainer, 
+  TablePagination, 
+  Paper 
+} from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { EnrichedShowtime } from "@/types";
 
@@ -8,24 +20,21 @@ interface Props {
   showtimes: EnrichedShowtime[];
   onEdit: (showtime: EnrichedShowtime) => void;
   onDelete: (showtime: EnrichedShowtime) => void;
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (event: unknown, newPage: number) => void;
 }
 
-export function ShowtimesTable({ showtimes, onEdit, onDelete }: Props) {
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
-
-  const handleChangePage = (_: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-  
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const paginatedShowtimes = useMemo(() => {
-    return showtimes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  }, [page, rowsPerPage, showtimes]);
+export function ShowtimesTable({ 
+  showtimes, 
+  onEdit, 
+  onDelete, 
+  count, 
+  page, 
+  rowsPerPage, 
+  onPageChange 
+}: Props) {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -43,14 +52,14 @@ export function ShowtimesTable({ showtimes, onEdit, onDelete }: Props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedShowtimes.length === 0 ? (
+            {showtimes.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                   No hay funciones registradas
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedShowtimes.map((showtime) => (
+              showtimes.map((showtime) => (
                 <TableRow key={showtime.id} hover>
                   <TableCell>{showtime.movieName}</TableCell>
                   <TableCell>{showtime.theaterName}</TableCell>
@@ -66,7 +75,11 @@ export function ShowtimesTable({ showtimes, onEdit, onDelete }: Props) {
                       const percentage = total ? (occupied / total) * 100 : 0;
                       return (
                         <Box sx={{ minWidth: 100 }}>
-                          <LinearProgress variant="determinate" value={percentage} sx={{ height: 8, borderRadius: 5 }} />
+                          <LinearProgress 
+                            variant="determinate" 
+                            value={percentage} 
+                            sx={{ height: 8, borderRadius: 5 }} 
+                          />
                           <Typography variant="caption">{occupied} / {total}</Typography>
                         </Box>
                       );
@@ -88,15 +101,15 @@ export function ShowtimesTable({ showtimes, onEdit, onDelete }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+      
       <TablePagination
         component="div"
-        count={showtimes.length}
+        count={count} 
         page={page}
-        onPageChange={handleChangePage}
+        onPageChange={onPageChange}
         rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        rowsPerPageOptions={[5, 10, 15]}
-        labelRowsPerPage="Filas por página"
+        rowsPerPageOptions={[]} 
+        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
       />
     </Paper>
   );
