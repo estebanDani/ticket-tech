@@ -23,8 +23,10 @@ export const useShowtimesView = () => {
   const [moviesMap, setMoviesMap] = useState<Record<string, string>>({});
   const [moviesList, setMoviesList] = useState<Movie[]>([]);
   const [theaters, setTheaters] = useState<Theater[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const load = async () => {
+    setLoading(true);
     const [showtimes, movies, theatersData] = await Promise.all([
       ShowtimeService.getAll(),
       MovieService.getAll(),
@@ -44,11 +46,13 @@ export const useShowtimesView = () => {
     setMoviesList(movies);
     setTheaters(theatersData);
     setData(enriched);
+    setLoading(false);
+
   };
 
   useEffect(() => {
     load();
   }, []);
 
-  return { showtimes: data, moviesMap, moviesList, theaters, load };
+  return { showtimes: data, moviesMap, moviesList, theaters, load , loading};
 };

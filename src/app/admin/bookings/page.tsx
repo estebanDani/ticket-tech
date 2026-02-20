@@ -1,9 +1,8 @@
 "use client"
 import { useMemo, useState } from 'react'
-import { Container, Box, Button } from '@mui/material'
+import { Container, Box, CircularProgress } from '@mui/material'
 import PageHeader from '@/components/common/PageHeader'
-import { Add } from '@mui/icons-material'
-import { useBookings, useMovies, useTheaters, useShowtimes, useClients } from '@/hooks'
+import { useMovies, useTheaters, useShowtimes, useClients, useBookingAdmin } from '@/hooks'
 import { BookingsTable } from './components/bookingsTable'
 import ActionPanel from './components/ActionPanel'
 
@@ -14,7 +13,7 @@ interface Filter {
 }
 
 export default function BookingsPage() {
-  const { bookings } = useBookings();
+  const { bookings, loading} = useBookingAdmin();
   const { movies } = useMovies();
   const { theaters } = useTheaters();
   const { showtimes } = useShowtimes();
@@ -26,27 +25,26 @@ export default function BookingsPage() {
     movie: "",
   })
 
-  const DataTable = useMemo(() => {
-    return bookings.map((booking) => {
-      const showtime = showtimes?.find(s => s.id === booking.showtimeId);
-      const movie = movies?.find(m => m.id === booking.movieId);
-      const theater = theaters?.find(t => t.id === showtime?.theaterId);
-      const user = clients?.find(c => c.uid === booking.userId);
+  const DataTable =  bookings.map((booking) => {
+    const showtime = showtimes?.find(s => s.id === booking.showtimeId);
+    const movie = movies?.find(m => m.id === booking.movieId);
+    const theater = theaters?.find(t => t.id === showtime?.theaterId);
+    const user = clients?.find(c => c.uid === booking.userId);
 
-      return {
-        ...booking,
-        movie: movie?.title || 'Sin título',
-        user: user?.displayName || 'Usuario desconocido',
-        theater: theater?.name || 'Sin sala',
-        totalPrice: booking.totalPreice,
-      }
-    });
-  }, [bookings, movies, theaters, showtimes, clients]);
-  
+    return {
+      ...booking,
+      movie: movie?.title || 'Sin título',
+      user: user?.displayName || 'Usuario desconocido',
+      theater: theater?.name || 'Sin sala',
+      totalPrice: booking.totalPreice,
+    }
+  })
+
   const filterTable = useMemo(() => {
+
     return DataTable.filter((booking) => {
-      const bookingDate = booking.bookingDate;
-      const bookingDateString = bookingDate.toString().split('T')[0];
+      const bookingDate = booking.bookingDate.toDate();
+      const bookingDateString = bookingDate.toISOString().split('T')[0];
 
       const matchesDate = !filter.date || bookingDateString === filter.date;
       const matchesStatus = !filter.status || booking.status === filter.status;
@@ -56,6 +54,13 @@ export default function BookingsPage() {
     });
   }, [DataTable, filter]);
 
+  if(loading){
+    return (
+      <Box sx={{ display: 'grid', placeItems: 'center', py: 6, minHeight: '50vh' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
   return (
     <Container maxWidth={false} disableGutters>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -64,9 +69,6 @@ export default function BookingsPage() {
           description="Administra las reservas de los usuarios"
           icon="📖"
         />
-        <Button variant="contained" color="primary" startIcon={<Add />}>
-          Nueva Reserva
-        </Button>
       </Box>
       <ActionPanel
         filterDate={filter.date}
@@ -76,7 +78,7 @@ export default function BookingsPage() {
         setFilterStatus={(status) => setFilter(prev => ({ ...prev, status: status || "" }))}
         setFilterMovie={(movie) => setFilter(prev => ({ ...prev, movie: movie || "" }))}
       />
-      <BookingsTable bookings={filterTable} onEdit={() => { }} onDelete={() => { }} />
+      <BookingsTable bookings={filterTable} />
     </Container>
   )
 }

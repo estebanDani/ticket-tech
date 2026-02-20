@@ -1,6 +1,6 @@
 'use client'
 import { useMemo } from 'react'
-import { Grid, Container, Card, CardHeader, CardContent } from '@mui/material'
+import { Grid, Container, Card, CardHeader, CardContent, Box, CircularProgress } from '@mui/material'
 import { Movie, Paid, TheaterComedy, ListAlt } from '@mui/icons-material';
 import { DataCard } from './DataCard';
 import { PieChart } from '@mui/x-charts';
@@ -9,7 +9,7 @@ import { useBookings, useShowtimes, useMovies } from '@/hooks';
 
 export default function DashboardPage() {
 
-  const { bookings } = useBookings();
+  const { bookings, loading } = useBookings();
   const { movies } = useMovies();
   const { showtimes } = useShowtimes();
 
@@ -79,6 +79,14 @@ export default function DashboardPage() {
       count: bookings.filter((booking) => booking.movieId === movie.id).length,
     }));
   }, [movies, bookings]);
+
+  if(loading){
+    return (
+      <Box sx={{ display: 'grid', placeItems: 'center', py: 6, minHeight: '50vh' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
     <Container maxWidth={false} sx={{ py: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>

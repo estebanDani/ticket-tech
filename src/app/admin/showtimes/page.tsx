@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Button, Dialog, Container, Box } from '@mui/material';
+import { Button, Dialog, Container, Box, CircularProgress } from '@mui/material';
 import PageHeader from '@/components/common/PageHeader';
 import { showError, showSuccess } from '@/utils';
 import { ShowtimeService } from '@/services';
@@ -11,7 +11,7 @@ import { useShowtimesView } from '@/hooks/useShowtimeView';
 import { CreateShowtimeDto, EnrichedShowtime } from '@/types';
 
 export default function ShowtimesPage() {
-  const { showtimes, moviesMap, moviesList, theaters, load } = useShowtimesView();
+  const { showtimes, moviesMap, moviesList, theaters, load, loading} = useShowtimesView();
   
   const [open, setOpen] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -65,6 +65,14 @@ export default function ShowtimesPage() {
       return matchMovie && matchDate;
     });
   }, [showtimes, filters]);
+
+  if(loading){
+    return (
+      <Box sx={{ display: 'grid', placeItems: 'center', py: 6, minHeight: '50vh' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
     <Container maxWidth={false} sx={{ p: 2 }}>
