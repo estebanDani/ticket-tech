@@ -69,7 +69,7 @@ export default function ShowtimesPage() {
       setOpen(false);
       setSelectedShowtime(null);
       await load();
-    } catch (error: unknown) {
+    } catch { 
       showError('Ocurrió un error al procesar la función');
     } finally {
       setSubmitting(false);
