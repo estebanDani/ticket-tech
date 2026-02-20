@@ -4,38 +4,37 @@ import { CreateShowtimeDto, UpdateShowtimeDto, Showtime } from '@/types';
 import { COLLECTIONS } from '@/utils/constants';
 
 export class ShowtimeService {
-    static async getPaged(page: number, pageSize: number) {
-        try {
-            const colRef = collection(db, COLLECTIONS.SHOWTIMES);
-            
-            const countSnapshot = await getCountFromServer(colRef);
-            const total = countSnapshot.data().count;
+static async getPaged(page: number, pageSize: number) {
+    try {
+        const colRef = collection(db, COLLECTIONS.SHOWTIMES);
+                const countSnapshot = await getCountFromServer(colRef);
+        const total = countSnapshot.data().count;
 
-            let q = query(
-                colRef, 
-                orderBy("startTime", "desc"), 
-                limit(page * pageSize) 
-            );
+        const queryShowtime = query(
+            colRef, 
+            orderBy("startTime", "desc"),
+            limit(page * pageSize) 
+        );
 
-            const snapshot = await getDocs(q);
-            
-            const docs = snapshot.docs.slice((page - 1) * pageSize, page * pageSize);
+        const snapshot = await getDocs(queryShowtime);
+        
+        const docs = snapshot.docs.slice((page - 1) * pageSize, page * pageSize);
 
-            const results = docs.map((docSnapshot) => {
-                const data = docSnapshot.data();
-                return {
-                    id: docSnapshot.id,
-                    ...data,
-                    startTime: data.startTime?.toDate() || new Date(),
-                    endTime: data.endTime?.toDate() || new Date(),
-                } as Showtime;
-            });
+        const results = docs.map((docSnapshot) => {
+            const data = docSnapshot.data();
+            return {
+                id: docSnapshot.id,
+                ...data,
+                startTime: data.startTime?.toDate() || new Date(),
+                endTime: data.endTime?.toDate() || new Date(),
+            } as Showtime;
+        });
 
-            return { results, total };
-        } catch (error) {
-            throw new Error('Failed to fetch paged showtimes', { cause: error });
-        }
+        return { results, total };
+    } catch (error) {
+        throw new Error('Failed to fetch paged showtimes', { cause: error });
     }
+}
 
     static async getAll(): Promise<Showtime[]> {
         try {
