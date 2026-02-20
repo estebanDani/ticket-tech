@@ -20,10 +20,15 @@ import {
 import { useShowtimesView } from '@/hooks/useShowtimeView';
 import { CreateShowtimeDto, EnrichedShowtime } from '@/types';
 
+interface ShowtimeFilters {
+  movieId: string;
+  date: string;
+}
+
 export default function ShowtimesPage() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(0); 
   const rowsPerPage = 5;
-  const [filters, setFilters] = useState({ movieId: "", date: "" });
+  const [filters, setFilters] = useState<ShowtimeFilters>({ movieId: "", date: "" });
 
   const { 
     showtimes, 
@@ -46,6 +51,11 @@ export default function ShowtimesPage() {
     setPage(newPage);
   };
 
+  const handleFilterChange = (newFilters: ShowtimeFilters) => {
+    setFilters(newFilters);
+    setPage(0);
+  };
+
   const handleSubmit = async (data: CreateShowtimeDto) => {
     setSubmitting(true);
     try {
@@ -59,7 +69,7 @@ export default function ShowtimesPage() {
       setOpen(false);
       setSelectedShowtime(null);
       await load();
-    } catch {
+    } catch (error: unknown) {
       showError('Ocurrió un error al procesar la función');
     } finally {
       setSubmitting(false);
@@ -75,8 +85,9 @@ export default function ShowtimesPage() {
       await load();
       setDeleteDialogOpen(false);
       setShowtimeToDelete(null);
-    } catch (error: any) {
-      showError(error.message || 'Error al eliminar');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Error al eliminar';
+      showError(message);
     } finally {
       setDeleting(false);
     }
@@ -90,7 +101,7 @@ export default function ShowtimesPage() {
           <ShowtimesFilters 
             moviesfilter={moviesMap} 
             filters={filters} 
-            onChange={(f) => { setFilters(f); setPage(0); }} 
+            onChange={handleFilterChange} 
           />
           <Button variant="contained" onClick={() => { setSelectedShowtime(null); setOpen(true); }}>
             Nueva Función
@@ -98,7 +109,7 @@ export default function ShowtimesPage() {
         </Box>
       </Box>
 
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{ position: 'relative', minHeight: '300px' }}>
         {loading && (
           <Box sx={{ 
             position: 'absolute', top: '50%', left: '50%', 
@@ -119,8 +130,7 @@ export default function ShowtimesPage() {
         />
       </Box>
 
-      {/* Modales */}
-      <Dialog fullWidth maxWidth="md" open={open} onClose={() => setOpen(false)}>
+      <Dialog fullWidth maxWidth="md" open={open} onClose={() => !submitting && setOpen(false)}>
         <ShowtimeForm
           initialData={selectedShowtime ?? undefined}
           movies={moviesList}
@@ -131,7 +141,7 @@ export default function ShowtimesPage() {
         />
       </Dialog>
 
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+      <Dialog open={deleteDialogOpen} onClose={() => !deleting && setDeleteDialogOpen(false)}>
         <ShowtimeDelete
             title={showtimeToDelete ? `${showtimeToDelete.movieName} (${showtimeToDelete.date})` : ""}
             handleDelete={handleConfirmDelete}
