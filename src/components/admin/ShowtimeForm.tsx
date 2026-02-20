@@ -297,7 +297,7 @@ export const ShowtimeForm: React.FC<ShowtimeFormProps> = ({
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                {isLoading ? "Procesando..." : isEditMode ? "Guardar Función" : "Editar Función"}
+                {isLoading ? "Procesando..." : isEditMode ? "Actualizar Función" : "Crear Función"}
               </Button>
             </Grid>
 

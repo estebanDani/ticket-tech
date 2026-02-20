@@ -7,25 +7,19 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    Button,
     Box,
     TablePagination,
     Typography,
     TableContainer,
 } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import { BookingWithDetails, Booking } from '@/types';
+import { BookingWithDetails } from '@/types';
 
 interface BookingsTableProps {
     bookings: BookingWithDetails[];
-    onEdit: (booking: Booking) => void;
-    onDelete: (booking: Booking) => void;
 }
 
 export const BookingsTable: React.FC<BookingsTableProps> = ({
-    bookings,
-    onEdit,
-    onDelete,
+    bookings
 }) => {
 
     const [page, setPage] = useState<number>(0);
@@ -71,7 +65,6 @@ export const BookingsTable: React.FC<BookingsTableProps> = ({
                             <TableCell>Sala</TableCell>
                             <TableCell>Precio total</TableCell>
                             <TableCell>Estado</TableCell>
-                            <TableCell>Acciones</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -92,27 +85,6 @@ export const BookingsTable: React.FC<BookingsTableProps> = ({
                                     <TableCell>{booking.totalPreice}</TableCell>
                                     <TableCell>
                                         {booking.status}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Box sx={{ display: 'flex', gap: 1 }}>
-                                            <Button
-                                                variant="outlined"
-                                                size="small"
-                                                title="Editar"
-                                                onClick={() => onEdit(booking)}
-                                            >
-                                                <Edit />
-                                            </Button>
-                                            <Button
-                                                variant="outlined"
-                                                color="error"
-                                                size="small"
-                                                title="Eliminar"
-                                                onClick={() => onDelete(booking)}
-                                            >
-                                                <Delete />
-                                            </Button>
-                                        </Box>
                                     </TableCell>
                                 </TableRow>
                             ))

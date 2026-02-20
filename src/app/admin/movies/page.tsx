@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Button, Dialog, Container, Box, TextField, InputAdornment } from '@mui/material';
+import { Button, Dialog, Container, Box, TextField, InputAdornment, CircularProgress } from '@mui/material';
 import PageHeader from '@/components/common/PageHeader';
 import { showError, showSuccess } from '@/utils';
 import { CreateMovieDto, Movie, UpdateMovieDto } from '@/types';
@@ -13,7 +13,7 @@ import { MovieTable } from './MovieTable';
 import { Search } from '@mui/icons-material';
 
 export default function MoviesPage() {
-  const { movies, load } = useMovies();
+  const { movies, load, loading } = useMovies();
   const [open, setOpen] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
@@ -92,6 +92,14 @@ export default function MoviesPage() {
       movie.title.toLowerCase().includes(search.toLowerCase())
     );
   },[movies,search]) 
+
+  if(loading){
+    return (
+      <Box sx={{ display: 'grid', placeItems: 'center', py: 6, minHeight: '50vh' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
     <Container maxWidth={false} sx={{ p: 2 }}>
