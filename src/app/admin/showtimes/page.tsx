@@ -1,26 +1,50 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Button, Dialog, Container, Box } from '@mui/material';
+import { useState } from 'react';
+import { 
+  Button, 
+  Dialog, 
+  Container, 
+  Box, 
+  CircularProgress 
+} from '@mui/material';
 import PageHeader from '@/components/common/PageHeader';
 import { showError, showSuccess } from '@/utils';
 import { ShowtimeService } from '@/services';
-import { ShowtimeForm, ShowtimesFilters, ShowtimesTable } from '@/components';
-import { ShowtimeDelete } from '@/components';
+import { 
+  ShowtimeForm, 
+  ShowtimesFilters, 
+  ShowtimesTable, 
+  ShowtimeDelete 
+} from '@/components';
 import { useShowtimesView } from '@/hooks/useShowtimeView';
 import { CreateShowtimeDto, EnrichedShowtime } from '@/types';
 
 export default function ShowtimesPage() {
-  const { showtimes, moviesMap, moviesList, theaters, load } = useShowtimesView();
-  
+  const [page, setPage] = useState(0);
+  const rowsPerPage = 5;
+  const [filters, setFilters] = useState({ movieId: "", date: "" });
+
+  const { 
+    showtimes, 
+    totalCount, 
+    moviesMap, 
+    moviesList, 
+    theaters, 
+    load, 
+    loading 
+  } = useShowtimesView(page + 1, rowsPerPage);
+
   const [open, setOpen] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedShowtime, setSelectedShowtime] = useState<EnrichedShowtime | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [showtimeToDelete, setShowtimeToDelete] = useState<EnrichedShowtime | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
-  
-  const [filters, setFilters] = useState({ movieId: "", date: "" });
+
+  const handleChangePage = (_: unknown, newPage: number) => {
+    setPage(newPage);
+  };
 
   const handleSubmit = async (data: CreateShowtimeDto) => {
     setSubmitting(true);
@@ -51,39 +75,51 @@ export default function ShowtimesPage() {
       await load();
       setDeleteDialogOpen(false);
       setShowtimeToDelete(null);
-    } catch {
-      showError('Ocurrió un error al eliminar la función');
+    } catch (error: any) {
+      showError(error.message || 'Error al eliminar');
     } finally {
       setDeleting(false);
     }
   };
-
-  const filteredShowtimes = useMemo(() => {
-    return (showtimes as EnrichedShowtime[]).filter((s) => {
-      const matchMovie = filters.movieId ? s.movieId === filters.movieId : true;
-      const matchDate = filters.date ? s.date === filters.date : true;
-      return matchMovie && matchDate;
-    });
-  }, [showtimes, filters]);
 
   return (
     <Container maxWidth={false} sx={{ p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <PageHeader title="Administración de funciones" description="Gestiona el horario del cine" icon="🎬" />
         <Box display="flex" alignItems="center" gap={1}>
-          <ShowtimesFilters moviesfilter={moviesMap} filters={filters} onChange={setFilters} />
+          <ShowtimesFilters 
+            moviesfilter={moviesMap} 
+            filters={filters} 
+            onChange={(f) => { setFilters(f); setPage(0); }} 
+          />
           <Button variant="contained" onClick={() => { setSelectedShowtime(null); setOpen(true); }}>
             Nueva Función
           </Button>
         </Box>
       </Box>
 
-      <ShowtimesTable 
-        showtimes={filteredShowtimes} 
-        onEdit={(s) => { setSelectedShowtime(s as EnrichedShowtime); setOpen(true); }} 
-        onDelete={(s) => { setShowtimeToDelete(s as EnrichedShowtime); setDeleteDialogOpen(true); }} 
-      />
+      <Box sx={{ position: 'relative' }}>
+        {loading && (
+          <Box sx={{ 
+            position: 'absolute', top: '50%', left: '50%', 
+            transform: 'translate(-50%, -50%)', zIndex: 2 
+          }}>
+            <CircularProgress />
+          </Box>
+        )}
+        
+        <ShowtimesTable 
+          showtimes={showtimes} 
+          count={totalCount}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
+          onEdit={(s) => { setSelectedShowtime(s as EnrichedShowtime); setOpen(true); }} 
+          onDelete={(s) => { setShowtimeToDelete(s as EnrichedShowtime); setDeleteDialogOpen(true); }} 
+        />
+      </Box>
 
+      {/* Modales */}
       <Dialog fullWidth maxWidth="md" open={open} onClose={() => setOpen(false)}>
         <ShowtimeForm
           initialData={selectedShowtime ?? undefined}
